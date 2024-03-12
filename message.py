@@ -1,22 +1,23 @@
 import enum
 import dataclasses
-from openc2.actions import * # This should be made safer by defining __all__ in openc2.actions
-from openc2.targets import * # This should be made safer by defining __all__ in openc2.targets
+from openc2.actions import Actions 
+from openc2.target import Target
 from openc2.response import * # This should be made safer by defining __all__ in openc2.targets
 from openc2.args import Args
 from openc2.actuator import Actuator
 import openc2.actuators
+import openc2.basetypes
 from openc2.datatypes import DateTime
 
 _OPENC2_CONTENT_TYPE = "application/openc2"
-_OPENC2_VERSION = "v1.0"
+_OPENC2_VERSION = "version=1.0"
 
 class MessageType(enum.Enum):
 	command = 1
 	response = 2
 
 class Content:
-	msg_type: MessageType = None
+	msg_type: str = None
 
 @dataclasses.dataclass
 class Message:
@@ -31,8 +32,8 @@ class Message:
 	version = _OPENC2_VERSION
 	
 	def __post_init__(self ):
-		self.request_id = "" # Fill in with random string
-		self.created = DateTime()
+		self.request_id = "" # TODO: Fill in with random string
+		self.created = int(DateTime())
 		self.msg_type = self.content.msg_type
 
 #todo
@@ -44,13 +45,20 @@ class Message:
 
 # Init and other standard methods are automatically created
 @dataclasses.dataclass
-class Command(Content):
-	action: Action
+class Command(Content, openc2.basetypes.Record):
+	action: Actions
 	target: Target
 	args: Args = None
 	actuator: Actuator = None
 	command_id: str = None
 	msg_type = MessageType.command
+
+	# Mind that the __post_init__ hides Exceptions!!!! 
+	# If something fails in its code, it returns with no errors but does 
+	# not complete the code
+	def __post_init__(self):
+		if not isinstance(self.target, Target):
+			self.target = Target(self.target)
 
 
 # Init and other standard methods are automatically created
