@@ -1,0 +1,15 @@
+
+3.3.1 OpenC2 Command	-> message.py
+3.3.1.1 Action			-> actions.py
+3.3.1.2 Target			-> target.py, targets.py
+
+3.3.2 OpenC2 Response-> message.py
+3.3.2.1 Status-Code	-> response.py
+3.3.2.2 Results		-> response.py
+
+
+
+3.4 Types definition
+====================
+3.4.1 Target types -> targettypes.py
+3.4.2 Data types	 -> datatypes.py
