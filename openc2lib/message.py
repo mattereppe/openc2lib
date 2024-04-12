@@ -1,5 +1,6 @@
 import enum
 import dataclasses
+import uuid
 from openc2lib.actions import Actions 
 from openc2lib.target import Target
 from openc2lib.response import * # This should be made safer by defining __all__ in openc2.targets
@@ -32,7 +33,7 @@ class Message:
 	version = _OPENC2_VERSION
 	
 	def __post_init__(self ):
-		self.request_id = "" # TODO: Fill in with random string
+		self.request_id = str(uuid.uuid4()) 
 		self.created = int(DateTime())
 		try:
 			self.msg_type = self.content.msg_type

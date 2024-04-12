@@ -1,6 +1,9 @@
 import copy
 import aenum
 import enum
+import logging
+
+logger = logging.getLogger('openc2')
 
 UNCODED = (bool, str, int, float)
 
@@ -94,19 +97,13 @@ class Encoder:
 	# clstype is the classtype to use for the conversion
 	@staticmethod
 	def fromdict(clstype, dic):
-		print("Deconding: ", dic, " with ", clstype)
+		logger.debug("Decondig: %s with %s", dic, clstype)
 		try:
-#return clstype.fromdict(dic, Encoder)
-			print("Trying: clstype.fromdict")
-			print(clstype.fromdict)
-			a = clstype.fromdict(dic, Encoder)
-			print("returning clstype.fromdict: ", a, " of type ", type(a))
-			return a
+			logging.debug("Trying: %s", clstype.fromdict)
+			return clstype.fromdict(dic, Encoder)
 		except:
-#return Encoder.objfromdict(clstype, dic)
-			print("Falling back: Encoder.objfromdict for ", clstype)
+			logger.debug("Falling back: Encoder.objfromdict for %s", clstype)
 			b = Encoder.objfromdict(clstype, dic)
-			print("returning objfromdict: ", b)
-			return b
+			return Encoder.objfromdict(clstype, dic)
 		
 

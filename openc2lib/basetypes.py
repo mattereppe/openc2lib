@@ -6,6 +6,9 @@
 
 import aenum
 import inspect
+import logging
+
+logger = logging.getLogger('openc2lib')
 
 
 class Openc2Type():
@@ -135,8 +138,8 @@ class ArrayOf:
 			@classmethod
 			def fromdict(cls, lis, e):
 				objlis = cls()
-				print("ArrayOf: ", lis)
-				print("Instantiating: ", cls.fieldtype)
+				logger.debug('Building %s from %s in ArrayOf', cls, lis)
+				logger.debug('-> instantiating: %s', cls.fieldtype)
 				for k in lis:
 					objlis.append(e.fromdict(cls.fieldtype, k))
 		
@@ -180,16 +183,12 @@ class Map(Openc2Type, dict):
 	@classmethod
 	def fromdict(cls, dic, e):
 		objdic = {}
-		print("dicitems: ", dic.items())
+		logger.debug('Building %s from %s in Map', cls, dic)
 		for k,v in dic.items():
-			print("k: ",k)
-			print("fieldtypes: ", cls.fieldtypes)
 			if k not in cls.fieldtypes:
 				raise TypeError("Unexpected field: ", k)
 			objdic[k] = e.fromdict(cls.fieldtypes[k], v)
-			print("objdic[k]", objdic)
 
-#return cls(objdic)
 		return objdic
 
 class MapOf:
@@ -201,17 +200,11 @@ class MapOf:
 			@classmethod
 			def fromdict(cls, dic, e):
 				objdic = {}
-				print("MapOf dicitems: ", dic.items())
+				logger.debug('Building %s from %s in MapOf', cls, dic)
 				for k,v in dic.items():
-					print("k: ",k)
-					print("fieldtypes: ", cls.fieldtypes)
 					kclass = list(cls.fieldtypes)[0]
 					objk = e.fromdict(kclass, k)
-					
-					print("MapOf k type: ", type(objk))
-					print("MapOf v type: ", type(cls.fieldtypes[kclass]))
 					objdic[objk] = e.fromdict(cls.fieldtypes[kclass], v)
-					print("objdic[k]", objdic)
 				return objdic
 
 		return MapOf
