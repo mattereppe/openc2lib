@@ -3,7 +3,7 @@ import requests
 import logging
 from flask import Flask, request
 from openc2lib.transfer import Transfer
-from openc2lib.message import MessageType, Message, Command, Response
+from openc2lib.message import MessageType, Message, Command, Response, Content
 from openc2lib.basetypes import Openc2Type
 # TODO: remove this when the encoder is instantiated based on message content
 from openc2lib.encoders.json_encoder import JSONEncoder
@@ -157,9 +157,12 @@ class HTTPTransfer(Transfer):
 		logger.debug("HTTP got response: %s", response)
 	
 		# TODO: How to manage HTTP response code? Can we safely assume they always match the Openc2 response?
-		print("+++++++ Now encoding")
-		msg = self.fromhttp(response.text, encoder)
-		print("+++++++ msg: ", msg.content['status'])
+		try:
+			msg = self.fromhttp(response.text, encoder)
+		except:
+			msg = Message(Content())
+			msg.status = response.status_code
+			logger.error("Unable to parse data: >%s<", response.text)
 
 		return msg
 
@@ -203,7 +206,7 @@ class HTTPTransfer(Transfer):
 
 			return data
 
-		app.run(debug=True)
+		app.run(debug=True, host=self.host, port=self.port)
 
 
 class HTTPSTransfer(HTTPTransfer):

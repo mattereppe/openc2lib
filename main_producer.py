@@ -10,6 +10,9 @@ from openc2lib.actions import *
 from openc2lib.targets import * # This is here to load the available targets. Find a better solution!
 from openc2lib.targettypes import IPv4Net, IPv4Connection
 from openc2lib.datatypes import L4Protocol
+#import openc2lib.profiles.slpf.actuator as slpf
+import openc2lib.profiles.slpf.actuator as slpf
+import openc2lib.profiles.slpf.targettypes as slpf_target
 import logging
 import sys
 
@@ -19,17 +22,27 @@ logger = logging.getLogger('openc2')
 
 def main():
 	logger.info("Creating Producer")
-	p = Producer("ge.imati.cnr.ir", JSONEncoder(), HTTPTransfer("127.0.0.1", 5000))
+	p = Producer("ge.imati.cnr.ir", JSONEncoder(), HTTPTransfer("127.0.0.1", 8080))
+
+	pf = slpf.Actuator()
+
+
 	cmd = Command(Actions.scan, IPv4Net("130.251.17.0/24"))
 	logger.info("Sending command: %s", cmd)
-	resp = p.sendcmd(cmd,consumers=["tnt-lab.unige.it"])
 
-	logger.info("Got response: %s", resp)
+#	resp = p.sendcmd(cmd,consumers=["tnt-lab.unige.it"])
+#
+#	logger.info("Got response: %s", resp)
+
+
+
+
+
+
 
 #resp = p.sendcmd(Command(Actions.query, IPv4Connection(dst_addr = "130.251.17.0/24", dst_port=80, protocol=L4Protocol.sctp)),consumers=["tnt-lab.unige.it", "ge.imati.cnr.it"])
 
 
-	print(resp)
 
 #p.sendcmd(Command(Actions.query,DomainName("cqw")),consumers=["tnt-lab.unige.it"])
 #p.sendcmd(Command(Actions.stop,EmailAddress("1486518253@qq.com")),consumers=["tnt-lab.unige.it"])
