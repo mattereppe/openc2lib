@@ -23,9 +23,13 @@ class Consumer:
 
 	def dispatch(self, msg):
 		#TODO: The logic to select the actuator that matches the request
-#		for a in actuators:
-		actuator = self.actuators[0]
+		try:
+			asset_id = msg.content.actuator.getTarget()['asset_id']
+			actuator = self.actuators[asset_id]
+		except:
+			raise ValueError("Actuator %s not found!",asset_id)
 
+		print("Actuator: ", actuator, msg.content)
 		# Run the command and collect the response
 		response = actuator.run(msg.content) 
 		logger.debug("Actuator %s returned: %s", actuator, response)

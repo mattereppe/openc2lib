@@ -3,10 +3,12 @@ from openc2lib.datatypes import ActionTargets, TargetEnum, Nsid, Version
 from openc2lib.actions import Actions
 from openc2lib.message import Command, Response
 from openc2lib.response import Results, StatusCode, StatusCodeDescription
+from openc2lib.profiles.slpf import slpf
 
-# A dumb actuator that does not implement any function but can
-# be used to test the openc2 communication.
-class DumbActuator:
+# An implementation of the slpf profile. 
+class IptablesActuator:
+	profile = slpf
+
 	def run(self, cmd):
 
 		at = ActionTargets()

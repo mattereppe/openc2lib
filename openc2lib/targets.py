@@ -5,7 +5,9 @@ from openc2lib.datatypes import TargetEnum
 TargetObjects = {}
 
 class TargetsDict(dict):
-	def add(self, name: str, target, identifier):
+	def add(self, name: str, target, identifier, nsid=None):
+		if nsid is not None:
+			name = nsid + ':' + name
 		try:
 			list(TargetObjects.keys())[list(TargetObjects.values()).index(target)]
 		except ValueError:

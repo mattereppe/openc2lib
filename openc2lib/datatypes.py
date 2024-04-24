@@ -53,6 +53,13 @@ class DateTime:
 		else:
 			self.time = timestamp
 
+# A time (positive number) expressed in milliseconds
+class Duration(int):
+	def __init__(self, dur):
+		if int(dur) < 0:
+			raise ValueError("Duration must be a positive number")
+		self=int(dur)
+
 class Version(str):
 	def __new__(cls, major, minor):
 		vers = str(major) + '.' + str(minor)
@@ -83,6 +90,11 @@ class Nsid(str):
 	def fromdict(cls, name, e):
 		return Nsid(name)
 	
+class ResponseType(openc2lib.basetypes.Enumerated):
+	none=0
+	ack=1
+	status=2
+	complete=3
 
 class TargetEnum(openc2lib.basetypes.Enumerated):
 	def __repr__(self):

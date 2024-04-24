@@ -36,7 +36,7 @@ class Encoder:
 			return Encoder.__iteratelist(obj)
 
 		if isinstance(obj, dict):
-			return  Encoder.__iterateobj(obj)
+			return  Encoder.__iteratedic(obj)
 
 		# Default: return a string representation of the object
 		return str(obj)
@@ -57,10 +57,11 @@ class Encoder:
 
 	# Convert complex types to string by interatively invoking the todict function
 	@staticmethod
-	def __iterateobj(dic):
+	def __iteratedic(dic):
 		newdic = {}
 		for k,v in dic.items():
-			newdic[Encoder.todict(k)] = Encoder.todict(v)
+			if v is not None:
+				newdic[Encoder.todict(k)] = Encoder.todict(v)
 #			if not isinstance(v, UNCODED):
 #				dic[k] = Encoder.todict(v)
 		return newdic
@@ -101,7 +102,7 @@ class Encoder:
 		try:
 			logging.debug("Trying: %s", clstype.fromdict)
 			return clstype.fromdict(dic, Encoder)
-		except:
+		except AttributeError:
 			logger.debug("Falling back: Encoder.objfromdict for %s", clstype)
 			b = Encoder.objfromdict(clstype, dic)
 			return Encoder.objfromdict(clstype, dic)

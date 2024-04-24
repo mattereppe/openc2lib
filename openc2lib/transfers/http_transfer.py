@@ -151,6 +151,7 @@ class HTTPTransfer(Transfer):
 		openc2headers, openc2data = self.tohttp(msg, encoder)
 
 		logger.info("Sending to %s", self.url)
+		logger.debug(" -> body: %s", openc2data)
 
 		# Send the OpenC2 message and get the response
 		response = requests.post(self.url, data=openc2data, headers=openc2headers)

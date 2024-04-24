@@ -189,7 +189,7 @@ class Map(Openc2Type, dict):
 				raise TypeError("Unexpected field: ", k)
 			objdic[k] = e.fromdict(cls.fieldtypes[k], v)
 
-		return objdic
+		return cls(objdic)
 
 class MapOf:
 
