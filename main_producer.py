@@ -28,7 +28,7 @@ def main():
 # Alternative initialization
 #	pf = slpf.slpf(dict(hostname='abete', named_group='firewalls', asset_id='iptables'))
 
-	arg = slpf.ExtArgs({'start_time': DateTime(), 'duration': 3000,'persistent': True})
+	arg = slpf.ExtArgs({'start_time': DateTime(), 'duration': 3000,'persistent': True, 'direction': slpf.Direction.ingress})
 
 	cmd = Command(Actions.scan, IPv4Net("130.251.17.0/24"), arg, actuator=pf)
 #	cmd = Command(Actions.scan, IPv4Net("130.251.17.0/24"))
