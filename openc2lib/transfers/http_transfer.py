@@ -1,14 +1,16 @@
 import dataclasses
 import requests
 import logging
+import copy
 from flask import Flask, request
+
 from openc2lib.transfer import Transfer
 from openc2lib.message import MessageType, Message, Command, Response, Content
 from openc2lib.basetypes import Openc2Type
 # TODO: remove this when the encoder is instantiated based on message content
 from openc2lib.encoders.json_encoder import JSONEncoder
 
-logger = logging.getLogger('openc2')
+logger = logging.getLogger('openc2lib')
 
 # This can be taken as an example that defines an additional Openc2Type
 # for parsing a custom data structure (HTTP Message, in this case)
@@ -69,11 +71,14 @@ class Payload(Openc2Type):
 			payload.headers = dic['headers']
 		except KeyError:
 			payload. headers = None
-		try:
-			payload.body = dic['body']
 
+		try:
+			# deepcopy is necessary to avoid unpleasant issues when the decode functions
+			# is called multiple times (an issues that may occur while debugging)
+			payload.body = copy.deepcopy(dic['body'])
 		except KeyError:
 			payload.body = None
+
 		try:
 			payload.signature = dic['signature']
 		except KeyError:
@@ -85,6 +90,8 @@ class Payload(Openc2Type):
 			content = v
 
 		payload.body['openc2'][payload.getContentType()] = e.decode(Payload.getContentClass(content_type), payload.getContent())
+
+
 
 		return payload
 

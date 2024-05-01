@@ -33,6 +33,7 @@ class Record(Openc2Type):
 
 	@classmethod
 	def fromdict(clstype, dic, e):
+		objdic = {}
 		# Retrieve class type for each field in the dictionary
 		fielddesc = None
 		for tpl in inspect.getmembers(clstype):
@@ -42,12 +43,11 @@ class Record(Openc2Type):
 		for k,v in dic.items():
 			if k not in fielddesc:
 				raise Exception("Unknown field '" + k + "' from message")
-			dic[k] = e.fromdict(fielddesc[k], v)
+			objdic[k] = e.fromdict(fielddesc[k], v)
 
-		
 		# A record should always have more than one field, so the following statement 
 		# should not raise exceptions
-		return clstype(**dic)
+		return clstype(**objdic)
 
 
 
@@ -104,7 +104,7 @@ class EnumeratedID(Enumerated):
 	@classmethod
 	def fromdict(cls, dic, e):
 		try:
-			return cls[int(dic)]
+			return cls(int(dic))
 		except:
 			raise TypeError("Unexpected enum value: ", dic)
 
@@ -176,21 +176,51 @@ class ArrayOf:
 
 class Map(Openc2Type, dict):
 	fieldtypes: dict = None
+	extend = None
+	extns = {}
 
 	def todict(self, e):
-		return e.todict(dict(self))
+		newdic=dict()
+
+		# This is necessary because self.extend.fieldtypes does
+		# not exist for non-extended classes
+		if self.extend is None:
+			return e.todict(dict(self))
+			
+		for k,v in self.items():
+			if k not in self.fieldtypes:
+				raise ValueError('Unknown field: ', k)
+			if k in self.extend.fieldtypes:
+				newdic[k] = v
+			else:
+				if self.nsid not in newdic:
+					newdic[self.nsid]={}
+				newdic[self.nsid][k]=v
+			
+		return e.todict(newdic)
 
 	@classmethod
 	def fromdict(cls, dic, e):
 		objdic = {}
+		extension = None
 		logger.debug('Building %s from %s in Map', cls, dic)
 		for k,v in dic.items():
-			if k not in cls.fieldtypes:
+			if k in cls.fieldtypes:
+				objdic[k] = e.fromdict(cls.fieldtypes[k], v)
+			elif k in cls.extns:
+				logger.debug('   Using profile %s to decode: %s', k, v)
+				extension = cls.extns[k]
+				for l,w in v.items():
+					objdic[l] = e.fromdict(extension.fieldtypes[l], w)
+			else:
 				raise TypeError("Unexpected field: ", k)
-			objdic[k] = e.fromdict(cls.fieldtypes[k], v)
+
+		if extension is not None:
+			cls = extension
 
 		return cls(objdic)
 
+# MapOf still does not support extensions!
 class MapOf:
 
 	def __new__(self,ktype, vtype):

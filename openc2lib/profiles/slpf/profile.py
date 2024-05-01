@@ -2,6 +2,8 @@ from openc2lib.profile import Profile
 from openc2lib.basetypes import Map
 from openc2lib.datatypes import Nsid
 
+profile_name = 'slpf'
+
 class slpf(Profile, Map):
 	fieldtypes = dict(hostname=str, named_group=str, asset_id=str, asset_tuple = [str])
 

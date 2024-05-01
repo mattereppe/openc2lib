@@ -75,3 +75,6 @@ class IPv4Connection(openc2lib.basetypes.Record):
 	            f"src_port={self.src_port}, " \
 	            f"st_port={self.dst_port})"
 
+class Features(openc2lib.basetypes.ArrayOf(openc2lib.datatypes.Feature)):
+# TODO: implmement control on the max number of elements
+	pass

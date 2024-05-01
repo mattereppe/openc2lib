@@ -13,8 +13,8 @@ import openc2lib.response
 import openc2lib.profiles.slpf as slpf
 
 #logging.basicConfig(filename='consumer.log',level=logging.DEBUG)
-logging.basicConfig(stream=sys.stdout,level=logging.DEBUG)
-#logging.basicConfig(stream=sys.stdout,level=logging.INFO)
+#logging.basicConfig(stream=sys.stdout,level=logging.DEBUG)
+logging.basicConfig(stream=sys.stdout,level=logging.INFO)
 logger = logging.getLogger('openc2')
 	
 def main():
@@ -22,9 +22,7 @@ def main():
 # Instantiate the list of available actuators, using a dictionary which key
 # is the assed_id of the actuator.
 	actuators = {}
-#actuators['iptables'] = 
-	actuators['dumb']=DumbActuator()
-	actuators['iptables']=IptablesActuator()
+	actuators[('slpf','iptables')]=IptablesActuator()
 
 	c = Consumer("testconsumer", actuators, JSONEncoder(), HTTPTransfer("127.0.0.1", 8080))
 

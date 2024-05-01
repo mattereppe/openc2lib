@@ -71,9 +71,3 @@ class Response(Content, openc2lib.basetypes.Map):
 	fieldtypes = dict(status= StatusCode, status_text= str, results= Results)
 	msg_type = MessageType.response
 
-	def __init__(self, status, status_text = None, results = None):
-		self['status'] = status
-		if not status_text is None:
-			self['status_text'] = status_text
-		if not results is None:
-			self['results'] = results

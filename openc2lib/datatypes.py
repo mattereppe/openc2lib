@@ -79,6 +79,13 @@ class Version(str):
 	def fromdict(cls, vers, e=None):
 		return Version.fromstr(vers)
 
+class Feature(openc2lib.basetypes.Enumerated):
+	versions   = 1
+	profiles   = 2
+	pairs      = 3
+	rate_limit = 4
+
+
 		
 class Nsid(str):
 	def __init__(self, nsid):
@@ -103,3 +110,5 @@ class TargetEnum(openc2lib.basetypes.Enumerated):
 class ActionTargets(openc2lib.basetypes.MapOf(Actions, openc2lib.basetypes.ArrayOf(TargetEnum))):
 	pass
 
+class ActionArguments(openc2lib.basetypes.MapOf(Actions, openc2lib.basetypes.ArrayOf(str))):
+	pass

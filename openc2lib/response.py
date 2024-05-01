@@ -22,5 +22,21 @@ StatusCodeDescription = {StatusCode.PROCESSING: 'Processing',
 										StatusCode.NOTIMPLEMENTED: 'Not Implemented',
 										StatusCode.SERVICEUNAVAILABLE: 'Service Unavailable'}
 
+class ExtResultsDict(dict):
+	def add(self, profile: str, extresults):
+		if profile in self:
+			raise ValueError("ExtResults already registered")
+		self[profile] = extresults
+	
+ExtendedResults = ExtResultsDict()
+
 class Results(Map):
-	fieldtypes = dict(versions= Version, profiles= ArrayOf(Nsid), pairs= ActionTargets, rate_limit= int)
+	fieldtypes = dict(versions= ArrayOf(Version), profiles= ArrayOf(Nsid), pairs= ActionTargets, rate_limit= int)
+	extend = None
+	extns = ExtendedResults
+
+	def set(self, version=None, profiles=None, pairs=None, rate_limit=None):
+		self['version']=version
+		self['profiles']=profiles
+		self['pairs']=pairs
+		self['rate_limit']=rate_limit

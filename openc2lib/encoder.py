@@ -3,7 +3,7 @@ import aenum
 import enum
 import logging
 
-logger = logging.getLogger('openc2')
+logger = logging.getLogger('openc2lib')
 
 UNCODED = (bool, str, int, float)
 
@@ -104,7 +104,6 @@ class Encoder:
 			return clstype.fromdict(dic, Encoder)
 		except AttributeError:
 			logger.debug("Falling back: Encoder.objfromdict for %s", clstype)
-			b = Encoder.objfromdict(clstype, dic)
 			return Encoder.objfromdict(clstype, dic)
 		
 

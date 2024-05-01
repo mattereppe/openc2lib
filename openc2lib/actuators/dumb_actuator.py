@@ -15,6 +15,6 @@ class DumbActuator:
 		pf = ArrayOf(Nsid)()
 		pf.append(Nsid('slpf'))
 		res = Results(versions=Version(1,0), profiles=pf, pairs=at,rate_limit=3)
-		r = Response(StatusCode.OK, StatusCodeDescription[StatusCode.OK], res)
+		r = Response({'status': StatusCode.OK, 'status_code': StatusCodeDescription[StatusCode.OK], 'results': res})
 
 		return r

@@ -20,5 +20,6 @@ class TargetsDict(dict):
 Targets = TargetsDict()
 
 
+Targets.add('features', openc2lib.targettypes.Features, 9)
 Targets.add('ipv4_net', openc2lib.targettypes.IPv4Net, 13)
 Targets.add('ipv4_connection', openc2lib.targettypes.IPv4Connection, 15)
