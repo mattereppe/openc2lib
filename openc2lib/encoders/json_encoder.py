@@ -1,5 +1,6 @@
 import json
-from openc2lib.encoder import Encoder, register_encoder
+
+from openc2lib import Encoder, register_encoder
 
 
 @register_encoder

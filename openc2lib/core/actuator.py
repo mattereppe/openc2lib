@@ -1,7 +1,7 @@
 import aenum
 
-from openc2lib.basetypes import Choice
-from openc2lib.profile import Profiles
+from openc2lib.types.language import Choice
+from openc2lib.core.profile import Profiles
 
 class Actuator(Choice):
 
@@ -32,5 +32,19 @@ class Actuator(Choice):
 
 	def run(self, command):
 		raise NotImplementedError("Actuator not implemented!")
+
+ActuatorTypes = {}
+
+class ActuatorsDict(dict):
+	def add(self, name: str, actuator, identifier):
+		try:
+			list(ActuatorTypes.keys())[list(ActuatorTypes.values()).index(actuator)]
+		except ValueError:
+			# The item is not in the list
+			self[name] = actuator
+			return
+		raise ValueError("Actuator already registered")
+	
+Actuators = ActuatorsDict()
 
 

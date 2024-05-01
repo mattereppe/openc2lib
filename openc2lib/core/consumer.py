@@ -1,8 +1,9 @@
 import logging
-from openc2lib.encoder import Encoder
-from openc2lib.transfer import Transfer
-from openc2lib.message import Message, Response
-from openc2lib.response import StatusCode
+
+from openc2lib.core.encoder import Encoder
+from openc2lib.core.transfer import Transfer
+from openc2lib.core.message import Message, Response
+from openc2lib.core.response import StatusCode
 
 logger = logging.getLogger('openc2')
 

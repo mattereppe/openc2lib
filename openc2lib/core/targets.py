@@ -1,6 +1,7 @@
 import aenum
-import openc2lib.targettypes
-from openc2lib.datatypes import TargetEnum
+
+from openc2lib.types.targettypes import Features, IPv4Net, IPv4Connection
+from openc2lib.types.datatypes import TargetEnum
 
 TargetObjects = {}
 
@@ -20,6 +21,7 @@ class TargetsDict(dict):
 Targets = TargetsDict()
 
 
-Targets.add('features', openc2lib.targettypes.Features, 9)
-Targets.add('ipv4_net', openc2lib.targettypes.IPv4Net, 13)
-Targets.add('ipv4_connection', openc2lib.targettypes.IPv4Connection, 15)
+# TODO: Move to __init__
+Targets.add('features', Features, 9)
+Targets.add('ipv4_net', IPv4Net, 13)
+Targets.add('ipv4_connection', IPv4Connection, 15)

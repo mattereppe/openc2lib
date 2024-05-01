@@ -1,19 +1,15 @@
 #!/opt/homebrew/bin/python3
 # Example to use the OpenC2 library
 #
-from openc2lib.producer import Producer
-from openc2lib.message import Command, Message
+
 from openc2lib.encoders.json_encoder import JSONEncoder
 from openc2lib.transfers.http_transfer import HTTPTransfer
 
-from openc2lib.actions import *
-from openc2lib.targets import * # This is here to load the available targets. Find a better solution!
-from openc2lib.targettypes import IPv4Net, IPv4Connection, Features
-from openc2lib.datatypes import L4Protocol, DateTime, Duration
-from openc2lib.args import Args
 import openc2lib.profiles.slpf as slpf
 import logging
 import sys
+
+import openc2lib as oc2
 
 #logging.basicConfig(filename='openc2.log',level=logging.DEBUG)
 logging.basicConfig(stream=sys.stdout,level=logging.DEBUG)
@@ -22,7 +18,7 @@ logger = logging.getLogger('openc2producer')
 
 def main():
 	logger.info("Creating Producer")
-	p = Producer("ge.imati.cnr.ir", JSONEncoder(), HTTPTransfer("127.0.0.1", 8080))
+	p = oc2.Producer("ge.imati.cnr.ir", JSONEncoder(), HTTPTransfer("127.0.0.1", 8080))
 
 	pf = slpf.slpf({'hostname':'abete', 'named_group':'firewalls', 'asset_id':'iptables'})
 #pf = slpf.slpf({})
@@ -31,12 +27,12 @@ def main():
 
 
 #arg = slpf.ExtArgs({'start_time': DateTime(), 'duration': 3000,'persistent': True, 'direction': slpf.Direction.ingress})
-	arg = slpf.ExtArgs(start_time=DateTime(), duration= 3000,persistent= True, direction= slpf.Direction.ingress)
+	arg = slpf.ExtArgs(start_time=oc2.DateTime(), duration= 3000,persistent= True, direction= slpf.Direction.ingress)
 #	arg = Args({'start_time': DateTime(), 'duration': 3000})
 
 #	cmd = Command(Actions.scan, IPv4Net("130.251.17.0/24"), arg, actuator=pf)
 #	cmd = Command(Actions.scan, IPv4Net("130.251.17.0/24"))
-	cmd = Command(Actions.query, Features(), actuator=pf)
+	cmd = oc2.Command(oc2.Actions.query, oc2.Features(), actuator=pf)
 	logger.info("Sending command: %s", cmd)
 
 	resp = p.sendcmd(cmd,consumers=["tnt-lab.unige.it"])

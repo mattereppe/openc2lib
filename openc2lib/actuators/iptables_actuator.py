@@ -1,9 +1,7 @@
-from openc2lib.basetypes import ArrayOf
-from openc2lib.datatypes import ActionTargets, TargetEnum, Nsid, Version
-from openc2lib.actions import Actions
-from openc2lib.message import Command, Response
-from openc2lib.response import StatusCode, StatusCodeDescription
+from openc2lib import ArrayOf,ActionTargets, TargetEnum, Nsid, Version,Actions, Command, Response, StatusCode, StatusCodeDescription
+
 import openc2lib.profiles.slpf as slpf 
+
 
 OPENC2VERS=Version(1,0)
 

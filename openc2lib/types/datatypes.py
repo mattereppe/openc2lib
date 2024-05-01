@@ -4,8 +4,9 @@ import ipaddress
 import aenum
 import datetime 
 import dataclasses
-import openc2lib.basetypes
-from openc2lib.actions import Actions
+
+from openc2lib.types.language import MapOf, Enumerated, ArrayOf
+from openc2lib.types.actions import Actions
 
 # The usage of the ipaddress module is compliant to what required in the
 # language specification for IPv4 addresses, especially the following points:
@@ -28,7 +29,7 @@ class IPv4Addr:
 	def __repr__(self):
 		return self.__ipv4_addr.exploded
 
-class L4Protocol(openc2lib.basetypes.Enumerated):
+class L4Protocol(Enumerated):
 	icmp = 1
 	tcp = 6
 	udp = 17
@@ -79,7 +80,7 @@ class Version(str):
 	def fromdict(cls, vers, e=None):
 		return Version.fromstr(vers)
 
-class Feature(openc2lib.basetypes.Enumerated):
+class Feature(Enumerated):
 	versions   = 1
 	profiles   = 2
 	pairs      = 3
@@ -97,18 +98,18 @@ class Nsid(str):
 	def fromdict(cls, name, e):
 		return Nsid(name)
 	
-class ResponseType(openc2lib.basetypes.Enumerated):
+class ResponseType(Enumerated):
 	none=0
 	ack=1
 	status=2
 	complete=3
 
-class TargetEnum(openc2lib.basetypes.Enumerated):
+class TargetEnum(Enumerated):
 	def __repr__(self):
 		return self.name
 
-class ActionTargets(openc2lib.basetypes.MapOf(Actions, openc2lib.basetypes.ArrayOf(TargetEnum))):
+class ActionTargets(MapOf(Actions, ArrayOf(TargetEnum))):
 	pass
 
-class ActionArguments(openc2lib.basetypes.MapOf(Actions, openc2lib.basetypes.ArrayOf(str))):
+class ActionArguments(MapOf(Actions, ArrayOf(str))):
 	pass

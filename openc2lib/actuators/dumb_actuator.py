@@ -1,8 +1,4 @@
-from openc2lib.basetypes import ArrayOf
-from openc2lib.datatypes import ActionTargets, TargetEnum, Nsid, Version
-from openc2lib.actions import Actions
-from openc2lib.message import Command, Response
-from openc2lib.response import Results, StatusCode, StatusCodeDescription
+from openc2lib import ArrayOf,ActionTargets, TargetEnum, Nsid, Version,Results, StatusCode, StatusCodeDescription, Actions, Command, Response
 
 # A dumb actuator that does not implement any function but can
 # be used to test the openc2 communication.

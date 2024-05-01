@@ -1,6 +1,4 @@
-from openc2lib.profile import Profile
-from openc2lib.basetypes import Map
-from openc2lib.datatypes import Nsid
+from openc2lib import Profile, Map, Nsid
 
 profile_name = 'slpf'
 

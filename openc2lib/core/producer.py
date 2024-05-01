@@ -1,6 +1,6 @@
-from openc2lib.message import Command, Message
-from openc2lib.encoder import Encoder
-from openc2lib.transfer import Transfer
+from openc2lib.core.message import Command, Message
+from openc2lib.core.encoder import Encoder
+from openc2lib.core.transfer import Transfer
 
 class Producer:
 	def __init__(self, producer, encoder=None, transfer=None):

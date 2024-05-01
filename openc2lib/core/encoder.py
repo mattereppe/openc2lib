@@ -1,3 +1,6 @@
+# Interface that defines the behaviour of the encoding and the 
+# intermediate translation to a dictionary.
+
 import copy
 import aenum
 import enum

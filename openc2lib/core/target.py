@@ -1,8 +1,9 @@
 # This module implements the Target types defined in Sec. 3.4.1 [OpenC2 Languate specification]
 #
 import aenum
-from openc2lib.basetypes import Choice
-from openc2lib.targets import Targets
+
+from openc2lib.types.language import Choice
+from openc2lib.core.targets import Targets
 
 
 class Target(Choice):

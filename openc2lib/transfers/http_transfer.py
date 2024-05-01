@@ -2,11 +2,11 @@ import dataclasses
 import requests
 import logging
 import copy
+
 from flask import Flask, request
 
-from openc2lib.transfer import Transfer
-from openc2lib.message import MessageType, Message, Command, Response, Content
-from openc2lib.basetypes import Openc2Type
+from openc2lib import Transfer, MessageType, Message, Command, Response, Content, Encoders
+
 # TODO: remove this when the encoder is instantiated based on message content
 from openc2lib.encoders.json_encoder import JSONEncoder
 
@@ -16,7 +16,7 @@ logger = logging.getLogger('openc2lib')
 # for parsing a custom data structure (HTTP Message, in this case)
 #@register_basetype
 @dataclasses.dataclass
-class Payload(Openc2Type):
+class Payload:
 	headers: dict = None
 	body: dict = None
 	signature: str = None
@@ -180,9 +180,18 @@ class HTTPTransfer(Transfer):
 
 	def recv(self, headers, data):
 
-		enctype = headers.get('Content-type')
 		# TODO: Check the HTTP headers for version/encoding
-		encoder = JSONEncoder()
+		enctype = headers.get('Content-type')
+		content_type =headers['Content-type']
+		if not content_type.startswith(Message.content_type):
+			raise ValueError("Unsupported content type")
+		enctype = content_type.strip(Message.content_type+'+').split(';')[0]
+		try:
+			encoder = Encoders[enctype].value
+		except KeyError:
+			raise ValueError("Unsupported encoding scheme: ", enctype)
+		if not content_type.strip(Message.content_type+'+').split(';')[1] == Message.version:
+			raise ValueError("Unsupported openc2 version")
 
 		logger.debug("Received body: %s", data)
 		msg = self.fromhttp(data, encoder)
@@ -203,16 +212,22 @@ class HTTPTransfer(Transfer):
 			encoders=app.config['ENCODER']
 
 			
-			cmd, encoder = server.recv(request.headers, request.data.decode('UTF-8') )
-			logger.info("Received command: %s", cmd)
-			resp = callback(cmd)
+			try:
+				cmd, encoder = server.recv(request.headers, request.data.decode('UTF-8') )
+				logger.info("Received command: %s", cmd)
+				# TODO: Add the code to answer according to 'response_requested'
+				resp = callback(cmd)
+			except Exception as e:
+				# TODO: Find better formatting (what should be returned if the request is not understood?)
+				return str(e), 501
+
 			logger.debug("Got response: %s", resp)
 			
 			# TODO: Set HTTP headers as appropriate
 			hdrs, data = server.respond(resp, encoder)
 			logger.debug("Sending response: %s", data)
 
-			return data
+			return data, resp.status
 
 		app.run(debug=True, host=self.host, port=self.port)
 

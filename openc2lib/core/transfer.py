@@ -1,11 +1,9 @@
-import openc2lib.encoder
+# Interface that defines the basic behavior of the Transfer Protocols 
 
 class Transfer:
 
 	def send(self, msg, encoder):
 		enc = encoder.encode(msg)
-
-		print(enc)
 
 	def recv(self, msg, encoder):
 		return encoder.decode(msg)

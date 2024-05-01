@@ -1,8 +1,7 @@
 # Validation rules according to SLPF specification
 
-from openc2lib.actions import Actions
-from openc2lib.response import StatusCode
-from openc2lib.datatypes import ActionTargets, ActionArguments, TargetEnum
+from openc2lib import Actions, StatusCode, ActionTargets, ActionArguments, TargetEnum
+
 from openc2lib.profiles.slpf.profile import profile_name
 
 AllowedActions = [ Actions.query, Actions.deny, Actions.allow, Actions.deny, Actions.update, Actions.delete]

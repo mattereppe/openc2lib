@@ -1,15 +1,12 @@
 import logging
 import sys
-from openc2lib.consumer import Consumer
+
+import openc2lib as oc2
+
 from openc2lib.encoders.json_encoder import JSONEncoder
-from openc2lib.encoder import Encoder
 from openc2lib.transfers.http_transfer import HTTPTransfer
-from openc2lib.transfer	import Transfer
-from openc2lib.message import Response
-from openc2lib.datatypes import *
 from openc2lib.actuators.dumb_actuator import DumbActuator
 from openc2lib.actuators.iptables_actuator import IptablesActuator
-import openc2lib.response
 import openc2lib.profiles.slpf as slpf
 
 #logging.basicConfig(filename='consumer.log',level=logging.DEBUG)
@@ -24,7 +21,7 @@ def main():
 	actuators = {}
 	actuators[('slpf','iptables')]=IptablesActuator()
 
-	c = Consumer("testconsumer", actuators, JSONEncoder(), HTTPTransfer("127.0.0.1", 8080))
+	c = oc2.Consumer("testconsumer", actuators, JSONEncoder(), HTTPTransfer("127.0.0.1", 8080))
 
 
 	c.run()

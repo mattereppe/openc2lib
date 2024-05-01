@@ -1,14 +1,16 @@
 import enum
 import dataclasses
 import uuid
-from openc2lib.actions import Actions 
-from openc2lib.target import Target
-from openc2lib.response import * # This should be made safer by defining __all__ in openc2.targets
-from openc2lib.args import Args
-from openc2lib.actuator import Actuator
-import openc2lib.actuators
-import openc2lib.basetypes
-from openc2lib.datatypes import DateTime
+
+from openc2lib.types.actions import Actions 
+from openc2lib.types.datatypes import DateTime
+from openc2lib.types.language import Record, Map
+
+from openc2lib.core.target import Target
+from openc2lib.core.response import StatusCode, Results
+from openc2lib.core.args import Args
+
+from openc2lib.core.actuator import Actuator
 
 _OPENC2_CONTENT_TYPE = "application/openc2lib"
 _OPENC2_VERSION = "version=1.0"
@@ -49,7 +51,7 @@ class Message:
 
 # Init and other standard methods are automatically created
 @dataclasses.dataclass
-class Command(Content, openc2lib.basetypes.Record):
+class Command(Content, Record):
 	action: Actions
 	target: Target
 	args: Args = None
@@ -67,7 +69,7 @@ class Command(Content, openc2lib.basetypes.Record):
 			self.actuator = Actuator(self.actuator)
 
 
-class Response(Content, openc2lib.basetypes.Map):
+class Response(Content, Map):
 	fieldtypes = dict(status= StatusCode, status_text= str, results= Results)
 	msg_type = MessageType.response
 

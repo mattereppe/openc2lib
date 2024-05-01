@@ -1,4 +1,4 @@
-from openc2lib.basetypes import Enumerated
+from openc2lib import Enumerated
 
 class DropProcess(Enumerated):
 	none=1

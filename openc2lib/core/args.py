@@ -1,8 +1,8 @@
 import logging
 
-from openc2lib.datatypes import DateTime, Duration, ResponseType
-from openc2lib.basetypes import Map
-from openc2lib.profile import Profiles
+from openc2lib.types.datatypes import DateTime, Duration, ResponseType
+from openc2lib.types.language import Map
+from openc2lib.core.profile import Profiles
 
 logger = logging.getLogger('openc2lib')
 

@@ -1,5 +1,5 @@
 import aenum 
-from openc2lib.basetypes import Enumerated
+from openc2lib.types.language import Enumerated
 
 # New actions can be registered with the following syntax:
 # Actions.add('<action_name>', <action_id>)
