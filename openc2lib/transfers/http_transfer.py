@@ -227,7 +227,7 @@ class HTTPTransfer(Transfer):
 			hdrs, data = server.respond(resp, encoder)
 			logger.debug("Sending response: %s", data)
 
-			return data, resp.status
+			return data, resp.status.value
 
 		app.run(debug=True, host=self.host, port=self.port)
 
