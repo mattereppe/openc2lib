@@ -59,7 +59,7 @@ class DateTime:
 		if timestamp is None:
 			timestamp = self.time
 
-		return datetime.datetime.fromtimestamp(timestamp/1000).strftime('%a, %w %b %Y %H:%M:%S %Z')
+		return datetime.datetime.fromtimestamp(timestamp/1000).strftime('%a, %d %b %Y %H:%M:%S %Z')
 
 # A time (positive number) expressed in milliseconds
 class Duration(int):
