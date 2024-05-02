@@ -3,9 +3,9 @@ import requests
 import logging
 import copy
 
-from flask import Flask, request
+from flask import Flask, request, make_response
 
-from openc2lib import Transfer, MessageType, Message, Command, Response, Content, Encoders
+from openc2lib import Transfer, MessageType, Message, Command, Response, Content, Encoders, StatusCode, Version, Encoder, DateTime
 
 # TODO: remove this when the encoder is instantiated based on message content
 from openc2lib.encoders.json_encoder import JSONEncoder
@@ -123,39 +123,61 @@ class HTTPTransfer(Transfer):
 		self.payload.body['openc2'][content] = msg.content
 
 		# Encode the data
-		data = encoder.encode(self.payload)
+		if encoder is not None:
+			data = encoder.encode(self.payload)
+		else:
+			data = Encoder().encode(self.payload)
 
-		# Building the Content-Type header
-		content_type = f"{msg.content_type}+{encoder.getName()};{msg.version}"
-		headers={'Content-Type': content_type}
 
-		return headers, data
+		return data
 
-	def fromhttp(self, data, encoder):
+	def fromhttp(self, hdr, data):
+
+		# TODO: Check the HTTP headers for version/encoding
+		content_type =hdr['Content-type']
+
+		if not content_type.removeprefix('application/').startswith(Message.content_type):
+			raise ValueError("Unsupported content type")
+
+		enctype = content_type.removeprefix('application/'+Message.content_type+'+').split(';')[0]
+		try:
+			encoder = Encoders[enctype].value
+		except KeyError:
+			raise ValueError("Unsupported encoding scheme: " + enctype)
+
 		payload = encoder.decode(data, Payload)
 
 		# HTTP processing to extract the headers
 		# and the transport body
 		msg = Message(payload.getContent())
-		msg.request_id = payload.headers['request_id'] 
-		msg.created = payload.headers['created'] 
-		msg.from_ = payload.headers['from'] 
-		msg.to = payload.headers['to'] 
+		msg.request_id = payload.headers['request_id'] if 'request_id' in payload.headers.keys() else None
+		msg.created = payload.headers['created'] if 'created' in payload.headers.keys() else None
+		msg.from_ = payload.headers['from'] if 'from' in payload.headers.keys() else None
+		msg.to = payload.headers['to'] if 'to' in payload.headers.keys() else None
 		msg.msg_type = Payload.getMessageType(payload.getContentType())
+		msg.content_type = hdr['Content-type'].removeprefix('application/').split('+')[0]
+		msg.version = Version.fromstr(hdr['Content-type'].split(';')[1].removeprefix("version="))
+		msg.encoding = encoder
+		
 		try:
 			msg.status = msg.content['status']
 		except:
 			msg.status = None
 
 
-		return msg
+		return msg, encoder
 
 
 	# This function is used to send an HTTP request
 	def send(self, msg, encoder):
 		# HTTP processing to prepare the headers
 		# and the transport body
-		openc2headers, openc2data = self.tohttp(msg, encoder)
+		openc2data = self.tohttp(msg, encoder)
+
+		# Building the requested headers for the Request
+		content_type = f"application/{msg.content_type}+{encoder.getName()};version={msg.version}"
+		date = msg.created if msg.created else int(DateTime())
+		openc2headers={'Content-Type': content_type, 'Accept': content_type, 'Date': DateTime(date).httpdate()}
 
 		logger.info("Sending to %s", self.url)
 		logger.debug(" -> body: %s", openc2data)
@@ -163,38 +185,47 @@ class HTTPTransfer(Transfer):
 		# Send the OpenC2 message and get the response
 		response = requests.post(self.url, data=openc2data, headers=openc2headers)
 		logger.debug("HTTP got response: %s", response)
+		print("data: ", response.text)
 	
 		# TODO: How to manage HTTP response code? Can we safely assume they always match the Openc2 response?
 		try:
-			msg = self.fromhttp(response.text, encoder)
-		except:
+			if response.text is not "":
+				msg = self.fromhttp(response.headers, response.text)
+			else:
+				msg = None
+		except ValueError as e:
 			msg = Message(Content())
 			msg.status = response.status_code
 			logger.error("Unable to parse data: >%s<", response.text)
+			logger.error(str(e))
 
 		return msg
 
 	# This function is used to prepare the headers and content in a response
 	def respond(self, msg, encoder):
-		return self.tohttp(msg, encoder)
+
+		headers = {}
+		if msg is not None:
+			if encoder is not None:
+				content_type = f"application/{msg.content_type}+{encoder.getName()};version={msg.version}"
+			else:	
+				content_type = f"text/plain"
+			headers['Content-Type']= content_type
+			date = msg.created if msg.created else int(DateTime())
+			data = self.tohttp(msg, encoder)
+		else:
+			content_type = None
+			data = None
+			date = int(DateTime())
+
+		headers['Date'] = DateTime(date).httpdate()
+
+		return headers, data
 
 	def recv(self, headers, data):
 
-		# TODO: Check the HTTP headers for version/encoding
-		enctype = headers.get('Content-type')
-		content_type =headers['Content-type']
-		if not content_type.startswith(Message.content_type):
-			raise ValueError("Unsupported content type")
-		enctype = content_type.strip(Message.content_type+'+').split(';')[0]
-		try:
-			encoder = Encoders[enctype].value
-		except KeyError:
-			raise ValueError("Unsupported encoding scheme: ", enctype)
-		if not content_type.strip(Message.content_type+'+').split(';')[1] == Message.version:
-			raise ValueError("Unsupported openc2 version")
-
 		logger.debug("Received body: %s", data)
-		msg = self.fromhttp(data, encoder)
+		msg, encoder = self.fromhttp(headers, data)
 		logger.info("Received command: %s", msg)
   			
 		return msg, encoder
@@ -209,25 +240,38 @@ class HTTPTransfer(Transfer):
 		def consumer():
 			server = app.config['OPENC2']
 			callback = app.config['CALLBACK']
-			encoders=app.config['ENCODER']
-
+			encoder=app.config['ENCODER']
 			
 			try:
 				cmd, encoder = server.recv(request.headers, request.data.decode('UTF-8') )
-				logger.info("Received command: %s", cmd)
 				# TODO: Add the code to answer according to 'response_requested'
-				resp = callback(cmd)
-			except Exception as e:
+			except ValueError as e:
 				# TODO: Find better formatting (what should be returned if the request is not understood?)
-				return str(e), 501
+				content = Response(status=StatusCode.BADREQUEST, status_text=str(e))
+				resp = Message(content)
+				resp.content_type = Message.content_type
+				resp.version = Message.version
+				resp.encoder = encoder
+				resp.status=StatusCode.BADREQUEST
+			else:
+				logger.info("Received command: %s", cmd)
+				resp = callback(cmd)
 
+			
 			logger.debug("Got response: %s", resp)
 			
 			# TODO: Set HTTP headers as appropriate
 			hdrs, data = server.respond(resp, encoder)
 			logger.debug("Sending response: %s", data)
+			httpresp = make_response(data if data is not None else "") 
+			httpresp.headers = hdrs
 
-			return data, resp.status.value
+			if data is None:
+				resp_code = 200
+			else:
+				resp_code = resp.status.value
+
+			return httpresp, resp_code
 
 		app.run(debug=True, host=self.host, port=self.port)
 

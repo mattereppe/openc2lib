@@ -2,7 +2,7 @@
 # need to use the openc2lib.
 
 from openc2lib.types.language import Enumerated, Map, ArrayOf, MapOf
-from openc2lib.types.datatypes import L4Protocol, DateTime, Duration, TargetEnum, Nsid, ActionTargets, ActionArguments, Version
+from openc2lib.types.datatypes import L4Protocol, DateTime, Duration, TargetEnum, Nsid, ActionTargets, ActionArguments, Version, ResponseType
 from openc2lib.types.targettypes import IPv4Net, IPv4Connection, Features
 from openc2lib.types.actions import Actions
 

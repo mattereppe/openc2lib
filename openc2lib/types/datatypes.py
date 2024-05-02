@@ -54,6 +54,13 @@ class DateTime:
 		else:
 			self.time = timestamp
 
+	# RFC 7231       
+	def httpdate(self, timestamp=None):
+		if timestamp is None:
+			timestamp = self.time
+
+		return datetime.datetime.fromtimestamp(timestamp/1000).strftime('%a, %w %b %Y %H:%M:%S %Z')
+
 # A time (positive number) expressed in milliseconds
 class Duration(int):
 	def __init__(self, dur):

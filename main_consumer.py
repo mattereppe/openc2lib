@@ -10,8 +10,8 @@ from openc2lib.actuators.iptables_actuator import IptablesActuator
 import openc2lib.profiles.slpf as slpf
 
 #logging.basicConfig(filename='consumer.log',level=logging.DEBUG)
-#logging.basicConfig(stream=sys.stdout,level=logging.DEBUG)
-logging.basicConfig(stream=sys.stdout,level=logging.INFO)
+logging.basicConfig(stream=sys.stdout,level=logging.DEBUG)
+#logging.basicConfig(stream=sys.stdout,level=logging.INFO)
 logger = logging.getLogger('openc2')
 	
 def main():

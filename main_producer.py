@@ -26,13 +26,13 @@ def main():
 #	pf = slpf.slpf(dict(hostname='abete', named_group='firewalls', asset_id='iptables'))
 
 
-#arg = slpf.ExtArgs({'start_time': DateTime(), 'duration': 3000,'persistent': True, 'direction': slpf.Direction.ingress})
-	arg = slpf.ExtArgs(start_time=oc2.DateTime(), duration= 3000,persistent= True, direction= slpf.Direction.ingress)
+	arg = slpf.ExtArgs({'start_time': oc2.DateTime(), 'duration': 3000,'persistent': True, 'direction': slpf.Direction.ingress})
+#arg = slpf.ExtArgs(start_time=oc2.DateTime(), response_requested=oc2.ResponseType.complete, duration= 3000,persistent= True, direction= slpf.Direction.ingress)
 #	arg = Args({'start_time': DateTime(), 'duration': 3000})
 
-#	cmd = Command(Actions.scan, IPv4Net("130.251.17.0/24"), arg, actuator=pf)
+	cmd = oc2.Command(oc2.Actions.query, oc2.IPv4Net("130.251.17.0/24"), arg, actuator=pf)
 #	cmd = Command(Actions.scan, IPv4Net("130.251.17.0/24"))
-	cmd = oc2.Command(oc2.Actions.query, oc2.Features(), actuator=pf)
+#	cmd = oc2.Command(oc2.Actions.query, oc2.Features(), actuator=pf)
 	logger.info("Sending command: %s", cmd)
 
 	resp = p.sendcmd(cmd,consumers=["tnt-lab.unige.it"])

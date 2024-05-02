@@ -1,9 +1,11 @@
 import logging
 
+from openc2lib.types.datatypes import DateTime, ResponseType
+
 from openc2lib.core.encoder import Encoder
 from openc2lib.core.transfer import Transfer
 from openc2lib.core.message import Message, Response
-from openc2lib.core.response import StatusCode
+from openc2lib.core.response import StatusCode, StatusCodeDescription
 
 logger = logging.getLogger('openc2')
 
@@ -21,8 +23,7 @@ class Consumer:
 		if not transfer: transfer = self.transfer
 		if not transfer: raise ValueError('Missing transfer object')
 
-#transfer.run(dispatch, actuators)
-		transfer.run(self.dispatch)
+		transfer.run(self.dispatch, self.encoder)
 
 
 	def dispatch(self, msg):
@@ -68,29 +69,57 @@ class Consumer:
 		except KeyError:
 			response = Response(status=StatusCode.NOTFOUND, status_text='No actuator available')
 			return self.__respmsg(msg, response)
-			
+
+		print(msg.content)
+		if msg.content.args:
+			if 'response_requested' in msg.content.args.keys():
+				match msg.content.args['response_requested']:
+					case ResponseType.none:
+						response_content = None
+					case ResponseType.ack:
+						response_content = Response(status=StatusCode.PROCESSING, status_text=StatusCodeDescription[StatusCode.PROCESSING])
+						# TODO: Spawn a process to run the process offline
+						logger.warn("Command: %s not run! -- Missing code")
+					case ResponseType.status:
+						response_content = Response(status=StatusCode.PROCESSING, status_text=StatusCodeDescription[StatusCode.PROCESSING])
+						# TODO: Spawn a process to run the process offline
+						logger.warn("Command: %s not run! -- Missing code")
+					case ResponseType.complete:
+						response_content = self.__runcmd(msg, actuator)
+					case _:
+						response_content = Respnonse(status=StatusCode.BADREQUEST, status_text="Invalid response requested")
+			else:
+				# Default: ResponseType == complete. Return an answer after the command is executed.
+				response_content = self.__runcmd(msg, actuator)
+					
+		logger.debug("Actuator %s returned: %s", actuator, response_content)
+
+		# Add the metadata to be returned to the Producer
+		return self.__respmsg(msg, response_content)
+
+	def __runcmd(self, msg, actuator):
 		# Run the command and collect the response
 		# TODO: Define how to manage concurrent execution from more than one actuator
 		try:
 			# TODO: How to merge multiple responses?
 			# for a in actuators.items(): 
-			response = actuator[0].run(msg.content) 
+			response_content = actuator[0].run(msg.content) 
 		except (IndexError,AttributeError):
-			response = Response(status=StatusCode.NOTFOUND, status_text='No actuator available')
-			
-		logger.debug("Actuator %s returned: %s", actuator, response)
+			response_content = Response(status=StatusCode.NOTFOUND, status_text='No actuator available')
 
-		# Add the metadata to be returned to the Producer
-		return self.__respmsg(msg, response)
-
+		return response_content
 
 	def __respmsg(self, msg, response):
-		respmsg = Message(response)
-		respmsg.from_=self.consumer
-		respmsg.to=msg.from_
-		respmsg.content_type=msg.content_type
-		respmsg.request_id=msg.request_id
-		respmsg.status=response['status']
+		if response:
+			respmsg = Message(response)
+			respmsg.from_=self.consumer
+			respmsg.to=msg.from_
+			respmsg.content_type=msg.content_type
+			respmsg.request_id=msg.request_id
+			respmsg.created=int(DateTime())
+			respmsg.status=response['status']
+		else:
+			respmsg = None
 		logger.debug("Response to be sent: %s", respmsg)
 
 		return respmsg

@@ -3,7 +3,7 @@ import dataclasses
 import uuid
 
 from openc2lib.types.actions import Actions 
-from openc2lib.types.datatypes import DateTime
+from openc2lib.types.datatypes import DateTime, Version
 from openc2lib.types.language import Record, Map
 
 from openc2lib.core.target import Target
@@ -12,8 +12,8 @@ from openc2lib.core.args import Args
 
 from openc2lib.core.actuator import Actuator
 
-_OPENC2_CONTENT_TYPE = "application/openc2lib"
-_OPENC2_VERSION = "version=1.0"
+_OPENC2_CONTENT_TYPE = "openc2"
+_OPENC2_VERSION = Version(1,0)
 
 class MessageType(enum.Enum):
 	command = 1
@@ -32,7 +32,8 @@ class Message:
 	created: int = None
 	from_: str = None
 	to: [] = None
-	version = _OPENC2_VERSION
+	version: Version = _OPENC2_VERSION
+	encoding: object = None
 	
 	def __post_init__(self ):
 		self.request_id = str(uuid.uuid4()) 

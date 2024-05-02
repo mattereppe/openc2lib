@@ -27,7 +27,7 @@ class Encoder:
 
 	@staticmethod
 	def encode(obj):
-		return Encoder.todict(obj)
+		return str(Encoder.todict(obj))
 
 	@staticmethod
 	def decode(msgtype, msg):
