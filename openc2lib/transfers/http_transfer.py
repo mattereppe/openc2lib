@@ -189,7 +189,7 @@ class HTTPTransfer(Transfer):
 	
 		# TODO: How to manage HTTP response code? Can we safely assume they always match the Openc2 response?
 		try:
-			if response.text is not "":
+			if response.text != "":
 				msg = self.fromhttp(response.headers, response.text)
 			else:
 				msg = None
@@ -218,7 +218,9 @@ class HTTPTransfer(Transfer):
 			data = None
 			date = int(DateTime())
 
-		headers['Date'] = DateTime(date).httpdate()
+		# Date is currently autmatically inserted by Flask (probably 
+		# after I used 'make_response')
+		#headers['Date'] = DateTime(date).httpdate()
 
 		return headers, data
 
