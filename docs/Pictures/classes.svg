@@ -2,9 +2,9 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="162.03333mm"
-   height="85.875244mm"
-   viewBox="-3 -2 141.14548 74.805"
+   width="159.903mm"
+   height="92.093002mm"
+   viewBox="-5 -4 139.28978 80.221222"
    version="1.1"
    id="svg1"
    inkscape:version="1.3.2 (091e20e, 2023-11-25)"
@@ -23,15 +23,16 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
-     inkscape:zoom="0.88194444"
-     inkscape:cx="254.55118"
-     inkscape:cy="426.33071"
-     inkscape:window-width="1768"
-     inkscape:window-height="1203"
-     inkscape:window-x="793"
-     inkscape:window-y="97"
+     inkscape:zoom="2.0705103"
+     inkscape:cx="258.39041"
+     inkscape:cy="124.60696"
+     inkscape:window-width="2144"
+     inkscape:window-height="1249"
+     inkscape:window-x="131"
+     inkscape:window-y="67"
      inkscape:window-maximized="0"
-     inkscape:current-layer="g18-2" />
+     inkscape:current-layer="layer1"
+     showgrid="false" />
   <defs
      id="defs1">
     <marker
@@ -153,14 +154,21 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-31.172917,-29.35488)">
+     transform="translate(-34.172917,-25.362519)">
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke:#606060;stroke-width:0.264583;stroke-dasharray:1.05833, 0.264583;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;paint-order:markers fill stroke"
+       id="rect1"
+       width="33.221313"
+       height="72.033134"
+       x="133.62476"
+       y="27.93429" />
     <rect
        style="fill:#ffffff;fill-opacity:1;stroke:#606060;stroke-width:0.264583;stroke-dasharray:1.05833, 0.264583;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;paint-order:markers fill stroke"
        id="rect1-8-0-8"
        width="33.221321"
-       height="66.690094"
+       height="72.033134"
        x="95.698265"
-       y="33.277336" />
+       y="27.93429" />
     <rect
        style="fill:#f1f1f1;fill-opacity:1;stroke:#000000;stroke-width:0.264583;stroke-opacity:1;-inkscape-stroke:none;paint-order:markers fill stroke"
        id="rect1-8-0"
@@ -170,7 +178,7 @@
        y="50.57106" />
     <g
        id="g16"
-       transform="translate(10.8,-63.6)">
+       transform="translate(10.8,-61.295245)">
       <rect
          style="fill:#919191;fill-opacity:1;stroke:#696969;stroke-width:0.465;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke;stop-color:#000000"
          id="rect879"
@@ -204,7 +212,7 @@
     </g>
     <g
        id="g17"
-       transform="translate(10.8,-63.6)">
+       transform="translate(10.8,-61.295245)">
       <rect
          style="fill:#919191;fill-opacity:1;stroke:#696969;stroke-width:0.465;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke;stop-color:#000000"
          id="rect879-5"
@@ -238,7 +246,7 @@
     </g>
     <g
        id="g12"
-       transform="translate(10.8,-63.6)">
+       transform="translate(10.8,-61.295245)">
       <rect
          style="font-variation-settings:normal;vector-effect:none;fill:#565656;fill-opacity:1;stroke:#000000;stroke-width:0.465;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;paint-order:markers fill stroke;stop-color:#000000"
          id="rect1132"
@@ -270,7 +278,7 @@
     </g>
     <g
        id="g13"
-       transform="translate(10.8,-63.6)">
+       transform="translate(10.8,-61.295245)">
       <rect
          style="font-variation-settings:normal;vector-effect:none;fill:#565656;fill-opacity:1;stroke:#000000;stroke-width:0.419769;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;paint-order:markers fill stroke;stop-color:#000000"
          id="rect1132-0"
@@ -307,36 +315,36 @@
     </g>
     <path
        style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="m 41.16942,45.54806 v 1.48599 h 24.787942 v -1.48599"
+       d="m 41.16942,47.852815 v 1.48599 h 24.787942 v -1.48599"
        id="path8341"
        sodipodi:nodetypes="cccc" />
     <path
        style="fill:none;stroke:#000000;stroke-width:0.265;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Send)"
-       d="m 53.563391,46.8997 v 1.62034"
+       d="m 53.563391,49.204455 v 1.62034"
        id="path8456"
        sodipodi:nodetypes="cc" />
     <path
        style="fill:none;stroke:#000000;stroke-width:0.265;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Send)"
-       d="m 53.563391,60.47664 v 1.61213"
+       d="m 53.563391,62.781395 v 1.61213"
        id="path8458"
        sodipodi:nodetypes="cc" />
     <path
        style="fill:none;stroke:#000000;stroke-width:0.265;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Send)"
-       d="m 53.563391,71.79436 v 2.27563"
+       d="m 53.563391,74.099115 v 2.27563"
        id="path8460"
        sodipodi:nodetypes="cc" />
     <path
        style="fill:none;stroke:#000000;stroke-width:0.265;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Send)"
-       d="m 53.563391,83.77558 v 2.1413"
+       d="m 53.563391,86.080335 v 2.1413"
        id="path8462"
        sodipodi:nodetypes="cc" />
     <path
        style="font-variation-settings:normal;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.265;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#Arrow1Send);stop-color:#000000"
-       d="M 56.530151,39.49823 H 51.058242"
+       d="M 56.530151,41.802985 H 51.058242"
        id="path764" />
     <g
        id="g14"
-       transform="translate(10.8,-63.6)">
+       transform="translate(10.8,-61.295245)">
       <rect
          style="font-variation-settings:normal;vector-effect:none;fill:#565656;fill-opacity:1;stroke:#000000;stroke-width:0.419769;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;paint-order:markers fill stroke;stop-color:#000000"
          id="rect1132-7"
@@ -373,7 +381,7 @@
     </g>
     <g
        id="g15"
-       transform="translate(10.8,-63.6)">
+       transform="translate(10.8,-61.295245)">
       <rect
          style="font-variation-settings:normal;vector-effect:none;fill:#565656;fill-opacity:1;stroke:#000000;stroke-width:0.419769;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;paint-order:markers fill stroke;stop-color:#000000"
          id="rect1132-09"
@@ -412,24 +420,35 @@
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:1.25;font-family:Arial;-inkscape-font-specification:Arial;stroke-width:0.264583"
        x="98.539207"
-       y="49.469345"
+       y="49.930298"
        id="text2"><tspan
          sodipodi:role="line"
          id="tspan2"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;font-family:Arial;-inkscape-font-specification:Arial;stroke-width:0.264583"
          x="98.539207"
-         y="49.469345">Consumer</tspan></text>
+         y="49.930298">Consumer</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:1.25;font-family:Arial;-inkscape-font-specification:Arial;stroke-width:0.264583"
-       x="95.631439"
-       y="31.923201"
+       x="95.245583"
+       y="25.93084"
        id="text2-5"><tspan
          sodipodi:role="line"
          id="tspan2-8"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;font-family:Arial;-inkscape-font-specification:Arial;stroke-width:0.264583"
-         x="95.631439"
-         y="31.923201">Controller</tspan></text>
+         style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;font-family:Arial;-inkscape-font-specification:'Arial Italic';stroke-width:0.264583"
+         x="95.245583"
+         y="25.93084">Controller</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:1.25;font-family:Arial;-inkscape-font-specification:Arial;stroke-width:0.264583"
+       x="133.24442"
+       y="25.93084"
+       id="text2-5-4"><tspan
+         sodipodi:role="line"
+         id="tspan2-8-8"
+         style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;font-family:Arial;-inkscape-font-specification:'Arial Italic';stroke-width:0.264583"
+         x="133.24442"
+         y="25.93084">Server</tspan></text>
     <rect
        style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#373737;stroke-width:0.165;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers fill stroke"
        id="rect17"
@@ -495,25 +514,54 @@
          style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#6a6a6a;stroke-width:0.165;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:0.66, 0.165;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers fill stroke"
          id="rect18-3"
          width="27.848679"
-         height="5.9766769"
+         height="13.100739"
          x="95.999191"
-         y="76.558189" />
+         y="69.434128" />
       <text
          xml:space="preserve"
          style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Italic';text-align:center;text-anchor:middle;fill:#565656;fill-opacity:1;stroke-width:0.264583"
          x="109.84705"
-         y="76.736015"
+         y="73.173988"
          id="text17-4-2-8"><tspan
            sodipodi:role="line"
            id="tspan17-1-5-7"
            style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;font-family:Arial;-inkscape-font-specification:'Arial Italic';text-align:center;text-anchor:middle;fill:#565656;fill-opacity:1;stroke-width:0.264583"
            x="109.84705"
-           y="76.736015" /><tspan
+           y="73.173988" /><tspan
            sodipodi:role="line"
            style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;font-family:Arial;-inkscape-font-specification:'Arial Italic';text-align:center;text-anchor:middle;fill:#565656;fill-opacity:1;stroke-width:0.264583"
            x="109.84705"
-           y="80.263794"
+           y="76.701767"
            id="tspan26">Business logic</tspan></text>
+      <g
+         id="g2">
+        <g
+           id="g1">
+          <rect
+             style="fill:#ffffff;fill-opacity:1;stroke:#6a6a6a;stroke-width:0.165;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:0.66, 0.165;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers fill stroke"
+             id="rect18-3-0"
+             width="27.848679"
+             height="4.4182901"
+             x="134.29718"
+             y="68.589218" />
+          <text
+             xml:space="preserve"
+             style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Italic';text-align:center;text-anchor:middle;fill:#565656;fill-opacity:1;stroke-width:0.264583"
+             x="148.14503"
+             y="67.987854"
+             id="text17-4-2-8-3"><tspan
+               sodipodi:role="line"
+               id="tspan17-1-5-7-9"
+               style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;font-family:Arial;-inkscape-font-specification:'Arial Italic';text-align:center;text-anchor:middle;fill:#565656;fill-opacity:1;stroke-width:0.264583"
+               x="148.14503"
+               y="67.987854" /><tspan
+               sodipodi:role="line"
+               style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;font-family:Arial;-inkscape-font-specification:'Arial Italic';text-align:center;text-anchor:middle;fill:#565656;fill-opacity:1;stroke-width:0.264583"
+               x="148.14503"
+               y="71.515633"
+               id="tspan26-9">Business logic</tspan></text>
+        </g>
+      </g>
     </g>
     <g
        id="g20"
@@ -544,20 +592,20 @@
        style="fill:#f1f1f1;fill-opacity:1;stroke:#000000;stroke-width:0.264583;stroke-opacity:1;-inkscape-stroke:none;paint-order:markers fill stroke"
        id="rect20"
        width="27.62616"
-       height="64.655495"
+       height="59.089828"
        x="136.89906"
-       y="33.149734" />
+       y="38.715408" />
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:1.25;font-family:Arial;-inkscape-font-specification:Arial;stroke-width:0.264583"
-       x="136.68811"
-       y="31.924925"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:1.25;font-family:Arial;-inkscape-font-specification:Arial;font-variant-ligatures:normal;font-variant-position:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-alternates:normal;font-variant-east-asian:normal;font-feature-settings:normal;font-variation-settings:normal;text-indent:0;text-align:start;text-decoration-line:none;text-decoration-style:solid;text-decoration-color:#000000;letter-spacing:normal;word-spacing:normal;text-transform:none;writing-mode:lr-tb;direction:ltr;text-orientation:mixed;dominant-baseline:auto;baseline-shift:baseline;white-space:normal;opacity:1;vector-effect:none;fill:#000000;fill-opacity:1;stroke-width:0.264583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000;stop-opacity:1"
+       x="136.49461"
+       y="38.081432"
        id="text20"><tspan
          sodipodi:role="line"
          id="tspan20"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;font-family:Arial;-inkscape-font-specification:Arial;stroke-width:0.264583"
-         x="136.68811"
-         y="31.924925">Producer</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:1.25;font-family:Arial;-inkscape-font-specification:Arial;font-variant-ligatures:normal;font-variant-position:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-alternates:normal;font-variant-east-asian:normal;font-feature-settings:normal;font-variation-settings:normal;text-indent:0;text-align:start;text-decoration-line:none;text-decoration-style:solid;text-decoration-color:#000000;letter-spacing:normal;word-spacing:normal;text-transform:none;writing-mode:lr-tb;direction:ltr;text-orientation:mixed;dominant-baseline:auto;baseline-shift:baseline;white-space:normal;vector-effect:none;fill:#000000;fill-opacity:1;stroke-width:0.264583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000;stop-opacity:1"
+         x="136.49461"
+         y="38.081432">Producer</tspan></text>
     <rect
        style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#373737;stroke-width:0.165;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers fill stroke"
        id="rect21"
@@ -643,7 +691,7 @@
     </g>
     <g
        id="g26"
-       transform="translate(15.919389,-60.954167)">
+       transform="translate(15.919389,-58.649412)">
       <rect
          style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#373737;stroke-width:0.165;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers fill stroke"
          id="rect25"
