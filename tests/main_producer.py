@@ -19,7 +19,7 @@ logger = logging.getLogger('openc2producer')
 
 def main():
 	logger.info("Creating Producer")
-	p = oc2.Producer("ge.imati.cnr.ir", JSONEncoder(), HTTPTransfer("127.0.0.1", 8080))
+	p = oc2.Producer("producer.example.net", JSONEncoder(), HTTPTransfer("127.0.0.1", 8080))
 
 	pf = slpf.slpf({'hostname':'abete', 'named_group':'firewalls', 'asset_id':'iptables'})
 
@@ -29,7 +29,7 @@ def main():
 	cmd = oc2.Command(oc2.Actions.query, oc2.Features(), actuator=pf)
 
 	logger.info("Sending command: %s", cmd)
-	resp = p.sendcmd(cmd,consumers=["tnt-lab.unige.it"])
+	resp = p.sendcmd(cmd,consumers=["firewall.example.net"])
 	logger.info("Got response: %s", resp)
 
 
