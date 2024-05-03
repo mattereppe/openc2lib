@@ -16,8 +16,17 @@ Usage and extension of openc2lib have a shallow learning curve because data stru
 Before using openc2lib you must be familiar with the [OpenC2 Language Specification](https://docs.oasis-open.org/openc2/oc2ls/v1.0/cs02/oc2ls-v1.0-cs02.pdf). Even if not strictly required to getting started with the code, the [OpenC2 Architecture Specification]([https://docs.oasis-open.org/openc2/oc2arch/v1.0/cs01/oc2arch-v1.0-cs01.pdf](https://docs.oasis-open.org/openc2/oc2ls/v1.0/cs02/oc2ls-v1.0-cs02.pdf)) provides a good introduction to OpenC2 architectural patterns and terminology.
 Other relevant documentation is listed in the [Related documents](docs/relateddocuments.md) Section.
 
-### Terminology 
+### Architecture 
 
+The openc2lib provides the implementation of the _Producer_ and _Consumer_ roles, as defined by the [Language Specification](https://docs.oasis-open.org/openc2/oc2ls/v1.0/cs02/oc2ls-v1.0-cs02.pdf). The _Producer_ is expected to create and send _Messages_ to the _Consumer_; the latter returns _Responses_. Within the _Consumer_, _Actuators_ translate the _Commands_ into the specific instructions to control local or remote _Security Functions_, and collect any feedback on their execution. 
+
+![High-level architecture of the openc2lib and intended usage](docs/Pictures/architecture.svg)
+
+The _Producer_ and the _Consumer_ are expected to run on different hosts separated by a network. While the _Producer_ is expected to be used as Python library within existing code (for example, a controller), the _Consumer_ is a server process that listens on a given port waiting for _Commands_. 
+
+openc2lib provides the `Provider` and `Consumer` classes that implements the _Provider_ and _Consumer_ role, respectively. Each classes creates its own execution environment made of its own identifier, a protocol stack, and the available _Actuators_ (this last only for the `Consumer`). According to the [OpenC2 Architecture](https://docs.oasis-open.org/openc2/oc2arch/v1.0/cs01/oc2arch-v1.0-cs01.pdf](https://docs.oasis-open.org/openc2/oc2ls/v1.0/cs02/oc2ls-v1.0-cs02.pdf), a protocol stack includes an encoding language and a transfer protocol. Note that in the openc2lib implementation, the security services and transport protocols are already embedded in each specific transfer protocol.
+
+![Instantiation of the main openc2lib classes](docs/Pictures/classes.svg)
 
 
 ### Download 
