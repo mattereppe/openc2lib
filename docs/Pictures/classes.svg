@@ -2,9 +2,9 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="210mm"
-   height="297mm"
-   viewBox="0 0 210 297"
+   width="162.03333mm"
+   height="85.875244mm"
+   viewBox="-3 -2 141.14548 74.805"
    version="1.1"
    id="svg1"
    inkscape:version="1.3.2 (091e20e, 2023-11-25)"
@@ -24,8 +24,8 @@
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
      inkscape:zoom="0.88194444"
-     inkscape:cx="396.28346"
-     inkscape:cy="561.25984"
+     inkscape:cx="254.55118"
+     inkscape:cy="426.33071"
      inkscape:window-width="1768"
      inkscape:window-height="1203"
      inkscape:window-x="793"
@@ -61,8 +61,8 @@
        orient="auto"
        inkscape:stockid="Arrow1Send"
        inkscape:isstock="true"
-       markerWidth="1.843"
-       markerHeight="1.05314285"
+       markerWidth="1.8430001"
+       markerHeight="1.0531429"
        preserveAspectRatio="xMidYMid"
        markerUnits="userSpaceOnUse"
        viewBox="0 0 4.4434635 2.539122">
@@ -152,7 +152,8 @@
   <g
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
-     id="layer1">
+     id="layer1"
+     transform="translate(-31.172917,-29.35488)">
     <rect
        style="fill:#ffffff;fill-opacity:1;stroke:#606060;stroke-width:0.264583;stroke-dasharray:1.05833, 0.264583;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;paint-order:markers fill stroke"
        id="rect1-8-0-8"
@@ -511,7 +512,7 @@
            sodipodi:role="line"
            style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;font-family:Arial;-inkscape-font-specification:'Arial Italic';text-align:center;text-anchor:middle;fill:#565656;fill-opacity:1;stroke-width:0.264583"
            x="109.84705"
-           y="80.263786"
+           y="80.263794"
            id="tspan26">Business logic</tspan></text>
     </g>
     <g
