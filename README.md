@@ -9,6 +9,13 @@ openc2lib is an open-source implementation of the OpenC2 language written in Pyt
 
 Usage and extension of openc2lib have a shallow learning curve because data structures are explicitly designed to follow the language specification. Differently from many other implementations publicly available, introducing new transfer protocols, new message encoding formats, new profiles, and new implementations of actuators does not require modification to the core package; these extensions are easily to introduce because they largely reflect the language specification, hence minimal comprehension of the openc2lib is required to getting started.
 
+The openc2lib currently provides:
+- the implementation of the core functions that implement the OpenC2 Architecture and Language Specification;
+- an implementation of the json encoder;
+- an implementation of the HTTP transfer protocol;
+- the definition of the SLPF profile;
+- a dumb implementation of an actuator for the SLPF profile.
+
 ## Getting started
 
 ### Background
@@ -27,6 +34,8 @@ The _Producer_ and the _Consumer_ usually run on different hosts separated by a 
 openc2lib provides the `Provider` and `Consumer` classes that implements the _Provider_ and _Consumer_ role, respectively. Each class creates its own execution environment made of its own identifier, a protocol stack, and the available _Actuators_ (this last only for the `Consumer`). According to the [OpenC2 Architecture](https://docs.oasis-open.org/openc2/oc2arch/v1.0/cs01/oc2arch-v1.0-cs01.pdf](https://docs.oasis-open.org/openc2/oc2ls/v1.0/cs02/oc2ls-v1.0-cs02.pdf), a protocol stack includes an encoding language and a transfer protocol. Note that in the openc2lib implementation, the security services and transport protocols are already embedded in each specific transfer protocol.
 
 ![Instantiation of the main openc2lib classes](docs/Pictures/classes.svg)
+
+Building on the definitions in the OpenC2 Architecture and Language Specification, the openc2lib defines a _profile_ as the language extension for a specific class of security functions, whereas an _actuator_ is the concrete implementation for a specific security appliance. For instance, the [OpenC2 Profile for Stateless Packet Filtering](https://docs.oasis-open.org/openc2/oc2slpf/v1.0/cs01/oc2slpf-v1.0-cs01.pdf) is a _profile_ that defines all grammar and syntax rules for adding and removing rules from a packet firewall. The corresponding _actuators_ must translate this abstract interface to concrete commands (e.g., for iptables, pfsense). A more detailed discussion is present in the [Developing extensions](docs/developingextensions.md) Section.
 
 ### Software requirements
 
@@ -48,59 +57,88 @@ To use the library you must include the `<installdir>/src/` the Python path acco
 - add the library path in your code (this must be done for every module):
   ```
   import sys
-  sys.path.append('_<_your_path_here_>_')
+  sys.path.append('<_your_path_here_>')
   ```
 - add the library path to the PYTHONPATH environmental variable (this is not persistent when you close the shell):
   ```
-  export PYTHONPATH=$PYTHONPATH':<__your_path_here__>'
+  export PYTHONPATH=$PYTHONPATH':<_your_path_here_>'
   ```
 - add the library path to the venv (this is my preferred option):
   ```
-  echo '<__your_path_here__>/src' > .venv/lib/python3.11/site-packages/openc2lib.pth
+  echo '<_your_path_here_>/src' > .venv/lib/python3.11/site-packages/openc2lib.pth
   ```
 
+A few scripts are available in the `test` folder for sending a simple commmand to a remote actuator (see [Usage](#usage)).
 
+## Usage 
 
+Basic usage description covers the step to instantiate the `Producer` and the `Consumer`, and send messages. This requires the availability of a minimal set of encoders, transfer protocols, profiles, and actuator implementations. See the [Developing extensions](docs/developingextensions.md) Section to learn how to add your custom extensions. In the following we refer to the implementation of a `Controller` that sends _Commands_ and a `Server` that controls local security functions. Simple implementation of these functions are provided in the `test` folder.
 
+### Create a Server
 
+A `Server` is intended to instantiate and run the OpenC2 `Consumer`. Instantiation requires the definition of the protocol stack and the configuration of the `Actuator`s that will be exposed.
 
-
-
-## Add your files
-
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
-
+As a preliminary step, the necessary modules must be imported. Note that the openc2lib only includes core grammar and syntax elements, and all the necessary extensions (including encoders, trasfer protocols, profiles, and actuators) must be imported separetely. We will use json encoding and HTTP for our protocol stack, and an iptables actuator for stateless packet filtering:
 ```
-cd existing_repo
-git remote add origin https://gitlab1.polito.it/netgroup/thesis/2024-tanzarella_silvio.git
-git branch -M main
-git push -uf origin main
+import openc2lib as oc2
+
+from openc2lib.encoders.json_encoder import JSONEncoder
+from openc2lib.transfers.http_transfer import HTTPTransfer
+
+import openc2lib.profiles.slpf as slpf
+from openc2lib.actuators.iptables_actuator import IptablesActuator
 ```
 
-## Integrate with your tools
+First, we instantiate the `IptablesActuator` as an implementation of the `slpf` profile:
+```
+ actuators = {}
+ actuators[(slpf.nsid,'iptables')]=IptablesActuator()
+```
+(there is no specific configuration here because the `IptablesActuator` is currently a mockup)
 
-- [ ] [Set up project integrations](https://gitlab1.polito.it/netgroup/thesis/2024-tanzarella_silvio/-/settings/integrations)
+Next, we create the `Consumer` by instantiating its execution environment with the list of served `Actuator`s and the protocol stack. We also provide an identification string:
+```
+consumer = oc2.Consumer("consumer.example.net", actuators, JSONEncoder(), HTTPTransfer("127.0.0.1", 8080))
+```
+(the server will be listening on the loopback interface, port 8080)
 
-## Collaborate with your team
+Finally, start the server:
+```
+ consumer.run()
+```
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+The server code can indeed be improved by loading the configuration from file and setting up [Logging for openc2lib](docs/logging.md). 
 
-## Test and Deploy
+### Create the Controller
 
-Use the built-in continuous integration in GitLab.
+A `Controller` is intended to instantiate an OpenC2 `Producer` and to use it to control a remote security function. Instantiation requires the definition of the same protocol stack we used for the server, and an identifier:
+```
+producer = oc2.Producer("producer.example.net", JSONEncoder(), HTTPTransfer("127.0.0.1", 8080))
+```
+(the same modules must be imported as for the `Server` but the `iptables_actuator`)
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+Next we create the `Command`, by combining the _Action_, _Target_, _Arguments_, and _Actuator_. We will query the remote `slpf` actuator for its capabilities. Note how we mix common language elements with specific extensions for the `slpf` profile, as expected by the Specification:
+```
+pf = slpf.slpf({'hostname':'firewall', 'named_group':'firewalls', 'asset_id':'iptables'})
+arg = slpf.ExtArgs({'response_requested': oc2.ResponseType.complete})
+ 
+cmd = oc2.Command(oc2.Actions.query, oc2.Features(), actuator=pf)
+```
 
-***
+Finally, we send the command and catch the response:
+```
+resp = p.sendcmd(cmd)
+```
+(print out `resp` to check what the server returned)
+
+A concrete implementation of a _Controller_ would also include the business logic to update rules on specific events (even by specific input from the user).
+
+
+## Advanced usage
+
+
+
+
 
 # Editing this README
 
