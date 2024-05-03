@@ -40,7 +40,7 @@ Additional actions envisioned by profiles should be added in the profile folder,
 
 ## Types
 
-Types are the definition of data structures compliant with the requirements and naming in the [OpenC2 Language Specification](https://docs.oa    sis-open.org/openc2/oc2ls/v1.0/cs02/oc2ls-v1.0-cs02.pdf). This includes both data types and target types, listed in Sec. 3.4 (see [Mapping](#mapping)).
+Types are the definition of data structures compliant with the requirements and naming in the [OpenC2 Language Specification](https://docs.oasis-open.org/openc2/oc2ls/v1.0/cs02/oc2ls-v1.0-cs02.pdf). This includes both data types and target types, listed in Sec. 3.4 (see [Mapping](#mapping)).
 
 
 ### Base Types
