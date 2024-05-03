@@ -70,7 +70,7 @@ class Consumer:
 			response = Response(status=StatusCode.NOTFOUND, status_text='No actuator available')
 			return self.__respmsg(msg, response)
 
-		print(msg.content)
+		response_content = None
 		if msg.content.args:
 			if 'response_requested' in msg.content.args.keys():
 				match msg.content.args['response_requested']:
@@ -87,10 +87,11 @@ class Consumer:
 					case ResponseType.complete:
 						response_content = self.__runcmd(msg, actuator)
 					case _:
-						response_content = Respnonse(status=StatusCode.BADREQUEST, status_text="Invalid response requested")
-			else:
-				# Default: ResponseType == complete. Return an answer after the command is executed.
-				response_content = self.__runcmd(msg, actuator)
+						response_content = Response(status=StatusCode.BADREQUEST, status_text="Invalid response requested")
+
+		if not response_content:
+			# Default: ResponseType == complete. Return an answer after the command is executed.
+			response_content = self.__runcmd(msg, actuator)
 					
 		logger.debug("Actuator %s returned: %s", actuator, response_content)
 

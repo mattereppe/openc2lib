@@ -1,3 +1,7 @@
+#!../.venv/bin/python3
+# Example to use the OpenC2 library
+#
+
 import logging
 import sys
 
@@ -5,13 +9,11 @@ import openc2lib as oc2
 
 from openc2lib.encoders.json_encoder import JSONEncoder
 from openc2lib.transfers.http_transfer import HTTPTransfer
-from openc2lib.actuators.dumb_actuator import DumbActuator
 from openc2lib.actuators.iptables_actuator import IptablesActuator
 import openc2lib.profiles.slpf as slpf
 
 #logging.basicConfig(filename='consumer.log',level=logging.DEBUG)
-logging.basicConfig(stream=sys.stdout,level=logging.DEBUG)
-#logging.basicConfig(stream=sys.stdout,level=logging.INFO)
+logging.basicConfig(stream=sys.stdout,level=logging.INFO)
 logger = logging.getLogger('openc2')
 	
 def main():
@@ -26,23 +28,6 @@ def main():
 
 	c.run()
 
-
-
-#print(msg)
-#print(msg.content)
-#
-##print(type(msg.content.target))
-#
-#print("Creating response")
-#
-#
-#print(r)
-#
-#c.reply(r)
-#
-#logger.debug('debug')
-#logger.warn('warn')
-#logger.error('error')
 
 if __name__ == "__main__":
 	main()

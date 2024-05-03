@@ -1,19 +1,22 @@
-#!/opt/homebrew/bin/python3
+#!../.venv/bin/python3
 # Example to use the OpenC2 library
 #
+
+import logging
+import sys
+#sys.path.insert(0,'/Users/matteo/Progetti/OpenC2/openc2/src')
+
+import openc2lib as oc2
 
 from openc2lib.encoders.json_encoder import JSONEncoder
 from openc2lib.transfers.http_transfer import HTTPTransfer
 
 import openc2lib.profiles.slpf as slpf
-import logging
-import sys
 
-import openc2lib as oc2
 
 #logging.basicConfig(filename='openc2.log',level=logging.DEBUG)
-logging.basicConfig(stream=sys.stdout,level=logging.DEBUG)
-#logging.basicConfig(stream=sys.stdout,level=logging.INFO)
+#logging.basicConfig(stream=sys.stdout,level=logging.DEBUG)
+logging.basicConfig(stream=sys.stdout,level=logging.INFO)
 logger = logging.getLogger('openc2producer')
 
 def main():
