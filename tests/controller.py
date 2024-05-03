@@ -24,7 +24,7 @@ def main():
 	pf = slpf.slpf({'hostname':'firewall', 'named_group':'firewalls', 'asset_id':'iptables'})
 
 
-	arg = slpf.ExtArgs({'response_requested': oc2.ResponseType.complete})
+	arg = slpf.Args({'response_requested': oc2.ResponseType.complete})
 
 	cmd = oc2.Command(oc2.Actions.query, oc2.Features(), actuator=pf)
 
