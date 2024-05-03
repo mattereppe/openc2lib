@@ -20,7 +20,7 @@ The openc2lib currently provides:
 
 ### Background
 
-Before using openc2lib you must be familiar with the [OpenC2 Language Specification](https://docs.oasis-open.org/openc2/oc2ls/v1.0/cs02/oc2ls-v1.0-cs02.pdf). Even if not strictly required to getting started with the code, the [OpenC2 Architecture Specification]([https://docs.oasis-open.org/openc2/oc2arch/v1.0/cs01/oc2arch-v1.0-cs01.pdf](https://docs.oasis-open.org/openc2/oc2ls/v1.0/cs02/oc2ls-v1.0-cs02.pdf)) provides a good introduction to OpenC2 architectural patterns and terminology.
+Before using openc2lib you must be familiar with the [OpenC2 Language Specification](https://docs.oasis-open.org/openc2/oc2ls/v1.0/cs02/oc2ls-v1.0-cs02.pdf). Even if not strictly required to getting started with the code, the [OpenC2 Architecture Specification](https://docs.oasis-open.org/openc2/oc2arch/v1.0/cs01/oc2arch-v1.0-cs01.pdf) provides a good introduction to OpenC2 architectural patterns and terminology.
 Other relevant documentation is listed in the [Related documents](docs/relateddocuments.md) Section.
 
 ### Architecture 
@@ -31,7 +31,7 @@ The openc2lib provides the implementation of the _Producer_ and _Consumer_ roles
 
 The _Producer_ and the _Consumer_ usually run on different hosts separated by a network. While the _Producer_ is expected to be used as Python library within existing code (for example, a controller), the _Consumer_ is a server process that listens on a given port waiting for _Commands_. 
 
-openc2lib provides the `Provider` and `Consumer` classes that implements the _Provider_ and _Consumer_ role, respectively. Each class creates its own execution environment made of its own identifier, a protocol stack, and the available _Actuators_ (this last only for the `Consumer`). According to the [OpenC2 Architecture](https://docs.oasis-open.org/openc2/oc2arch/v1.0/cs01/oc2arch-v1.0-cs01.pdf](https://docs.oasis-open.org/openc2/oc2ls/v1.0/cs02/oc2ls-v1.0-cs02.pdf), a protocol stack includes an encoding language and a transfer protocol. Note that in the openc2lib implementation, the security services and transport protocols are already embedded in each specific transfer protocol.
+openc2lib provides the `Provider` and `Consumer` classes that implements the _Provider_ and _Consumer_ role, respectively. Each class creates its own execution environment made of its own identifier, a protocol stack, and the available _Actuators_ (this last only for the `Consumer`). According to the [OpenC2 Architecture](https://docs.oasis-open.org/openc2/oc2arch/v1.0/cs01/oc2arch-v1.0-cs01.pdf), a protocol stack includes an encoding language and a transfer protocol. Note that in the openc2lib implementation, the security services and transport protocols are already embedded in each specific transfer protocol.
 
 ![Instantiation of the main openc2lib classes](docs/Pictures/classes.svg)
 
@@ -158,8 +158,9 @@ Contributions are wellcome for the implementation of the following extensions:
 - encoding format beyond json (no specification available);
 - transfer protocols (MQTT first);
 - implementation of SLPF `Actuator`s for different firewall technologies (both opensource and proprietary).
+- implementation of new and draft profiles.
 
-- 
+  
 ## Authors and acknowledgment
 
 TODO
