@@ -18,24 +18,46 @@ Other relevant documentation is listed in the [Related documents](docs/relateddo
 
 ### Architecture 
 
-The openc2lib provides the implementation of the _Producer_ and _Consumer_ roles, as defined by the [Language Specification](https://docs.oasis-open.org/openc2/oc2ls/v1.0/cs02/oc2ls-v1.0-cs02.pdf). The _Producer_ is expected to create and send _Messages_ to the _Consumer_; the latter returns _Responses_. Within the _Consumer_, _Actuators_ translate the _Commands_ into the specific instructions to control local or remote _Security Functions_, and collect any feedback on their execution. 
+The openc2lib provides the implementation of the _Producer_ and _Consumer_ roles, as defined by the [Language Specification](https://docs.oasis-open.org/openc2/oc2ls/v1.0/cs02/oc2ls-v1.0-cs02.pdf). The _Producer_ creates and sends _Messages_ to the _Consumer_; the latter returns _Responses_. Within the _Consumer_, _Actuators_ translate the _Commands_ into the specific instructions to control local or remote _Security Functions_, and collect any feedback on their execution. 
 
 ![High-level architecture of the openc2lib and intended usage](docs/Pictures/architecture.svg)
 
-The _Producer_ and the _Consumer_ are expected to run on different hosts separated by a network. While the _Producer_ is expected to be used as Python library within existing code (for example, a controller), the _Consumer_ is a server process that listens on a given port waiting for _Commands_. 
+The _Producer_ and the _Consumer_ usually run on different hosts separated by a network. While the _Producer_ is expected to be used as Python library within existing code (for example, a controller), the _Consumer_ is a server process that listens on a given port waiting for _Commands_. 
 
-openc2lib provides the `Provider` and `Consumer` classes that implements the _Provider_ and _Consumer_ role, respectively. Each classes creates its own execution environment made of its own identifier, a protocol stack, and the available _Actuators_ (this last only for the `Consumer`). According to the [OpenC2 Architecture](https://docs.oasis-open.org/openc2/oc2arch/v1.0/cs01/oc2arch-v1.0-cs01.pdf](https://docs.oasis-open.org/openc2/oc2ls/v1.0/cs02/oc2ls-v1.0-cs02.pdf), a protocol stack includes an encoding language and a transfer protocol. Note that in the openc2lib implementation, the security services and transport protocols are already embedded in each specific transfer protocol.
+openc2lib provides the `Provider` and `Consumer` classes that implements the _Provider_ and _Consumer_ role, respectively. Each class creates its own execution environment made of its own identifier, a protocol stack, and the available _Actuators_ (this last only for the `Consumer`). According to the [OpenC2 Architecture](https://docs.oasis-open.org/openc2/oc2arch/v1.0/cs01/oc2arch-v1.0-cs01.pdf](https://docs.oasis-open.org/openc2/oc2ls/v1.0/cs02/oc2ls-v1.0-cs02.pdf), a protocol stack includes an encoding language and a transfer protocol. Note that in the openc2lib implementation, the security services and transport protocols are already embedded in each specific transfer protocol.
 
 ![Instantiation of the main openc2lib classes](docs/Pictures/classes.svg)
 
+### Software requirements
 
-### Download 
+Python 3.9+ is required to run the openc2lib (Python 3.11 was used for development).
 
+### Download and setup
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+The openc2lib is currently available as source code only. Dowload it from github:
+```
+git clone https://github.com/mattereppe/openc2.git
+```
+(this creates an `openc2` folder).
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
-
+The repository includes a venv that contains all required Python 3.11 packages. Enter the `openc2` folder and activate the environment:
+```
+. .venv/bin/activate
+```
+To use the library you must include the `<installdir>/src/` the Python path according to the download directory. You can either:
+- add the library path in your code (this must be done for every module):
+  ```
+  import sys
+  sys.path.append('<_your__path_here_>')
+  ```
+- add the library path to the PYTHONPATH environmental variable (this is not persistent when you close the shell):
+  ```
+  export PYTHONPATH=$PYTHONPATH':<_your__path__here_>'
+  ```
+- add the library path to the venv (this is my preferred option):
+  ```
+  echo '<_your__path__here_>/src' > .venv/lib/python3.11/site-packages/openc2lib.pth
+  ```
 
 
 
