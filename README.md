@@ -9,14 +9,31 @@ openc2lib is an open-source implementation of the OpenC2 language written in Pyt
 
 Usage and extension of openc2lib have a shallow learning curve because data structures are explicitly designed to follow the language specification. Differently from many other implementations publicly available, introducing new transfer protocols, new message encoding formats, new profiles, and new implementations of actuators does not require modification to the core package; these extensions are easily to introduce because they largely reflect the language specification, hence minimal comprehension of the openc2lib is required to getting started.
 
-
-
-
 ## Getting started
+
+### Background
+
+Before using openc2lib you must be familiar with the [OpenC2 Language Specification](https://docs.oasis-open.org/openc2/oc2ls/v1.0/cs02/oc2ls-v1.0-cs02.pdf). Even if not strictly required to getting started with the code, the [OpenC2 Architecture Specification]([https://docs.oasis-open.org/openc2/oc2arch/v1.0/cs01/oc2arch-v1.0-cs01.pdf](https://docs.oasis-open.org/openc2/oc2ls/v1.0/cs02/oc2ls-v1.0-cs02.pdf)) provides a good introduction to OpenC2 architectural patterns and terminology.
+Other relevant documentation is listed in the [Related documents](docs/relateddocuments.md) Section.
+
+### Terminology 
+
+
+
+### Download 
+
 
 To make it easy for you to get started with GitLab, here's a list of recommended next steps.
 
 Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+
+
+
+
+
+
+
+
 
 ## Add your files
 
