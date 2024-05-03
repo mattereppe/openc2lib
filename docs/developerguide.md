@@ -7,27 +7,26 @@ This Section describes the main library structure and meaning, to serve as a ref
 The following table maps the OpenC2 elements and related Sections of the [OpenC2 Language Specification](https://docs.oa    sis-open.org/openc2/oc2ls/v1.0/cs02/oc2ls-v1.0-cs02.pdf) to the openc2lib modules where they are defined.
 
 
-| Name                | Section           | Location                     | Module           |
-|---------------------|-------------------|------------------------------|------------------|
+| Name                | Section   | Location   | Module           |
+|---------------------|-----------|------------|------------------|
+| Message             | 3.2       | core       | message.py       |
+| Content             | 3.3       | core       | content.py       |
+| OpenC2 Command      | 3.3.1     | core       | message.py       |
+| Action              | 3.3.1.1   | core       | actions.py       |
+| Target              | 3.3.1.2   | core       | target.py        |
+| Arguments           | 3.3.1.4   | core       | args.py          |
+| Actuator            | 3.3.1.3   | core       | actuator.py      |
+| OpenC2 Resposne     | 3.3.2     | core       | message.py       |
+| Status Code         | 3.3.2.1   | core       | response.py      |
+| Results             | 3.3.2.2   | core       | response.py      |
+| Target types        | 3.4.1     | types      | targettypes.py   |
+| Data types          | 3.4.2     | types      | datatypes.py     |
+| Base structures     | 3.1       | types      | basetypes.py     |
 
 
 
-
-  2 3.3.1 OpenC2 Command -> message.py
-  3 3.3.1.1 Action       -> actions.py
-  4 3.3.1.2 Target       -> target.py, targets.py
-  5 
-  6 3.3.2 OpenC2 Response-> message.py
-  7 3.3.2.1 Status-Code  -> response.py
-  8 3.3.2.2 Results      -> response.py
-  9 
- 10 
- 11 
- 12 3.4 Types definition
- 13 ====================
- 14 3.4.1 Target types -> targettypes.py
- 15 3.4.2 Data types   -> datatypes.py
-~                                              
+  
+                                               
 
 
 ## Core components
