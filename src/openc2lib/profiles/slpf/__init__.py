@@ -15,9 +15,9 @@ Targets.add('rule_number', RuleID, 1024, nsid)
 
 # According to the standard, extended targets must be prefixed with the nsid
 from openc2lib import ExtendedArguments
-from openc2lib.profiles.slpf.args import ExtArgs
+from openc2lib.profiles.slpf.args import Args
 
-ExtendedArguments.add(nsid, ExtArgs)
+ExtendedArguments.add(nsid, Args)
 
 from openc2lib import ExtendedResults
 from openc2lib.profiles.slpf.response import Results
