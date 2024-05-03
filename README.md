@@ -1,11 +1,13 @@
 # openc2lib: extensible OpenC2 Library
 
-## Purpose and scope
+## Description
 
 openc2lib is an open-source implementation of the OpenC2 language written in Python. It is explicitly designed with flexibility and extensibility in mind, meaning that additional profiles and actuators can be added without impacting the core library itself. For this reason, openc2lib is particullary suited for:
 - developers that are looking for a common interface to control their remote cybersecurity functions;
 - researchers that design new profiles for cybersecurity functions;
 - system integrators that need a common language for their cybersecurity frameworks. 
+
+Usage and extension of openc2lib have a shallow learning curve because data structures are explicitly designed to follow the language specification. Differently from many other implementations publicly available, introducing new transfer protocols, new message encoding formats, new profiles, and new implementations of actuators does not require modification to the core package; these extensions are easily to introduce because they largely reflect the language specification, hence minimal comprehension of the openc2lib is required to getting started.
 
 
 
