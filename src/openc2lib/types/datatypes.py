@@ -5,8 +5,10 @@ import aenum
 import datetime 
 import dataclasses
 
-from openc2lib.types.language import MapOf, Enumerated, ArrayOf
-from openc2lib.types.actions import Actions
+from openc2lib.types.basetypes import MapOf, Enumerated, ArrayOf
+
+from openc2lib.core.actions import Actions
+
 
 # The usage of the ipaddress module is compliant to what required in the
 # language specification for IPv4 addresses, especially the following points:

@@ -2,10 +2,10 @@ import enum
 import dataclasses
 import uuid
 
-from openc2lib.types.actions import Actions 
 from openc2lib.types.datatypes import DateTime, Version
-from openc2lib.types.language import Record, Map
+from openc2lib.types.basetypes import Record, Map
 
+from openc2lib.core.actions import Actions 
 from openc2lib.core.target import Target
 from openc2lib.core.response import StatusCode, Results
 from openc2lib.core.args import Args

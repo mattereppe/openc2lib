@@ -2,7 +2,7 @@
 #
 import aenum
 
-from openc2lib.types.language import Choice
+from openc2lib.types.basetypes import Choice
 from openc2lib.core.targets import Targets
 
 

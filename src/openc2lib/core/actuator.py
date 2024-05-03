@@ -1,6 +1,6 @@
 import aenum
 
-from openc2lib.types.language import Choice
+from openc2lib.types.basetypes  import Choice
 from openc2lib.core.profile import Profiles
 
 class Actuator(Choice):

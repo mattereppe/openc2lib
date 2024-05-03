@@ -1,4 +1,4 @@
-from openc2lib.types.language import EnumeratedID, Map, ArrayOf
+from openc2lib.types.basetypes import EnumeratedID, Map, ArrayOf
 from openc2lib.types.datatypes import Version, ActionTargets, Nsid
 
 class StatusCode(EnumeratedID):

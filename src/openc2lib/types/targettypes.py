@@ -8,7 +8,7 @@
 import dataclasses
 import ipaddress
 
-import openc2lib.types.language
+import openc2lib.types.basetypes
 import openc2lib.types.datatypes
 
 
@@ -56,7 +56,7 @@ class IPv4Net:
 
 
 @dataclasses.dataclass
-class IPv4Connection(openc2lib.types.language.Record):
+class IPv4Connection(openc2lib.types.basetypes.Record):
 	"OpenC2 IPv4 Connection"
 	src_addr: IPv4Net = None
 	src_port: int = None
@@ -76,6 +76,6 @@ class IPv4Connection(openc2lib.types.language.Record):
 	            f"src_port={self.src_port}, " \
 	            f"st_port={self.dst_port})"
 
-class Features(openc2lib.types.language.ArrayOf(openc2lib.types.datatypes.Feature)):
+class Features(openc2lib.types.basetypes.ArrayOf(openc2lib.types.datatypes.Feature)):
 # TODO: implmement control on the max number of elements
 	pass

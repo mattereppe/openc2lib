@@ -1,3 +1,5 @@
+# TODO: Merge this definition in target.py
+
 import aenum
 
 from openc2lib.types.targettypes import Features, IPv4Net, IPv4Connection
