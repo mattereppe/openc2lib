@@ -6,9 +6,9 @@ This Section describes the main library structure and meaning, to serve as a ref
 
 The following table maps the OpenC2 elements and related Sections of the [OpenC2 Language Specification](https://docs.oa    sis-open.org/openc2/oc2ls/v1.0/cs02/oc2ls-v1.0-cs02.pdf) to the openc2lib modules where they are defined.
 
------------------------------------------------------------------------------------------------------
+
 | Name                | Section           | Location                     | Module           |
------------------------------------------------------------------------------------------------------
+|---------------------|-------------------|------------------------------|------------------|
 
 
 
