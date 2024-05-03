@@ -9,29 +9,25 @@ import openc2lib as oc2
 
 from openc2lib.encoders.json_encoder import JSONEncoder
 from openc2lib.transfers.http_transfer import HTTPTransfer
-
+from openc2lib.actuators.iptables_actuator import IptablesActuator
 import openc2lib.profiles.slpf as slpf
 
-
-#logging.basicConfig(filename='openc2.log',level=logging.DEBUG)
+#logging.basicConfig(filename='consumer.log',level=logging.DEBUG)
 logging.basicConfig(stream=sys.stdout,level=logging.INFO)
-logger = logging.getLogger('openc2producer')
-
+logger = logging.getLogger('openc2')
+	
 def main():
-	logger.info("Creating Producer")
-	p = oc2.Producer("producer.example.net", JSONEncoder(), HTTPTransfer("127.0.0.1", 8080))
 
-	pf = slpf.slpf({'hostname':'abete', 'named_group':'firewalls', 'asset_id':'iptables'})
+# Instantiate the list of available actuators, using a dictionary which key
+# is the assed_id of the actuator.
+	actuators = {}
+	actuators[(slpf.nsid,'iptables')]=IptablesActuator()
 
-
-	arg = slpf.ExtArgs({'start_time': oc2.DateTime(), 'duration': 3000,'persistent': True, 'direction': slpf.Direction.ingress})
-
-	cmd = oc2.Command(oc2.Actions.query, oc2.Features(), actuator=pf)
-
-	logger.info("Sending command: %s", cmd)
-	resp = p.sendcmd(cmd,consumers=["firewall.example.net"])
-	logger.info("Got response: %s", resp)
+	c = oc2.Consumer("testconsumer", actuators, JSONEncoder(), HTTPTransfer("127.0.0.1", 8080))
 
 
-if __name__ == '__main__':
+	c.run()
+
+
+if __name__ == "__main__":
 	main()
