@@ -50,7 +50,7 @@ Define extensions to common types and elements defined in the Language Specifica
 - targets;
 - arguments;
 - response results;
-- actuator properties (already covered in the [specifier]() Section.
+- actuator properties (already covered in the [specifier](https://github.com/mattereppe/openc2/blob/main/docs/developingextensions.md#create-the-actuator-specifiers) Section.
 The list of Actions MUST NOT be extended (see Sec. 3.1.4 of the [Language Specification](https://docs.oasis-open.org/openc2/oc2ls/v1.0/cs02/oc2ls-v1.0-cs02.pdf)
 
 Extensions are currently possible for `Map` and derived base structures (`MapOf`). The extension (`Ext`) declares what is extended (`Base`), makes a copy of base field types, add the list of additional fields, and sets the nsid:
@@ -74,7 +74,10 @@ args = slpf.Args(...)   # <- This instantiate the extended Args class derived in
 ```
 
 
+targettypes
 
+
+targets????
 
 
 datatypes
