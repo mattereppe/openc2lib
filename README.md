@@ -48,15 +48,15 @@ To use the library you must include the `<installdir>/src/` the Python path acco
 - add the library path in your code (this must be done for every module):
   ```
   import sys
-  sys.path.append('<_your__path_here_>')
+  sys.path.append('_<_your_path_here_>_')
   ```
 - add the library path to the PYTHONPATH environmental variable (this is not persistent when you close the shell):
   ```
-  export PYTHONPATH=$PYTHONPATH':<_your__path__here_>'
+  export PYTHONPATH=$PYTHONPATH':<__your_path_here__>'
   ```
 - add the library path to the venv (this is my preferred option):
   ```
-  echo '<_your__path__here_>/src' > .venv/lib/python3.11/site-packages/openc2lib.pth
+  echo '<__your_path_here__>/src' > .venv/lib/python3.11/site-packages/openc2lib.pth
   ```
 
 
