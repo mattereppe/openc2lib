@@ -90,8 +90,34 @@ Targets.add('rule_number', RuleID, 1024, nsid)
 ```
 The id is taken from the specification (Table 2.1.2-2 in this case). 
 
+The registration of new `Args` and `Results` is even simpler:
+```
+from openc2lib.profiles.slpf.args import Args
+
+ExtendedArguments.add(nsid, Args)
+
+from openc2lib import ExtendedResults 
+ 
+ExtendedResults.add(nsid, Results)
+```
+(assuming the local extensions within the profiles have been named `Args` and `Results`).
+
+Registration can be done in the `__init__.py` file. 
+
+### Syntax validation
+
+Profiles are likely to restrict the possible combination of `Actions`, `Target`, and `Args`. Since these restrictions are common to all `Actuator`s, they can be defined only once within the profile. Specific functions must be exported to perform the validation; the internal implementation does not need to follow any specific template.
+
+
 ### Export modules and data
 
+Even if this step is not strictly required, it is recommended to pack every new definition under the main profile namespace. This simplifies access to exported data and structures. This operation can be done by importing all data, classes, and functions to be exported in the `__init__.py` module. Such elements can then be imported and used in a very simple and natural way under their profile namespace (which is very similar to what expected by the specifications):
+```
+import openc2lib.profiles.slpf as slpf
+
+Command(target=slpf.rule_number, ...)
+slpf.Args(...)
+```
 
 
 
