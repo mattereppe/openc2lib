@@ -232,7 +232,7 @@ class HTTPTransfer(Transfer):
   			
 		return msg, encoder
 	
-	def run(self, callback, encoder=None):
+	def receive(self, callback, encoder):
 		app = Flask(__name__)
 		app.config['OPENC2']=self
 		app.config['CALLBACK']=callback

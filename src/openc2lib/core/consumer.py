@@ -23,7 +23,7 @@ class Consumer:
 		if not transfer: transfer = self.transfer
 		if not transfer: raise ValueError('Missing transfer object')
 
-		transfer.run(self.dispatch, self.encoder)
+		transfer.receive(self.dispatch, self.encoder)
 
 
 	def dispatch(self, msg):

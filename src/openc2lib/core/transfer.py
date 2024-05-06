@@ -3,8 +3,7 @@
 class Transfer:
 
 	def send(self, msg, encoder):
-		enc = encoder.encode(msg)
+		pass
 
-	def recv(self, msg, encoder):
-		return encoder.decode(msg)
-
+	def receive(self, callback, encoder):
+		pass
