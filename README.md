@@ -68,11 +68,11 @@ To use the library you must include the `<installdir>/src/` the Python path acco
   echo '<_your_path_here_>/src' > .venv/lib/python3.11/site-packages/openc2lib.pth
   ```
 
-A few scripts are available in the `test` folder for sending a simple commmand to a remote actuator (see [Usage](#usage)).
+A few scripts are available in the `examples` folder of the repository for sending a simple commmand to a remote actuator (see [Usage](#usage)).
 
 ## Usage 
 
-Basic usage description covers the step to instantiate the `Producer` and the `Consumer`, and send messages. This requires the availability of a minimal set of encoders, transfer protocols, profiles, and actuator implementations. See the [Developing extensions](docs/developingextensions.md) Section to learn how to add your custom extensions. In the following we refer to the implementation of a `Controller` that sends _Commands_ and a `Server` that controls local security functions. Simple implementation of these functions are provided in the `test` folder.
+Basic usage description covers the step to instantiate the `Producer` and the `Consumer`, and send messages. This requires the availability of a minimal set of encoders, transfer protocols, profiles, and actuator implementations. See the [Developing extensions](docs/developingextensions.md) Section to learn how to add your custom extensions. In the following we refer to the implementation of a `Controller` that sends _Commands_ and a `Server` that controls local security functions. Simple implementation of these functions are provided in the `examples` folder.
 
 ### Create a Server
 
