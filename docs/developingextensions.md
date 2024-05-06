@@ -8,16 +8,38 @@ This Section gives basic guidelines to add extensions to the openc2lib. Extensio
 
 Extensions may be included in and delivered with openc2lib, or developed separately. There is no significant difference between the two methods, apart from the delivery process; the latter is not covered in this guide. There is no strict naming conventions for the extension modules, althought following a common convention facilitate the maintenance of the code by different developers.
 
-## Add new encoding formats
+## Adding new encoding formats
+
+Encoders are necessary to support new encoding formats. The definition of an `Encoder` must follows the general architecture described in the [Developer guide](https://github.com/mattereppe/openc2/blob/main/docs/developerguide.md#developer-guide). In a nutshell, each `Encoder` is expected to serialize OpenC2 messages. The translation between Python objects and dictionaries is already provided by the base `Encoder` class (by the `Encoder.todict()` and `Encoder.fromdict()` methods, which new Encoders are expected to extend.
+
+The definition of a new `Encoder` must provide:
+- a method for serializing OpenC2 commands;
+- a method for deserializing OpenC2 messages;
+- a class member with the name of the Encoder;
+- registration of the new `Encoder` (via the `@register_encoder` decorator).
+
+ ```
+@register_encoder
+class MyEncoder(Encoder):
+   encoder_type = 'json'
+   @staticmethod
+   def encode(obj):
+       ...
+ 
+   @staticmethod
+   def decode(msg, msgtype=None):
+      ...
+```
+
+See the [Developer guide](https://github.com/mattereppe/openc2/blob/main/docs/developerguide.md#developer-guide) for more detail about the base `Encoder` class and the available Encoders.
+
+
+## Adding new transfer protocols
 
 TODO
 
-## Add new transfer protocols
 
-TODO
-
-
-## Add new profiles
+## Adding new profiles
 
 To add a new profile within the openc2lib source code, create a new directory in the `src/openc2lib/profiles` folder. Preferably name the folder with the nsid of the profile to be developed (e.g., `slpf` for the Statless Packet Filter profile). 
 
@@ -119,7 +141,7 @@ Command(target=slpf.rule_number, ...)
 slpf.Args(...)
 ```
 
-## Add new actuators
+## Adding new actuators
 
 Implementing an `Actuator` is really straightforward. There are only two requirements for its interface:
 - an `Actuator` must set the class member `profile` to the profile it implements;
