@@ -9,7 +9,14 @@ OPENC2VERS=Version(1,0)
 class IptablesActuator:
 	profile = slpf
 
+
 	def run(self, cmd):
+		if not slpf.validate_command(cmd):
+			return Response(status=StatusCode.NOTIMPLEMENTED, status_text='Invalid Action/Target pair')
+
+		if not slpf.validate_args(cmd):
+			return Response(status=StatusCode.NOTIMPLEMENTED, status_text='Option not supported')
+
 		match cmd.action:
 			case Actions.query:
 				r = self.query(cmd)
