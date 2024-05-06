@@ -2,12 +2,12 @@
 
 from openc2lib import Actions, StatusCode, ActionTargets, ActionArguments, TargetEnum
 
-from openc2lib.profiles.slpf.profile import profile_name
+from openc2lib.profiles.slpf.nsid import nsid
 
 AllowedActions = [ Actions.query, Actions.deny, Actions.allow, Actions.deny, Actions.update, Actions.delete]
 
 # This is probably not strictly necessary
-AllowedTargets = [ 'feature', 'file', 'ipv4_net', 'ipv6_net', 'ipv4_connection', 'ipv6_connection' , profile_name+':rule_number']
+AllowedTargets = [ 'feature', 'file', 'ipv4_net', 'ipv6_net', 'ipv4_connection', 'ipv6_connection' , nsid+':rule_number']
 
 AllowedStatusCode = [StatusCode.PROCESSING, StatusCode.OK, StatusCode.BADREQUEST, StatusCode.INTERNALERROR, StatusCode.NOTIMPLEMENTED ] 
 
@@ -21,7 +21,7 @@ AllowedCommandTarget[Actions.deny] = [TargetEnum.ipv4_connection, TargetEnum.ipv
 #AllowedCommandTarget[Actions.deny] = [TargetEnum.ipv4_connection, TargetEnum.ipv6_connection,
 #	TargetEnum.ipv4_net, TargetEnum.ipv6_net]
 AllowedCommandTarget[Actions.query] = [TargetEnum.features]
-AllowedCommandTarget[Actions.delete] = [TargetEnum[profile_name+':rule_number']]
+AllowedCommandTarget[Actions.delete] = [TargetEnum[nsid+':rule_number']]
 #AllowedCommandTarget[Actions.update] = [TargetEnum.file]
 
 # Command Arguments Matrix (Table 2.3.2): valid Command/Arguments pairs.
@@ -33,8 +33,28 @@ AllowedCommandArguments[(Actions.allow, None)] = ['response_requested', 'start_t
 AllowedCommandArguments[(Actions.deny, None)] = ['response_requested', 'start_time', 'stop_time',
 	'duration','persistent','direction','insert_rule','drop_process']
 AllowedCommandArguments[(Actions.query, TargetEnum.features)] = ['response_requested']
-AllowedCommandArguments[(Actions.delete, TargetEnum[profile_name+':rule_number'])] = ['response_requested', 'start_time']
+AllowedCommandArguments[(Actions.delete, TargetEnum[nsid+':rule_number'])] = ['response_requested', 'start_time']
 #AllowedCommandArguments[(Actions.update, TargetEnum.file)] = ['response_requested', 'start_time']
 
+def validate_command(cmd):
+	try:
+		if cmd.action in AllowedActions and \
+			TargetEnum[cmd.target.getName()] in AllowedCommandTarget[cmd.action]:
+			return True
+		else:
+			return False
+	except:
+		return False
+
+def validate_args(cmd):
+	try:
+		if cmd.args is None: 
+			return True
+		for k,v in cmd.args.items():
+			if k not in AllowedCommandArguments[cmd.action, TargetEnum[cmd.target.getName()]]:
+				return False
+		return True
+	except:
+	  return False
 
 

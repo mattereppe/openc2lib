@@ -1,7 +1,8 @@
 import openc2lib as oc2
 
-from openc2lib.profiles.slpf.profile import profile_name
-from openc2lib.profiles.slpf.datatypes import DropProcess, Direction, RuleID
+import openc2lib.profiles.slpf.nsid as profile_name
+from openc2lib.profiles.slpf.datatypes import DropProcess, Direction
+from openc2lib.profiles.slpf.targettypes import RuleID
 
 class Args(oc2.Args):
 	extend = oc2.Args

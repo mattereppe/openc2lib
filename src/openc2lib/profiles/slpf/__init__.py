@@ -2,14 +2,16 @@
 #from . import *
 
 from openc2lib import Profile, Profiles
+
+from openc2lib.profiles.slpf.nsid import nsid
 from openc2lib.profiles.slpf.profile import *
 
-nsid = profile_name
 Profiles.add(nsid, slpf, 1024)
 
 from openc2lib import Targets
 from openc2lib import TargetEnum
-from openc2lib.profiles.slpf.datatypes import RuleID, Direction
+from openc2lib.profiles.slpf.datatypes import Direction
+from openc2lib.profiles.slpf.targettypes import RuleID
 
 Targets.add('rule_number', RuleID, 1024, nsid)
 
@@ -24,4 +26,4 @@ from openc2lib.profiles.slpf.response import Results
 
 ExtendedResults.add(nsid, Results)
 
-from openc2lib.profiles.slpf.validation import AllowedCommandTarget
+from openc2lib.profiles.slpf.validation import AllowedCommandTarget, AllowedCommandArguments, validate_command, validate_args

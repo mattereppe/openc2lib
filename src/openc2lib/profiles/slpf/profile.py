@@ -1,12 +1,12 @@
-from openc2lib import Profile, Map, Nsid
+from openc2lib import Profile, Map
 
-profile_name = 'slpf'
+from openc2lib.profiles.slpf.nsid import nsid
 
 class slpf(Profile, Map):
 	fieldtypes = dict(hostname=str, named_group=str, asset_id=str, asset_tuple = [str])
 
 	def __init__(self, dic):
-		Profile.__init__(self, 'slpf')
+		Profile.__init__(self, nsid)
 		Map.__init__(self, dic)
 	
 	def __str__(self):
@@ -17,6 +17,3 @@ class slpf(Profile, Map):
 		id += ')'
 		return id
 
-	@classmethod
-	def validate_cmd(cmd):
-		pass

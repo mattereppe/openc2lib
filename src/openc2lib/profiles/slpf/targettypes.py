@@ -1,0 +1,2 @@
+class RuleID(int):
+	pass

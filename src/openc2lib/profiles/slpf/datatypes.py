@@ -10,5 +10,3 @@ class Direction(Enumerated):
 	ingress=2
 	egress=3
 
-class RuleID(int):
-	pass

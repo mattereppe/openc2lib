@@ -1,7 +1,7 @@
 import openc2lib as oc2
 
-from openc2lib.profiles.slpf.profile import profile_name
-from openc2lib.profiles.slpf.datatypes import RuleID
+import openc2lib.profiles.slpf.nsid as profile_name
+from openc2lib.profiles.slpf.targettypes import RuleID
 
 class Results(oc2.Results):
 	extend = oc2.Results
