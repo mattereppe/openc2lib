@@ -32,7 +32,7 @@ class <nsid>(Profile, Map):
 ```
 (see the [User Guide](userguide.md) for `Map` documentation)
 
-The specifier must provide at least the following methods:
+The specifier can provide the following methods:
 - `__init__` (MANDATORY) to initialize both the `Profile` and the base type. The `Profile` initialization is standard:
   ```
   Profile.__init__(self, 'slpf')
@@ -106,7 +106,7 @@ Registration can be done in the `__init__.py` file.
 
 ### Syntax validation
 
-Profiles are likely to restrict the possible combination of `Actions`, `Target`, and `Args`. Since these restrictions are common to all `Actuator`s, they can be defined only once within the profile. Specific functions must be exported to perform the validation; the internal implementation does not need to follow any specific template.
+Profiles are likely to restrict the possible combination of `Actions`, `Target`, and `Args`. Since these restrictions are common to all `Actuator`s, they can be defined only once within the profile. Specific functions must be exported to perform the validation; the internal implementation does not need to follow any specific template. Note, however, that actuators are not expected to implement any possible Action/Target pair and support all Arguments described by the profile. For this reason, behind profile validation, each specific actuator will implement its internal validation.
 
 
 ### Export modules and data
@@ -119,10 +119,20 @@ Command(target=slpf.rule_number, ...)
 slpf.Args(...)
 ```
 
-
-
-
-
-
-
 ## Add new actuators
+
+Implementing an `Actuator` is really straightforward. There are only two requirements for its interface:
+- an `Actuator` must set the class member `profile` to the profile it implements;
+- an `Actuator` must implement a `run(cmd)` method that processes a command and returns the response.
+```
+class Actuator:
+  profile = slpf
+ 
+  
+  def run(self, cmd):
+     ...
+    return response
+```
+
+Internally, an `Actuator` is expected to have the configuration to locate the device it is controlling and the code to control it. It is also expected to perform command validation, to detect any action or option that it does not support (which may be more restrictive than the generic profile validation).
+
