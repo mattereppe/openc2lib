@@ -25,7 +25,7 @@ To add a new profile within the openc2lib source code, create a new directory in
 
 The _specifiers_ are the structure of any `Actuator` that implements the profile. They are defined by the Profile Specification (e.g., see [Sec. 2.4.1](https://docs.oasis-open.org/openc2/oc2slpf/v1.0/cs01/oc2slpf-v1.0-cs01.pdf) for the SLPF specifier).
 
-A specifier must be derived by `Profile` and the base structure it implements (likely it will be an OpenC2 `Map`). It is suggested to name it with the nsid of the profile:
+A specifier must be derived from `Profile` and the base structure it implements (likely, it will be an OpenC2 `Map`). It is suggested to name it with the nsid of the profile:
 ```
 class <nsid>(Profile, Map):
   ...
@@ -46,15 +46,17 @@ The specifier must provide at least the following methods:
 
 ### Define language extensions
 
-Define extensions to common types and elements defined in the Language Specification. The following elements can be extended:
+Define extensions to common types and elements described in the Language Specification. The following elements can be extended:
 - targets;
 - arguments;
 - response results;
 - actuator properties (already covered in the [specifier](https://github.com/mattereppe/openc2/blob/main/docs/developingextensions.md#create-the-actuator-specifiers) Section).
 
-The list of Actions MUST NOT be extended (see Sec. 3.1.4 of the [Language Specification](https://docs.oasis-open.org/openc2/oc2ls/v1.0/cs02/oc2ls-v1.0-cs02.pdf)).
+The list of `Actions` MUST NOT be extended (see Sec. 3.1.4 of the [Language Specification](https://docs.oasis-open.org/openc2/oc2ls/v1.0/cs02/oc2ls-v1.0-cs02.pdf)).
 
-Extensions are currently possible for `Map` and derived base structures (`MapOf`). This applies to both arguments (`Args`) and response results (`Results`). The extension (`Ext`) declares what is extended (`Base`), makes a copy of base field types, add the list of additional fields, and sets the nsid:
+It is strongly recommended to follow the same naming conventions as adopted by the openc2lib (see the [Developer Guide](https://github.com/mattereppe/openc2/blob/main/docs/developerguide.md#naming-conventions)).
+
+Extensions are currently possible for `Map` and derived base structures (`MapOf`). This applies to both arguments (`Args`) and response results (`Results`). The extension (`Ext`) declares what is extended (`Base`), makes a copy of base field types, adds the list of additional fields, and sets the nsid:
 ```
 class Ext(Base):
    extend = Base
@@ -74,14 +76,22 @@ args = Args(...)        # <- This instantiate the base Args class
 args = slpf.Args(...)   # <- This instantiate the extended Args class derived in the slpf profile
 ```
 
+The extension of `Argument` and `Result` will likely be based on additional structures. Define them as well in the profile folder. As best practice, data and target types should be defined in two different modules (datatypes and targettypes, respecitvely, see the [Developer guide](https://github.com/mattereppe/openc2/blob/main/docs/developerguide.md).
 
-targettypes
+### Register extensions
 
+Extensions to `Target`, `Args`, and `Results` must be known to openc2lib to properly encode and decode messages that use these elements. 
 
-targets????
+The registration of a new `Target` includes its name, class, id, and nsid. For instance, to register the 'rule_number' target defined by the SLPF profile:
+```
+from openc2lib import Targets
 
+Targets.add('rule_number', RuleID, 1024, nsid)
+```
+The id is taken from the specification (Table 2.1.2-2 in this case). 
 
-datatypes
+### Export modules and data
+
 
 
 
