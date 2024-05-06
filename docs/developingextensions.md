@@ -13,22 +13,25 @@ Extensions may be included in and delivered with openc2lib, or developed separat
 Encoders are necessary to support new encoding formats. The definition of an `Encoder` must follows the general architecture described in the [Developer guide](https://github.com/mattereppe/openc2/blob/main/docs/developerguide.md#developer-guide). In a nutshell, each `Encoder` is expected to serialize OpenC2 messages. The translation between Python objects and dictionaries is already provided by the base `Encoder` class (by the `Encoder.todict()` and `Encoder.fromdict()` methods, which new Encoders are expected to extend.
 
 The definition of a new `Encoder` must provide:
-- a method for serializing OpenC2 commands;
-- a method for deserializing OpenC2 messages;
-- a class member with the name of the Encoder;
-- registration of the new `Encoder` (via the `@register_encoder` decorator).
+- a method `encode` for serializing OpenC2 commands;
+- a method `decode` for deserializing OpenC2 messages;
+- a class member `encoder_type` with the name of the Encoder;
+- registration of the new `Encoder` via the `@register_encoder` decorator.
 
  ```
 @register_encoder
 class MyEncoder(Encoder):
    encoder_type = 'json'
+
    @staticmethod
    def encode(obj):
+       (dic =  Encoder.todict(obj) )
        ...
  
    @staticmethod
    def decode(msg, msgtype=None):
       ...
+      ( return Encoder.fromdict(msgtype, msg) )
 ```
 
 See the [Developer guide](https://github.com/mattereppe/openc2/blob/main/docs/developerguide.md#developer-guide) for more detail about the base `Encoder` class and the available Encoders.
@@ -36,7 +39,31 @@ See the [Developer guide](https://github.com/mattereppe/openc2/blob/main/docs/de
 
 ## Adding new transfer protocols
 
-TODO
+A transfer protocol is derived from the `Transfer` class:
+```
+class Transfer:
+
+   def send(self, msg, encoder):
+      pass
+
+  def receive(self, callback, encode):
+     pass
+
+```
+
+A `Transfer` implementation is used for both sending and receiving OpenC2 messages, by using the  the `send()` and `receive()` method, respectively. The `receive()` method is expected to be blocking and to wait for messages until termination of the application.
+
+The `send()` takes an OpenC2 `Message` as first argument, which is expected to carry a `Content`. It returns the `Response` within another `Message`. The `Encoder` must be passed as second argument, and it is possible to use a different `Encoder` for each individual message. The `send()` message is used by the `Producer`. 
+
+The `receive()` takes a callback function from the `Consumer`, which is used to dispatch incoming messages to the corresponding `Actuator`. The `Encoder` must be passed as second argument, but it is only used when the encoding format is not present in the metadata; it is also used to answer messages in unknown formats. 
+
+The implementation of a `Transfer` is expected to:
+- perform any protocol-specific initialization, including loading configurations (e.g., certificates to be used in TLS/SSL handshakes);
+- manage the transmission and reception of `Message` metadata in a protocol-dependent way (this is defined by each corresponding OpenC2 specification).
+
+Implementation of new `Transfer`s included in the openc2lib must be placed in the `transfers` folder and be self-contained in a single module.
+
+
 
 
 ## Adding new profiles
