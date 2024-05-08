@@ -98,12 +98,14 @@ class Payload:
 
 
 class HTTPTransfer(Transfer):
-	def __init__(self, host, port = 80, endpoint = '/.well-known/openc2'):
+	def __init__(self, host, port = 80, endpoint = '/.well-known/openc2', usessl=False):
 		self.host = host
 		self.port = port
 		self.endpoint = endpoint
-		self.url = f"http://{host}:{port}{endpoint}"
+		self.scheme = 'https' if usessl else 'http'
+		self.url = f"{self.scheme}://{host}:{port}{endpoint}"
 		self.payload = Payload()
+		self.ssl_context = None
 
 	def tohttp(self, msg, encoder):
 		self.payload.headers = {}
@@ -183,7 +185,9 @@ class HTTPTransfer(Transfer):
 		logger.debug(" -> body: %s", openc2data)
 
 		# Send the OpenC2 message and get the response
-		response = requests.post(self.url, data=openc2data, headers=openc2headers)
+		if self.scheme == 'https':
+			logger.warning("Certificate validation disabled!")
+		response = requests.post(self.url, data=openc2data, headers=openc2headers, verify=False)
 		logger.debug("HTTP got response: %s", response)
 		print("data: ", response.text)
 	
@@ -275,15 +279,12 @@ class HTTPTransfer(Transfer):
 
 			return httpresp, resp_code
 
-		app.run(debug=True, host=self.host, port=self.port)
+		app.run(debug=True, host=self.host, port=self.port, ssl_context=self.ssl_context)
 
 
 class HTTPSTransfer(HTTPTransfer):
-	def __init__(self, host, port):
-		self.host = host
-		self.port = port
-
-	def send(self, msg, encoder):
-		pass
+	def __init__(self, host, port = 443, endpoint = '/.well-known/openc2'):
+		HTTPTransfer.__init__(self, host, port, endpoint, usessl=True)
+		self.ssl_context = "adhoc"
 
 
