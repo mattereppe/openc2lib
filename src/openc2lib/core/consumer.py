@@ -1,3 +1,9 @@
+"""OpenC2 Consumer
+
+The `Consumer` implements the expected behaviour of an OpenC2 Consumer server that dispatches OpenC2 Commands
+to the Actuators.
+"""
+
 import logging
 
 from openc2lib.types.datatypes import DateTime, ResponseType
@@ -10,7 +16,32 @@ from openc2lib.core.response import StatusCode, StatusCodeDescription
 logger = logging.getLogger('openc2')
 
 class Consumer:
-	def __init__(self, consumer, actuators=None, encoder: Encoder = None, transfer: Transfer = None):
+	"""OpenC2 Consumer
+
+		The `Consumer` is designed to dispatch OpenC2 `Message`s to the relevant `Actuator`. 
+		The current implementation receives the configuration at initialization time. It is therefore
+		not conceived to be runned itself as a service, but to be integrated in an external component 
+		that reads the relevant configuration from file and passes it to the Consumer.
+
+		The `Consumer` has two main tasks:
+		- creating the OpenC2 stack to process Messages (namely the combination of an Encoding format and
+				a Transfer protocol);
+		- dispatching incoming `Command`s to the relevant `Actuator`.
+
+		Each `Consumer` will only run a single `Transfer` protocol. All registered `Encoder`s can be used,
+		and a default `Encoder` is explicitely given that will be used when no other selection is available 
+		(e.g., to answer Messages that the Consumer does not understand).
+		
+	"""
+	def __init__(self, consumer: str, actuators: [] =None, encoder: Encoder = None, transfer: Transfer = None):
+		""" Create a `Consumer`
+			:param consumer: This is a string that identifies the `Consumer` and is used in `from` 
+				and `to` fields of the OpenC2 `Message` (see Table 3.1 of the Language Specification.
+			:param actuators: This must be a list of available `Actuator`s. The list contains the
+				`Actuator` instances that will be used by the `Consumer`.
+			:param encoder: This is an instance of the `Encoder` that will be used by default.
+			:param transfer: This is the `Transfer` protocol that will be used to send/receive `Message`s.
+		"""
 		self.consumer = consumer
 		self.encoder = encoder
 		self.transfer = transfer
@@ -18,7 +49,22 @@ class Consumer:
 
 		# TODO: Read configuration from file
 
+	# TODO: Manage non-blocking implementation of the Transfer.receive() function
 	def run(self, encoder: Encoder = None, transfer: Transfer = None):
+		"""Runs a `Consumer`
+
+			This is the entry point of the `Consumer`. It must be invoked to start operation of the `Consumer`.
+			This method may be blocking, depending on the implementation of the `receive()` method of the 
+			used `Transfer`.
+
+			The arguments of this method can be used to create multiple OpenC2 stacks (e.g., using 
+			different `Encoder`s and `Transfer`s). This feature clearly requires the `Transfer` 
+			implementation to be non-blocking.
+
+			:param encoder: A different `Encoder` that might be passed to overwrite what set at initialization time. 
+			:param transfer: A different `Transfer` that might be passed to overwrite what set at initialization time.
+			:return: None.
+		"""
 		if not encoder: encoder = self.encoder
 		if not transfer: transfer = self.transfer
 		if not transfer: raise ValueError('Missing transfer object')
@@ -27,6 +73,22 @@ class Consumer:
 
 
 	def dispatch(self, msg):
+		""" Dispatches Commands to Actuators
+
+			This method scans the actuator profile carried in the `Command` and select one or more
+			`Actuator`s that will process the `Command`. 
+			
+			The current implementation is only meant to be used within the
+			implementation of `Transfer` protocols as a callback for returning control to the main code.
+			This approach is motivated by those Transfer protocols that replies to messages on the same 
+			TCP connection, so to avoid errors with NAT and firewalls 
+			(if a Command were passed back from the `Transfer.receive()` and processed within the `Consumer.run()`, 
+			 the following `Transfer.send() would use a different TCP connection).
+			
+			:param msg: The full openc2lib `Message` that embeds the `Command` to be processed.
+			:return: A `Message` that embeds the `Response` (from the `Actuator` or elaborated by the `Consumer` in
+					case of errors).
+		"""
 		#TODO: The logic to select the actuator that matches the request
 		# OC2 Architecture, Sec. 2.1:
 		# The Profile field, if present, specifies the profile that defines the function 
