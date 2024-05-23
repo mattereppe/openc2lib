@@ -4,6 +4,8 @@
 	registered within the system.
 """
 
+from openc2lib.core.register import Register
+
 class Profile:
 	"""OpenC2 Profile
 	
@@ -30,25 +32,15 @@ class Profile:
 	def __str__(self):
 		return self.nsid
 
-class _ProfilesDict(dict):
-	def add(self, name: str, profile, identifier ):
-		if name in self:
-			raise ValueError("Profile already registered")
-		self[name] = profile
+class Profiles(Register):
+	"""List of registered `Profile`s
 	
-Profiles = _ProfilesDict()
-"""List of registered `Profile`s
-
-	This is a dictionary of available `Profile`s within the system. When a new `Profile` is defined,
-	it must be registered in openc2lib before being used.
-
-	Multiple registration of the same Profile will raise a `ValueError` Excepction.
-
-	Methods
-	- **add(name: str, profile, identifier)**: Add a new profile
-
-	:param name: the name used to identify the profile (commonly set to its nsid)
-	:param profile: the class the extend the basic `Profile` definition
-	:param identifier: the numeric identifier assigned by the OpenC2 specification
-"""
+		This is a dictionary of available `Profile`s within the system. When a new `Profile` is defined,
+		it must be registered in openc2lib before being used.
+	
+		Multiple registration of the same Profile will raise a `ValueError` Excepction.
+	
+		Usage: see the `Register` class interface.
+	"""
+	pass
 

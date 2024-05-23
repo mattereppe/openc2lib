@@ -7,6 +7,7 @@ import aenum
 
 from openc2lib.types.basetypes import Choice
 from openc2lib.types.datatypes import TargetEnum
+from openc2lib.core.register import Register
 
 
 class Target(Choice):
@@ -54,15 +55,13 @@ class Target(Choice):
 
 
 
-class Targets:
+class Targets(Register):
 	""" List of `Target`s
 	
 		This class registers all available `Target`s, both provided by the openc2lib and by Profiles.
 		The class is meant to be used internally with class methods only without creating any instance.
 	"""
 	
-	_targets = {}
-
 	@classmethod
 	def add(cls, name: str, target, identifier, nsid=None):
 		""" Add a new `Target`
@@ -81,38 +80,11 @@ class Targets:
 		if nsid is not None:
 			name = nsid + ':' + name
 		try:
-			list(cls._targets.keys())[list(cls._targets.values()).index(target)]
+			list(cls._register.keys())[list(cls._register.values()).index(target)]
 		except ValueError:
 			# The item is not in the list
-			cls._targets[name] = target
+			cls._register[name] = target
 			aenum.extend_enum(TargetEnum, name, identifier)
 			return
 		raise ValueError("Target already registered")
-
-	@classmethod
-	def get(cls, name: str):
-		""" Get `Target` by name
-
-			Throws an exception if the given name does not correspond to any registered `Target`.
-
-			:param name: The name of the `Target` to return.
-			:return: The class `Target` corresponding to the given name.
-		"""
-		return cls._targets[name]
-
-	@classmethod
-	def getName(cls, target):
-		""" Get the name of a `Target`
-
-			Given a class `Target`, this method returns its name (the name it was registered with. 
-			Note that the returned name include the namespace prefix.
-
-			Throws an exception if the given `Target` is not registered.
-
-			:param target: The class `Target` to look for.
-			:return: A string with the name of the `Target`.
-		"""
-		return list(cls._targets.keys())[list(cls._targets.values()).index(target)]
-
-
 

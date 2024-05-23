@@ -26,7 +26,7 @@ class Actuator(Choice):
 		 """
 		self.obj = profile
 	# Throw exception if the class is not a valid actuator
-		self.choice = list(Profiles.keys())[list(Profiles.values()).index(profile.__class__)]
+		self.choice = Profiles.getName(profile.__class__)
 	
 	def getTarget(self):
 		"""Returns the Profile
@@ -50,7 +50,7 @@ class Actuator(Choice):
 			Returns the class associated to a given  `Actuator` Profile name.  This is used inside the core 
 			library to instantiate the object from an OpenC2 message.
 		"""
-		return Profiles[name]
+		return Profiles.get(name)
 
 	def __str__(self):
 		return self.choice
@@ -59,18 +59,5 @@ class Actuator(Choice):
 		return str(self.obj)
 
 
-#ActuatorTypes = {}
-#
-#class ActuatorsDict(dict):
-#	def add(self, name: str, actuator, identifier):
-#		try:
-#			list(ActuatorTypes.keys())[list(ActuatorTypes.values()).index(actuator)]
-#		except ValueError:
-#			# The item is not in the list
-#			self[name] = actuator
-#			return
-#		raise ValueError("Actuator already registered")
-#	
-#Actuators = ActuatorsDict()
 
 
