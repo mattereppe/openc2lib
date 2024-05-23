@@ -86,7 +86,7 @@ class Results(Map):
 
 		This field must be set to None in the base class, and to `Results` in the derived class that defines an extension.
 	"""
-	extns = ExtendedResults
+	regext = ExtendedResults
 	""" Extended NameSpace
 
 		This field is for internal use only and must not be set by any derived class.

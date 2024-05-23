@@ -16,6 +16,7 @@ class Actuator(Choice):
 	Language Specification. The `Actuator` is fully transparent to the concrete implementation of the Profile for a specific
 	security functions.
 	"""
+	register = Profiles
 
 	# According to the specification, the actuator is embedded within an actuator profile. 
 	def __init__(self, profile):
@@ -43,14 +44,14 @@ class Actuator(Choice):
 		"""
 		return self.choice
 
-	@staticmethod
-	def getClass(name: str):
-		"""Returns the class of the `Profile`.
-
-			Returns the class associated to a given  `Actuator` Profile name.  This is used inside the core 
-			library to instantiate the object from an OpenC2 message.
-		"""
-		return Profiles.get(name)
+#	@staticmethod
+#	def getClass(name: str):
+#		"""Returns the class of the `Profile`.
+#
+#			Returns the class associated to a given  `Actuator` Profile name.  This is used inside the core 
+#			library to instantiate the object from an OpenC2 message.
+#		"""
+#		return Profiles.get(name)
 
 	def __str__(self):
 		return self.choice

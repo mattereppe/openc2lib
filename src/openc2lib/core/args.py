@@ -48,7 +48,7 @@ class Args(Map):
 		This  field must be set to `Args` in all derived classes (i.e., definition of Arguments for specific Profiles).
 	"""
 
-	extns = ExtendedArguments
+	regext = ExtendedArguments
 	""" Extension Name Space
 	
 		This field is for internal use only and must not be modified by any derived class.	
