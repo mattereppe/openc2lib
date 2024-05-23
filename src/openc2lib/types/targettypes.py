@@ -11,6 +11,8 @@ import ipaddress
 import openc2lib.types.basetypes
 import openc2lib.types.datatypes
 
+from openc2lib.core.target import Targets
+
 
 
 # The Standard is not clear on this part. The 
@@ -79,3 +81,10 @@ class IPv4Connection(openc2lib.types.basetypes.Record):
 class Features(openc2lib.types.basetypes.ArrayOf(openc2lib.types.datatypes.Feature)):
 # TODO: implmement control on the max number of elements
 	pass
+
+
+
+# Register the list of available Targets
+Targets.add('features', Features, 9)
+Targets.add('ipv4_net', IPv4Net, 13)
+Targets.add('ipv4_connection', IPv4Connection, 15)
