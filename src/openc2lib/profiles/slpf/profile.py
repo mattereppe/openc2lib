@@ -1,12 +1,12 @@
 from openc2lib import Profile, Map
 
-from openc2lib.profiles.slpf.nsid import nsid
+from openc2lib.profiles.slpf.nsid import nsid, name
 
 class slpf(Profile, Map):
 	fieldtypes = dict(hostname=str, named_group=str, asset_id=str, asset_tuple = [str])
 
 	def __init__(self, dic):
-		Profile.__init__(self, nsid)
+		Profile.__init__(self, nsid, name)
 		Map.__init__(self, dic)
 	
 	def __str__(self):
