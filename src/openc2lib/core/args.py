@@ -7,17 +7,12 @@ import logging
 
 from openc2lib.types.datatypes import DateTime, Duration, ResponseType
 from openc2lib.types.basetypes import Map
+from openc2lib.core.register import Register
 from openc2lib.core.profile import Profiles
 
 logger = logging.getLogger('openc2lib')
 
-class _ExtArgsDict(dict):
-	def add(self, profile: str, extargs):
-		if profile in self:
-			raise ValueError("ExtArgs already registered")
-		self[profile] = extargs
-	
-ExtendedArguments = _ExtArgsDict()
+ExtendedArguments = Register()
 """ List of extensions
 
 	This variable contains all argument extensions registered by Profiles. It is a dictionary which key
@@ -26,15 +21,11 @@ ExtendedArguments = _ExtArgsDict()
 	Each `Args` definition for a Profile must be registered here to be available for encoding/decoding
 	OpenC2 `Message`s.
 
-	Multiple registration of extensions for the same Profile will raise a `ValueError` Excepction.
+	Multiple registration of extensions for the same Profile will raise a `ValueError` Exception.
 
-	Method
-	- **add(profile: str, extargs)**: add a new `Args` extension
-
-	:param profile: the Profile name that defines the extension
-	:param extargs: the class definition of the `Args` extension
-
+	Usage: see the `Register` interface.	
 """
+
 
 class Args(Map):
 	""" OpenC2 Arguments

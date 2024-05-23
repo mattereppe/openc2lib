@@ -32,15 +32,14 @@ class Profile:
 	def __str__(self):
 		return self.nsid
 
-class Profiles(Register):
-	"""List of registered `Profile`s
-	
-		This is a dictionary of available `Profile`s within the system. When a new `Profile` is defined,
-		it must be registered in openc2lib before being used.
-	
-		Multiple registration of the same Profile will raise a `ValueError` Excepction.
-	
-		Usage: see the `Register` class interface.
-	"""
-	pass
+Profiles = Register()
+"""List of registered `Profile`s
+
+	This is a dictionary of available `Profile`s within the system. When a new `Profile` is defined,
+	it must be registered in openc2lib before being used.
+
+	Multiple registration of the same Profile will raise a `ValueError` Excepction.
+
+	Usage: see the `Register` class interface.
+"""
 

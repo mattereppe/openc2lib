@@ -55,19 +55,20 @@ class Target(Choice):
 
 
 
-class Targets(Register):
-	""" List of `Target`s
+class TargetRegister(Register):
+	""" Target registration
 	
 		This class registers all available `Target`s, both provided by the openc2lib and by Profiles.
-		The class is meant to be used internally with class methods only without creating any instance.
+		The extension of the base class `Register` is necessary to add the nsid prefix in front of the
+		`Target` name.
 	"""
 	
-	@classmethod
-	def add(cls, name: str, target, identifier, nsid=None):
+	def add(self, name: str, target, identifier=None, nsid=None):
 		""" Add a new `Target`
 	
 			Register a new `Target` and make it available within the system. This method is expected to
-			be called by any `Profile` that defines additional `Target`s.
+			be called by any `Profile` that defines additional `Target`s. Additionally, the name is added 
+			to the Target enumeration `TargetEnum`.
 			
 			This method throw an Exception if the `Target` is already registered.
 
@@ -80,11 +81,16 @@ class Targets(Register):
 		if nsid is not None:
 			name = nsid + ':' + name
 		try:
-			list(cls._register.keys())[list(cls._register.values()).index(target)]
+			list(self.keys())[list(self.values()).index(target)]
 		except ValueError:
 			# The item is not in the list
-			cls._register[name] = target
+			self[name] = target
 			aenum.extend_enum(TargetEnum, name, identifier)
 			return
 		raise ValueError("Target already registered")
 
+Targets = TargetRegister()
+""" List of available `Target`s
+
+	Include base Targets defined by the Language Specification and additional Targets defined by Profiles.
+"""
