@@ -113,7 +113,7 @@ class Consumer:
 			return self.__respmsg(msg, response)
 
 		try:
-			asset_id = msg.content.actuator.getTarget()['asset_id']
+			asset_id = msg.content.actuator.getObj()['asset_id']
 		except KeyError:
 			# assed_id = None means the default actuator that implements the required profile
 			asset_id = None
@@ -176,7 +176,7 @@ class Consumer:
 		if response:
 			respmsg = Message(response)
 			respmsg.from_=self.consumer
-			respmsg.to=msg.from_
+			respmsg.to=[msg.from_]
 			respmsg.content_type=msg.content_type
 			respmsg.request_id=msg.request_id
 			respmsg.created=int(DateTime())
