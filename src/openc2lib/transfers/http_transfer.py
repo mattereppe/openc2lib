@@ -1,3 +1,13 @@
+""" HTTP Transfer Protocol
+
+	This module defines implementation of the `Transfer` interface for the 
+  	HTTP/HTTPs protocols. This implementation is mostly provided for 
+	research and development purposes, but it is not suitable for production
+	environments.
+
+	The implementation follows the Specification for Transfer of OpenC2 Messages via HTTPS
+	Version 1.1, which is indicated as the "Specification" in the following.
+"""
 import dataclasses
 import requests
 import logging
@@ -5,23 +15,40 @@ import copy
 
 from flask import Flask, request, make_response
 
-from openc2lib import Transfer, MessageType, Message, Command, Response, Content, Encoders, StatusCode, Version, Encoder, DateTime
+from openc2lib import Record, Transfer, MessageType, Message, Command, Response, Content, Encoders, StatusCode, Version, Encoder, DateTime
 
-# TODO: remove this when the encoder is instantiated based on message content
-from openc2lib.encoders.json_encoder import JSONEncoder
 
 logger = logging.getLogger('openc2lib')
+""" The logging facility in openc2lib """
 
 # This can be taken as an example that defines an additional Openc2Type
 # for parsing a custom data structure (HTTP Message, in this case)
 #@register_basetype
 @dataclasses.dataclass
-class Payload:
+class Payload(Record):
+	""" HTTP `Message` handling
+
+		This class provides the implementation of the abstract OpenC2 Message type for HTTP.
+	  
+	
+	
+		header and body.
+		The mapping follows the description in Sec. 3.3.2 of the Specification, but no
+		`signature` and `notification` are not currently implemented because they are not
+		described in the Language Specification.
+	"""
 	headers: dict = None
+	""" Content of HTTP headers """
 	body: dict = None
+	""" Content of HTTP body """
 	signature: str = None
+	""" Not implemented """
 
 	def getContent(self):
+		""" Get Payload Content
+
+			Returns the body of 
+		"""
 		try:
 			for k,v in self.body['openc2'].items():
 				return v
@@ -55,13 +82,13 @@ class Payload:
 			case _: # Should only be 'notification' (HTTP transfer specification)
 				raise TypeException("Unhandled Openc2 message type: ", content_type)
 
-	def todict(self, e):
-		dic = vars(self)
-		# Remove void fields
-		for k in list(dic.keys()):
-			if dic[k] is None:
-				del dic[k]
-		return e.todict(dic)
+#	def todict(self, e):
+#		dic = vars(self)
+#		# Remove void fields
+#		for k in list(dic.keys()):
+#			if dic[k] is None:
+#				del dic[k]
+#		return e.todict(dic)
 
 	
 	@classmethod
