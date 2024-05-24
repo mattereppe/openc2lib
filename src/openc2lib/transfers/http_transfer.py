@@ -41,6 +41,7 @@ OpenC2Contents.add('response', oc2.Response, 2)
 # OpenC2Contents.add('notification', oc2.Event, 3)
 
 class OpenC2Content(oc2.Choice):
+	""" HTTP Message OpenC2-Content (see Sec. 3.3.2 of the Specification) """
 	register = OpenC2Contents
 
 Bodies = oc2.Register()
@@ -106,7 +107,24 @@ class Message(oc2.Record):
 
 
 class HTTPTransfer(oc2.Transfer):
+	""" HTTP Transfer Protocol
+
+		This class provides an implementation of the Specification. It builds on Flask and so it is not
+		suitable for production environments.
+
+		Use `HTTPTransfer` to build OpenC2 communication stacks in `Producer` and `Consumer`.
+	"""
 	def __init__(self, host, port = 80, endpoint = '/.well-known/openc2', usessl=False):
+		""" Builds the `HTTPTransfer` instance
+
+			The `host` and `port` parameters are used either for selecting the remote server (`Producer`) or
+			for local binding (`Consumer`). This implementation only supports TCP as transport protocol.
+			:param host: Hostname or IP address of the OpenC2 server.
+			:param port: Transport port of the OpenC2 server.
+			:param endpoint: The remote endpoint to contact the OpenC2 server (`Producer` only).
+			:param usessl: Enable (`True`) or disable (`False`) SSL. Internal use only. Do not set this argument,
+				use the `HTTPSTransfer` instead.
+		"""
 		self.host = host
 		self.port = port
 		self.endpoint = endpoint
@@ -114,7 +132,8 @@ class HTTPTransfer(oc2.Transfer):
 		self.url = f"{self.scheme}://{host}:{port}{endpoint}"
 		self.ssl_context = None
 
-	def tohttp(self, msg, encoder):
+	def _tohttp(self, msg, encoder):
+		""" Convert openc2lib `Message` to HTTP `Message` """
 		m = Message()
 		m.set(msg)
 
@@ -126,7 +145,8 @@ class HTTPTransfer(oc2.Transfer):
 
 		return data
 
-	def fromhttp(self, hdr, data):
+	def _fromhttp(self, hdr, data):
+		""" Convert HTTP `Message` to openc2lib `Message` """
 
 		# TODO: Check the HTTP headers for version/encoding
 		content_type =hdr['Content-type']
@@ -159,8 +179,15 @@ class HTTPTransfer(oc2.Transfer):
 
 	# This function is used to send an HTTP request
 	def send(self, msg, encoder):
+		""" Sends OpenC2 message
+
+			This method implements the required `Transfer` interface to send message to an OpenC2 server.
+			:param msg: The message to send (openc2lib `Message`).
+			:param encoder: The encoder to use for encoding the `msg`.
+			:return: An OpenC2  response (`Response`).
+		"""
 		# Convert the message to the specific HTTP representation
-		openc2data = self.tohttp(msg, encoder)
+		openc2data = self._tohttp(msg, encoder)
 
 		# Building the requested headers for the Request
 		content_type = f"application/{msg.content_type}+{encoder.getName()};version={msg.version}"
@@ -179,7 +206,7 @@ class HTTPTransfer(oc2.Transfer):
 		# TODO: How to manage HTTP response code? Can we safely assume they always match the Openc2 response?
 		try:
 			if response.text != "":
-				msg = self.fromhttp(response.headers, response.text)
+				msg = self._fromhttp(response.headers, response.text)
 			else:
 				msg = None
 		except ValueError as e:
@@ -191,7 +218,8 @@ class HTTPTransfer(oc2.Transfer):
 		return msg
 
 	# This function is used to prepare the headers and content in a response
-	def respond(self, msg, encoder):
+	def _respond(self, msg, encoder):
+		""" Responds to received OpenC2 message """
 
 		headers = {}
 		if msg is not None:
@@ -201,7 +229,7 @@ class HTTPTransfer(oc2.Transfer):
 				content_type = f"text/plain"
 			headers['Content-Type']= content_type
 			date = msg.created if msg.created else int(oc2.DateTime())
-			data = self.tohttp(msg, encoder)
+			data = self._tohttp(msg, encoder)
 		else:
 			content_type = None
 			data = None
@@ -213,28 +241,49 @@ class HTTPTransfer(oc2.Transfer):
 
 		return headers, data
 
-	def recv(self, headers, data):
+	def _recv(self, headers, data):
+		""" Retrieve HTTP messages
+			
+			Internal function to convert Flask data into openc2lib `Message` structure and `Encoder`.
+			The `encoder` is derived from the HTTP header, to provide the ability to manage multiple
+			clients that use different encoding formats.
+			:param headers: HTTP headers.
+			:param data: HTTP body.
+			:return: An openc2lib `Message` (first) and an `Encoder` instance (second).
+		"""
 
 		logger.debug("Received body: %s", data)
-		msg, encoder = self.fromhttp(headers, data)
+		msg, encoder = self._fromhttp(headers, data)
 		logger.info("Received command: %s", msg)
   			
 		return msg, encoder
 	
 	def receive(self, callback, encoder):
+		""" Listen for incoming messages
+
+			This method implements the `Transfer` interface to listen for and receive OpenC2 messages.
+			The internal implementation uses `Flask` as HTTP server. The method invokes the `callback`
+			for each received message, which must be provided by a `Producer` to properly dispatch 
+			`Command`s to the relevant server(s). It also takes an `Encoder` that is used to create
+			responses to `Command`s encoded with unknown encoders.
+			:param callback: The function that is invoked to process OpenC2 messages.
+			:param encoder: Default `Encoder` instance to respond to unknown or wrong messages.
+			:return :None
+		"""
 		app = Flask(__name__)
 		app.config['OPENC2']=self
 		app.config['CALLBACK']=callback
 		app.config['ENCODER']=encoder
 
 		@app.route(self.endpoint, methods=['POST'])
-		def consumer():
+		def _consumer():
+			""" Serving endpoint for `Flask` """
 			server = app.config['OPENC2']
 			callback = app.config['CALLBACK']
 			encoder=app.config['ENCODER']
 			
 			try:
-				cmd, encoder = server.recv(request.headers, request.data.decode('UTF-8') )
+				cmd, encoder = server._recv(request.headers, request.data.decode('UTF-8') )
 				# TODO: Add the code to answer according to 'response_requested'
 			except ValueError as e:
 				# TODO: Find better formatting (what should be returned if the request is not understood?)
@@ -252,7 +301,7 @@ class HTTPTransfer(oc2.Transfer):
 			logger.debug("Got response: %s", resp)
 			
 			# TODO: Set HTTP headers as appropriate
-			hdrs, data = server.respond(resp, encoder)
+			hdrs, data = server._respond(resp, encoder)
 			logger.info("Sending response: %s", data)
 			httpresp = make_response(data if data is not None else "") 
 			httpresp.headers = hdrs
@@ -268,7 +317,23 @@ class HTTPTransfer(oc2.Transfer):
 
 
 class HTTPSTransfer(HTTPTransfer):
+	""" HTTP Transfer Protocol with SSL
+
+		This class provides an implementation of the Specification. It builds on Flask and so it is not
+		suitable for production environments.
+
+		Use `HTTPSTransfer` to build OpenC2 communication stacks in `Producer` and `Consumer`.
+		Usage and methods of `HTTPSTransfer` are semanthically the same as for `HTTPTransfer`.
+	"""
 	def __init__(self, host, port = 443, endpoint = '/.well-known/openc2'):
+		""" Builds the `HTTPSTransfer` instance
+
+			The `host` and `port` parameters are used either for selecting the remote server (`Producer`) or
+			for local binding (`Consumer`). This implementation only supports TCP as transport protocol.
+			:param host: Hostname or IP address of the OpenC2 server.
+			:param port: Transport port of the OpenC2 server.
+			:param endpoint: The remote endpoint to contact the OpenC2 server (`Producer` only).
+		"""
 		HTTPTransfer.__init__(self, host, port, endpoint, usessl=True)
 		self.ssl_context = "adhoc"
 
