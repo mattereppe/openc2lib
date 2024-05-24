@@ -58,42 +58,10 @@ class Target(Choice):
 	register = Targets
 	""" Keeps the list of registered `Target`s """
 
-	def __init__(self, target):
-		""" Creates a new `Target`
-
-			Objects used as Target must be registered in advance in the `Targets` dictionary.
-
-			:arg target: An object among those defined as `targettypes`.
-		"""
-		self.obj = target
-		""" Keeps the instance of the target object"""
-	# Throw exception if the class is not a valid target
-		self.choice = Targets.getName(target.__class__)
-		""" Keeps the identifier that the Language Specification associates to each target type"""
-	
-	def getTarget(self):
-		""" Returns the objet instance embedded in the `Target`."""
-		return self.obj
-	
 	def getName(self):
 		""" Returns the identifier associated to the Target type."""
 		return self.choice
 
-#	@staticmethod
-#	def getClass(name: str):
-#		""" Target object class
-#
-#			Returns the class that implements a given target type identifier.
-#			:param name: the identifier of the target type in a `Target` object
-#			:return: a class object
-#		"""
-#		return Targets.get(name)
-
-	def __str__(self):
-		return self.choice
-
-	def __repr__(self):
-		return str(self.obj)
 
 
 

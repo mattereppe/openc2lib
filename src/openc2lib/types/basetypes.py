@@ -103,11 +103,29 @@ class Choice(Openc2Type):
 	register = None
 	""" List of registered name/class options available """
 
-	def __init__(self):
-		self.choice: str = None
+	def __init__(self, obj):
+		""" Initialize the `Choice` object
+
+			Objects used as `Choice` must be registered in advance in the `register` dictionary.
+
+			:arg obj: An object among those defined in the `register`.
+		"""
+		self.choice: str = self.register.getName(obj.__class__)
 		""" Selected name for the `Choice` """
-		self.obj = None
+		self.obj = obj
 		""" Class corresponding to the `choice` """
+
+	def getObj(self):
+		""" Returns the objet instance embedded in the `register`."""
+		return self.obj
+	
+	def getName(self):
+		"""Returns the name of the choice
+
+			Returns the name of object, which is the selector carried by the `Choice` element. 
+			This does not include the object itself.
+		"""
+		return self.choice
 
 	@classmethod
 	def getClass(cls, choice):
@@ -119,6 +137,12 @@ class Choice(Openc2Type):
 			:return: The class corresponding to the provided `choice`.
 		"""
 		return cls.register.get(choice)
+
+	def __str__(self):
+		return self.choice
+
+	def __repr__(self):
+		return str(self.obj)
 
 	def todict(self, e):
 		""" Converts to dictionary 
