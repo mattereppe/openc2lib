@@ -86,6 +86,7 @@ class Record(Openc2Type):
 				raise Exception("Unknown field '" + k + "' from message")
 			objdic[k] = e.fromdict(fielddesc[k], v)
 
+
 		# A record should always have more than one field, so the following statement 
 		# should not raise exceptions
 		return clstype(**objdic)
@@ -182,7 +183,7 @@ class Choice(Openc2Type):
 		for k, v in dic.items():
 			# Expected to run one time only!
 			objtype = cls.getClass(k)
-			return e.fromdict(objtype, v)
+			return cls(e.fromdict(objtype, v))
 
 class Enumerated(Openc2Type, aenum.Enum):
 	""" OpenC2 Enumerated

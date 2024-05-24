@@ -41,6 +41,10 @@ class Content:
 	msg_type: MessageType = None
 	"The type of Content (`MessageType`)"
 
+	def getType(self):
+		""" Returns the Content type """
+		return self.msg_type
+
 @dataclasses.dataclass
 class Message:
 	"""OpenC2 Message

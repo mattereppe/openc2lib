@@ -15,148 +15,114 @@ import copy
 
 from flask import Flask, request, make_response
 
-from openc2lib import Record, Transfer, MessageType, Message, Command, Response, Content, Encoders, StatusCode, Version, Encoder, DateTime
+import openc2lib as oc2
 
 
 logger = logging.getLogger('openc2lib')
 """ The logging facility in openc2lib """
 
-# This can be taken as an example that defines an additional Openc2Type
-# for parsing a custom data structure (HTTP Message, in this case)
-#@register_basetype
-@dataclasses.dataclass
-class Payload(Record):
-	""" HTTP `Message` handling
-
-		This class provides the implementation of the abstract OpenC2 Message type for HTTP.
-	  
-	
-	
-		header and body.
-		The mapping follows the description in Sec. 3.3.2 of the Specification, but no
-		`signature` and `notification` are not currently implemented because they are not
-		described in the Language Specification.
+class Headers(oc2.Map):
+	""" HTTP Message Headers (see Sec. 3.3.2 of the Specification) 
+		
+		Note: the Specification defines `to` as "String [0..*]", but it should be an `ArrayOf(str)`. Using
+		a plain Python list does not work with the current openc2lib implementation.
 	"""
-	headers: dict = None
-	""" Content of HTTP headers """
-	body: dict = None
-	""" Content of HTTP body """
+	fieldtypes = {'request_id': str, 'created': oc2.DateTime, 'from': str, 'to': oc2.ArrayOf(str)}
+	extend = None
+	regext = {}
+
+
+OpenC2Contents = oc2.Register()
+""" List allowed OpenC2-Content (see Sec. 3.3.2 of the Specification) """
+OpenC2Contents.add('request', oc2.Command, 1)
+OpenC2Contents.add('response', oc2.Response, 2)
+# Event is not currently defined in the Language Specification
+# and there is not indication how to manage it.
+# OpenC2Contents.add('notification', oc2.Event, 3)
+
+class OpenC2Content(oc2.Choice):
+	register = OpenC2Contents
+
+Bodies = oc2.Register()
+""" List allowed objects in Body (see Sec. 3.3.2 of the Specification) """
+Bodies.add('openc2',OpenC2Content, 1)
+
+class Body(oc2.Choice):
+	""" HTTP Message Body (see Sec. 3.3.2 of the Specification) """
+	register = Bodies
+
+@dataclasses.dataclass
+class Message(oc2.Record):
+	""" HTTP Message representation
+
+		This class implements the HTTP-specific representation of the 
+		OpenC2 Message metadata. The OpenC2 Message metadata are described in 
+		Table 3.1 of the Language Specification as message elements, but they are not
+		framed in a concrete structure. The HTTP Specification defines such structure 
+		in Sec. 3.3.2, and this class is its implementation.
+
+		The methods of this class are meant to translate back and for the openc2lib
+		`Message` class.
+	"""
+	headers: Headers = None
+	""" Contains the `Message` metadata """
+	body: Body = None # This is indeed not optional, but the default argument is set to preserve ordering
+	""" Contains the `Content` """
 	signature: str = None
-	""" Not implemented """
+	""" Not used (the Specification does not define its usage """
 
-	def getContent(self):
-		""" Get Payload Content
-
-			Returns the body of 
+	def set(self, msg: oc2.Message):
+		""" Create HTTP `Message` from openc2lib `Message` 
+			
+			:param msg: An openc2lib `Message`.
+			:return: An HTTP `Message`
 		"""
-		try:
-			for k,v in self.body['openc2'].items():
-				return v
-		except:
-		  	return None
+		self.headers = {}
+		self.headers['request_id'] = msg.request_id
+		self.headers['created'] = msg.created
+		self.headers['from'] = msg.from_
+		self.headers['to'] = msg.to
 
-	def getContentType(self):
-		try:
-			for k,v in self.body['openc2'].items():
-				return k
-		except:
-		  return None
+		self.body = Body(OpenC2Content(msg.content))
 
-	@staticmethod
-	def getMessageType(content_type):
-		match content_type:
-			case 'request':
-				return MessageType.command
-			case 'response':
-				return MessageType.response
-			case _: # Should only be 'notification' (HTTP transfer specification)
-				raise TypeException("Unhandled Openc2 message type: ", content_type)
-	
-	@staticmethod
-	def getContentClass(content_type):
-		match content_type:
-			case 'request':
-				return Command
-			case 'response':
-				return Response
-			case _: # Should only be 'notification' (HTTP transfer specification)
-				raise TypeException("Unhandled Openc2 message type: ", content_type)
+		
+	def get(self):
+		""" Create an openc2lib `Message` from HTTP `Message` 
+			
+			:param msg: An openc2lib `Message`.
+			:return: An HTTP `Message`
+		"""
+		msg = oc2.Message(self.body.getObj().getObj())
+		msg.request_id = self.headers['request_id'] if 'request_id' in self.headers.keys() else None
+		msg.created = self.headers['created'] if 'created' in self.headers.keys() else None
+		msg.from_ = self.headers['from'] if 'from' in self.headers.keys() else None
+		msg.to = self.headers['to'] if 'to' in self.headers.keys() else None
+		msg.msg_type = msg.content.getType()
 
-#	def todict(self, e):
-#		dic = vars(self)
-#		# Remove void fields
-#		for k in list(dic.keys()):
-#			if dic[k] is None:
-#				del dic[k]
-#		return e.todict(dic)
-
-	
-	@classmethod
-	def fromdict(cls, dic, e):
-		payload = Payload()
-		try:
-			payload.headers = dic['headers']
-		except KeyError:
-			payload. headers = None
-
-		try:
-			# deepcopy is necessary to avoid unpleasant issues when the decode functions
-			# is called multiple times (an issues that may occur while debugging)
-			payload.body = copy.deepcopy(dic['body'])
-		except KeyError:
-			payload.body = None
-
-		try:
-			payload.signature = dic['signature']
-		except KeyError:
-			payload.signature: None
-
-		# TODO: check if this is expected to run once or more times (more commands in a single message?)
-		for k,v in payload.body['openc2'].items():
-			content_type = k
-			content = v
-
-		payload.body['openc2'][payload.getContentType()] = e.decode(Payload.getContentClass(content_type), payload.getContent())
+		return msg
 
 
 
-		return payload
 
 
-
-class HTTPTransfer(Transfer):
+class HTTPTransfer(oc2.Transfer):
 	def __init__(self, host, port = 80, endpoint = '/.well-known/openc2', usessl=False):
 		self.host = host
 		self.port = port
 		self.endpoint = endpoint
 		self.scheme = 'https' if usessl else 'http'
 		self.url = f"{self.scheme}://{host}:{port}{endpoint}"
-		self.payload = Payload()
 		self.ssl_context = None
 
 	def tohttp(self, msg, encoder):
-		self.payload.headers = {}
-		self.payload.headers['request_id'] = msg.request_id
-		self.payload.headers['created'] = msg.created
-		self.payload.headers['from'] = msg.from_
-		self.payload.headers['to'] = msg.to
-
-		self.payload.body = {}
-		self.payload.body['openc2'] = {}
-		match msg.msg_type:
-			case MessageType.command:
-				content = 'request'
-			case MessageType.response:
-				content = 'response'
-			# Missing "event" type (not found in language specification)
-		self.payload.body['openc2'][content] = msg.content
+		m = Message()
+		m.set(msg)
 
 		# Encode the data
 		if encoder is not None:
-			data = encoder.encode(self.payload)
+			data = encoder.encode(m)
 		else:
-			data = Encoder().encode(self.payload)
-
+			data = oc2.Encoder().encode(m)
 
 		return data
 
@@ -165,28 +131,22 @@ class HTTPTransfer(Transfer):
 		# TODO: Check the HTTP headers for version/encoding
 		content_type =hdr['Content-type']
 
-		if not content_type.removeprefix('application/').startswith(Message.content_type):
+		if not content_type.removeprefix('application/').startswith(oc2.Message.content_type):
 			raise ValueError("Unsupported content type")
 
-		enctype = content_type.removeprefix('application/'+Message.content_type+'+').split(';')[0]
+		enctype = content_type.removeprefix('application/'+oc2.Message.content_type+'+').split(';')[0]
 		try:
-			encoder = Encoders[enctype].value
+			encoder = oc2.Encoders[enctype].value
 		except KeyError:
 			raise ValueError("Unsupported encoding scheme: " + enctype)
 
-		payload = encoder.decode(data, Payload)
-
 		# HTTP processing to extract the headers
 		# and the transport body
-		msg = Message(payload.getContent())
-		msg.request_id = payload.headers['request_id'] if 'request_id' in payload.headers.keys() else None
-		msg.created = payload.headers['created'] if 'created' in payload.headers.keys() else None
-		msg.from_ = payload.headers['from'] if 'from' in payload.headers.keys() else None
-		msg.to = payload.headers['to'] if 'to' in payload.headers.keys() else None
-		msg.msg_type = Payload.getMessageType(payload.getContentType())
+		msg = encoder.decode(data, Message).get()
 		msg.content_type = hdr['Content-type'].removeprefix('application/').split('+')[0]
-		msg.version = Version.fromstr(hdr['Content-type'].split(';')[1].removeprefix("version="))
+		msg.version = oc2.Version.fromstr(hdr['Content-type'].split(';')[1].removeprefix("version="))
 		msg.encoding = encoder
+
 		
 		try:
 			msg.status = msg.content['status']
@@ -199,24 +159,22 @@ class HTTPTransfer(Transfer):
 
 	# This function is used to send an HTTP request
 	def send(self, msg, encoder):
-		# HTTP processing to prepare the headers
-		# and the transport body
+		# Convert the message to the specific HTTP representation
 		openc2data = self.tohttp(msg, encoder)
 
 		# Building the requested headers for the Request
 		content_type = f"application/{msg.content_type}+{encoder.getName()};version={msg.version}"
-		date = msg.created if msg.created else int(DateTime())
-		openc2headers={'Content-Type': content_type, 'Accept': content_type, 'Date': DateTime(date).httpdate()}
+		date = msg.created if msg.created else int(oc2.DateTime())
+		openc2headers={'Content-Type': content_type, 'Accept': content_type, 'Date': oc2.DateTime(date).httpdate()}
 
 		logger.info("Sending to %s", self.url)
-		logger.debug(" -> body: %s", openc2data)
+		logger.info(" -> body: %s", openc2data)
 
 		# Send the OpenC2 message and get the response
 		if self.scheme == 'https':
 			logger.warning("Certificate validation disabled!")
 		response = requests.post(self.url, data=openc2data, headers=openc2headers, verify=False)
-		logger.debug("HTTP got response: %s", response)
-		print("data: ", response.text)
+		logger.info("HTTP got response: %s", response)
 	
 		# TODO: How to manage HTTP response code? Can we safely assume they always match the Openc2 response?
 		try:
@@ -225,7 +183,7 @@ class HTTPTransfer(Transfer):
 			else:
 				msg = None
 		except ValueError as e:
-			msg = Message(Content())
+			msg = oc2.Message(oc2.Content())
 			msg.status = response.status_code
 			logger.error("Unable to parse data: >%s<", response.text)
 			logger.error(str(e))
@@ -242,16 +200,16 @@ class HTTPTransfer(Transfer):
 			else:	
 				content_type = f"text/plain"
 			headers['Content-Type']= content_type
-			date = msg.created if msg.created else int(DateTime())
+			date = msg.created if msg.created else int(oc2.DateTime())
 			data = self.tohttp(msg, encoder)
 		else:
 			content_type = None
 			data = None
-			date = int(DateTime())
+			date = int(oc2.DateTime())
 
 		# Date is currently autmatically inserted by Flask (probably 
 		# after I used 'make_response')
-		#headers['Date'] = DateTime(date).httpdate()
+		#headers['Date'] = oc2.DateTime(date).httpdate()
 
 		return headers, data
 
@@ -280,12 +238,12 @@ class HTTPTransfer(Transfer):
 				# TODO: Add the code to answer according to 'response_requested'
 			except ValueError as e:
 				# TODO: Find better formatting (what should be returned if the request is not understood?)
-				content = Response(status=StatusCode.BADREQUEST, status_text=str(e))
-				resp = Message(content)
-				resp.content_type = Message.content_type
-				resp.version = Message.version
+				content = oc2.Response(status=oc2.StatusCode.BADREQUEST, status_text=str(e))
+				resp = oc2.Message(content)
+				resp.content_type = oc2.Message.content_type
+				resp.version = oc2.Message.version
 				resp.encoder = encoder
-				resp.status=StatusCode.BADREQUEST
+				resp.status=oc2.StatusCode.BADREQUEST
 			else:
 				logger.info("Received command: %s", cmd)
 				resp = callback(cmd)
@@ -295,7 +253,7 @@ class HTTPTransfer(Transfer):
 			
 			# TODO: Set HTTP headers as appropriate
 			hdrs, data = server.respond(resp, encoder)
-			logger.debug("Sending response: %s", data)
+			logger.info("Sending response: %s", data)
 			httpresp = make_response(data if data is not None else "") 
 			httpresp.headers = hdrs
 
