@@ -20,7 +20,7 @@ the Language Specification):
 
 """
 
-from openc2lib.types.basetypes import Enumerated, Map, ArrayOf, MapOf
+from openc2lib.types.basetypes import Record, Choice, Enumerated, Array, ArrayOf, Map, MapOf
 from openc2lib.types.datatypes import L4Protocol, DateTime, Duration, TargetEnum, Nsid, ActionTargets, ActionArguments, Version, ResponseType
 from openc2lib.types.targettypes import IPv4Net, IPv4Connection, Features
 
@@ -34,3 +34,6 @@ from openc2lib.core.encoder import Encoder, Encoders, register_encoder
 from openc2lib.core.transfer import Transfer
 from openc2lib.core.profile import Profile, Profiles
 from openc2lib.core.target import Targets
+
+
+
