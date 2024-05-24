@@ -1,3 +1,8 @@
+""" Dumb `Actuator`
+
+	This module provides a dumb actuator that always answer with a fixed 
+	message. Use it for testing only.
+"""
 from openc2lib import ArrayOf,ActionTargets, TargetEnum, Nsid, Version,Results, StatusCode, StatusCodeDescription, Actions, Command, Response
 
 # A dumb actuator that does not implement any function but can

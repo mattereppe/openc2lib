@@ -1,3 +1,8 @@
+""" Skeleton `Actuator` for SLPF profile
+
+	This module provides an example to create an `Actuator` for the SLPF profile.
+	It only answers to the request for available features.
+"""
 from openc2lib import ArrayOf,ActionTargets, TargetEnum, Nsid, Version,Actions, Command, Response, StatusCode, StatusCodeDescription
 
 import openc2lib.profiles.slpf as slpf 
