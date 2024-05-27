@@ -7,8 +7,8 @@ import sys
 
 import openc2lib as oc2
 
-from openc2lib.encoders.json_encoder import JSONEncoder
-from openc2lib.transfers.http_transfer import HTTPTransfer
+from openc2lib.encoders.json import JSONEncoder
+from openc2lib.transfers.http import HTTPTransfer
 from openc2lib.actuators.iptables_actuator import IptablesActuator
 import openc2lib.profiles.slpf as slpf
 
