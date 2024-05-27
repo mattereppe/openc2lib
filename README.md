@@ -138,7 +138,7 @@ A concrete implementation of a _Controller_ would also include the business logi
 
 Advanced usage of the openc2lib requires knowledge of its data structures and functions. Data structures are very straightforward to learn, because they strictly follow the definition and requirements in the common Language Specification and Profile extensions. See the [Developer guide](docs/developerguide.md) for a comprehensive description of the library structure.
 
-User documentation of the openc2lib will be available soon.
+User documentation of the openc2lib is available [here](docs/index.html).
 
 
 

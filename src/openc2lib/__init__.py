@@ -34,6 +34,7 @@ from openc2lib.core.encoder import Encoder, Encoders, register_encoder
 from openc2lib.core.transfer import Transfer
 from openc2lib.core.profile import Profile, Profiles
 from openc2lib.core.target import Targets
+from openc2lib.core.register import Register
 
 
 

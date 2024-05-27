@@ -3,7 +3,7 @@
 This Section gives basic guidelines to add extensions to the openc2lib. Extensions include:
 - [encoders](https://github.com/mattereppe/openc2/blob/main/docs/developingextensions.md#add-new-encoding-formats)
 - [transfer protocols](https://github.com/mattereppe/openc2/blob/main/docs/developingextensions.md#add-new-transfer-protocols)
-- [profiles](https://github.com/mattereppe/openc2/blob/main/docs/developingextensions.md#add-new-profiles)
+- [profiles](https://github.com/mattereppe/openc2lib/blob/main/docs/developingextensions.md#adding-new-profiles)
 - [actuators](https://github.com/mattereppe/openc2/blob/main/docs/developingextensions.md#add-new-actuators)
 
 Extensions may be included in and delivered with openc2lib, or developed separately. There is no significant difference between the two methods, apart from the delivery process; the latter is not covered in this guide. There is no strict naming conventions for the extension modules, althought following a common convention facilitate the maintenance of the code by different developers.

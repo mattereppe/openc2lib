@@ -15,7 +15,6 @@ import openc2lib.types.datatypes
 from openc2lib.core.target import Targets
 
 
-
 class IPv4Net:
 	"""OpenC2 IPv4 Address Range
 		
