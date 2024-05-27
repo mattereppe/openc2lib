@@ -8,8 +8,8 @@ import ssl
 
 import openc2lib as oc2
 
-from openc2lib.encoders.json_encoder import JSONEncoder
-from openc2lib.transfers.http_transfer import HTTPSTransfer
+from openc2lib.encoders.json import JSONEncoder
+from openc2lib.transfers.http  import HTTPSTransfer
 
 import openc2lib.profiles.slpf as slpf
 
