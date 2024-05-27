@@ -9,14 +9,17 @@ account for reserved keywords and characters.
 All the target and data types defined by the standard are available for creating OpenC2 
 commands.
 
-The following base structures are also available for extending the language (see Sec. 3.1.1 of 
-the Language Specification):
-- `Enumerated`
-- `EnumeratedID`
-- `Array`
-- `ArrayOf`
-- `Map`
-- `MapOf`
+This is the code documentation for using and extending open2lib.
+Please read the [Getting started](https://github.com/mattereppe/openc2lib/blob/main/README.md#getting-started) 
+guide, the quick start [Usage](https://github.com/mattereppe/openc2lib/blob/main/README.md#usage)  and the 
+[Advanced usage](https://github.com/mattereppe/openc2lib/blob/main/README.md#advanced-usage) documentation for an overview of 
+openc2lib operation. 
+
+This documentation uses docstrings in the Python code. You can regenerate it by running 
+`pdoc -o docs/code src/openc2lib`
+or you can run your own websever with:
+`pdoc src/openc2lib/`
+(TODO: fix errors with the pdoc webserver).
 
 """
 
