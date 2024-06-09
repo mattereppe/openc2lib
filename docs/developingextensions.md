@@ -72,7 +72,7 @@ To add a new profile within the openc2lib source code, create a new directory in
 
 ### Create the actuator specifiers
 
-The _specifiers_ are the structure of any `Actuator` that implements the profile. They are defined by the Profile Specification (e.g., see [Sec. 2.4.1](https://docs.oasis-open.org/openc2/oc2slpf/v1.0/cs01/oc2slpf-v1.0-cs01.pdf) for the SLPF specifier).
+The _specifiers_ are the structure of any `Actuator` that implements the profile. They are defined by the Profile Specification (e.g., see [Sec. 2.1.4](https://docs.oasis-open.org/openc2/oc2slpf/v1.0/cs01/oc2slpf-v1.0-cs01.pdf) for the SLPF specifier).
 
 A specifier must be derived from `Profile` and the base structure it implements (likely, it will be an OpenC2 `Map`). It is suggested to name it with the nsid of the profile:
 ```
