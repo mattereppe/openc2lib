@@ -90,7 +90,7 @@ The specifier can provide the following methods:
   ```
   Map.__init__(self, dic)
   ```
-  where `dic` is the only argument passed to the specififer's ``__init__``.
+  where `dic` is the only argument passed to the specifier's ``__init__``.
 - `__str__` (RECOMMENDED) to provide a human-readable representation of the profile in log messages.
 
 ### Define language extensions
