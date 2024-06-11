@@ -31,7 +31,7 @@ class JSONEncoder(Encoder):
 			:return: A string with the json representation of the `obj`.
 
 		"""
-		return json.dumps(Encoder.todict(obj))
+		return json.dumps(Encoder.todict(obj), indent=3)
 
 	@staticmethod
 	def decode(msg, msgtype=None):

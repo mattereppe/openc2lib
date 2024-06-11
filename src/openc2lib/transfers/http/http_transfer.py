@@ -111,7 +111,7 @@ class HTTPTransfer(oc2.Transfer):
 		openc2headers={'Content-Type': content_type, 'Accept': content_type, 'Date': oc2.DateTime(date).httpdate()}
 
 		logger.info("Sending to %s", self.url)
-		logger.info(" -> body: %s", openc2data)
+		logger.info("HTTP Content:\n%s", openc2data)
 
 		# Send the OpenC2 message and get the response
 		if self.scheme == 'https':
@@ -218,7 +218,7 @@ class HTTPTransfer(oc2.Transfer):
 			
 			# TODO: Set HTTP headers as appropriate
 			hdrs, data = server._respond(resp, encoder)
-			logger.info("Sending response: %s", data)
+			logger.info("Sending response:\n%s", data)
 			httpresp = make_response(data if data is not None else "") 
 			httpresp.headers = hdrs
 
