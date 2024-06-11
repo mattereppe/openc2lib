@@ -6,7 +6,7 @@
 import openc2lib as oc2
 
 import openc2lib.profiles.slpf.nsid as profile_name
-from openc2lib.profiles.slpf.targettypes import RuleID
+from openc2lib.profiles.slpf.targets import RuleID
 
 class Results(oc2.Results):
 	""" SLPF Results

@@ -1,7 +1,3 @@
-""" SLPF additional data types
-
-	This modules defines additional data types specific for the SLPF profile.
-"""
 
 class RuleID(int):
 	""" OpenC2 Rule-ID

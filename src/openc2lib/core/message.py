@@ -11,8 +11,8 @@ import enum
 import dataclasses
 import uuid
 
-from openc2lib.types.datatypes import DateTime, Version
-from openc2lib.types.basetypes import Record, Map
+from openc2lib.types.data import DateTime, Version
+from openc2lib.types.base import Record, Map
 
 from openc2lib.core.actions import Actions 
 from openc2lib.core.target import Target

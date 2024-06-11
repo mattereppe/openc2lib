@@ -10,12 +10,12 @@
 	- `openc2lib.core.profile.Profile`:
 		- `openc2lib.profiles.slpf.profile.slpf` profile is defined for all Actuators that will implement it;
 		- `openc2lib.profiles.slpf.nsid.nsid` is defined as Namespace identifier for the SLPF profile;
-	- `openc2lib.types.datatypes`:
-		- `openc2lib.profiles.slpf.datatypes.Direction` is used to specify the rule applies to incoming, outgoing, or both kinds of packets;
-	- `openc2lib.types.targettypes`:
-		- `openc2lib.profiles.slpf.targettypes.RuleID` identifies a rule identifier to distinguish firewalling rules;
+	- `openc2lib.types.data`:
+		- `openc2lib.profiles.slpf.data.Direction` is used to specify the rule applies to incoming, outgoing, or both kinds of packets;
+	- `openc2lib.types.targets`:
+		- `openc2lib.profiles.slpf.targets.RuleID` identifies a rule identifier to distinguish firewalling rules;
 	- `openc2lib.core.target.Targets`:
-		- `openc2lib.profiles.slpf.targettypes.RuleID` is the identifier of an SLPF rule;
+		- `openc2lib.profiles.slpf.targets.RuleID` is the identifier of an SLPF rule;
 	- `openc2lib.core.args.Args`:
 		- `openc2lib.profiles.slpf.args.Args` is extended with `drop_process`, `persistent`, `direction`, and `insert_rule` arguments;
 	- `openc2lib.core.response.Results`:
@@ -36,12 +36,10 @@ from openc2lib.profiles.slpf.profile import *
 
 Profiles.add(nsid, slpf, 1024)
 
-from openc2lib import Targets
 from openc2lib import TargetEnum
-from openc2lib.profiles.slpf.datatypes import Direction
-from openc2lib.profiles.slpf.targettypes import RuleID
+from openc2lib.profiles.slpf.data import Direction
+from openc2lib.profiles.slpf.targets import RuleID
 
-Targets.add('rule_number', RuleID, 1024, nsid)
 
 # According to the standard, extended targets must be prefixed with the nsid
 from openc2lib import ExtendedArguments

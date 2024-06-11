@@ -5,8 +5,8 @@
 
 import aenum
 
-from openc2lib.types.basetypes import Choice
-from openc2lib.types.datatypes import TargetEnum
+from openc2lib.types.base import Choice
+from openc2lib.types.data import TargetEnum
 from openc2lib.core.register import Register
 
 

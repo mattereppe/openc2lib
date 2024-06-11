@@ -5,8 +5,8 @@
 """
 import logging
 
-from openc2lib.types.datatypes import DateTime, Duration, ResponseType
-from openc2lib.types.basetypes import Map
+from openc2lib.types.data import DateTime, Duration, ResponseType
+from openc2lib.types.base import Map
 from openc2lib.core.register import Register
 from openc2lib.core.profile import Profiles
 

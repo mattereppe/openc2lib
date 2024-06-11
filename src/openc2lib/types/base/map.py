@@ -1,0 +1,108 @@
+from openc2lib.types.base.openc2_type import Openc2Type
+from openc2lib.types.base.logger import logger
+
+class Map(Openc2Type, dict):
+	""" OpenC2 Map
+
+		Implements OpenC2 Map:
+		>An unordered map from a set of specified keys to values with semantics 
+			bound to each key. Each field has an id, name and type.
+
+		However, the id is not considered in this implementation.
+
+		The implementation follows a similar logic than `Array`. Each derived class
+		is expected to provide a `fieldtypes` class attribute that associate field names 
+		with their class definition. 
+		
+		Additionally, according to the Language Specification, `Map`s may be extended by
+		Profiles. Such extensions must use the `extend` and `regext` class attributes to 
+		bind to the base element they extend and the `Profile` in which they are defined.
+	"""
+	fieldtypes: dict = None
+	""" Field types
+
+		A `dictionary` which keys are field names and which values are the corresponding classes.
+		Must be provided by any derived class.
+	"""
+	extend = None
+	""" Base class
+
+		Data types defined in the Language Specification shall not set this field. Data types defined in
+		Profiles that extends a Data Type defined in the Language Specification, must set this field to
+		the corresponding class of the base Data Type.
+
+		Note: Extensions defined in the openc2lib context are recommended to use the same name of the base
+		Data Type, and to distinguish them through appropriate usage of the namespacing mechanism.
+	"""
+	regext = {}
+	""" Registered extensions
+
+		Classes that implement a Data Type defined in the Language Specification will use this field to
+		register extensions defined by external Profiles. Classes that define extensions within Profiles
+		shall register themselves according to the specific documentation of the base type class, but 
+		shall not modify this field.
+	"""
+
+	def todict(self, e):
+		""" Converts to dictionary 
+		
+			It is used to convert this object to an intermediary representation during 
+			serialization. It takes an `Encoder` argument that is used to recursively
+			serialize inner data and structures (the `Encoder` provides standard methods
+			for converting base types to dictionaries).. 
+
+			:param e: The `Encoder` that is being used.
+			:return: A dictionary compliants to the Language Specification's serialization
+			rules.
+		"""
+		newdic=dict()
+
+		# This is necessary because self.extend.fieldtypes does
+		# not exist for non-extended classes
+		if self.extend is None:
+			return e.todict(dict(self))
+			
+		for k,v in self.items():
+			if k not in self.fieldtypes:
+				raise ValueError('Unknown field: ', k)
+			if k in self.extend.fieldtypes:
+				newdic[k] = v
+			else:
+				if self.nsid not in newdic:
+					newdic[self.nsid]={}
+				newdic[self.nsid][k]=v
+			
+		return e.todict(newdic)
+
+	@classmethod
+	def fromdict(cls, dic, e):
+		""" Builds instance from dictionary 
+
+			It is used during deserialization to create an openc2lib instance from the text message.
+			It takes an `Encoder` instance that is used to recursively build instances of the inner
+			objects (the `Encoder` provides standard methods to create instances of base objects like
+			strings, integers, boolean).
+
+			:param dic: The intermediary dictionary representation from which the object is built.
+			:param e: The `Encoder that is being used.
+			:return: An instance of this class initialized from the dictionary values.
+		"""
+		objdic = {}
+		extension = None
+		logger.debug('Building %s from %s in Map', cls, dic)
+		for k,v in dic.items():
+			if k in cls.fieldtypes:
+				objdic[k] = e.fromdict(cls.fieldtypes[k], v)
+			elif k in cls.regext:
+				logger.debug('   Using profile %s to decode: %s', k, v)
+				extension = cls.regext[k]
+				for l,w in v.items():
+					objdic[l] = e.fromdict(extension.fieldtypes[l], w)
+			else:
+				raise TypeError("Unexpected field: ", k)
+
+		if extension is not None:
+			cls = extension
+
+		return cls(objdic)
+

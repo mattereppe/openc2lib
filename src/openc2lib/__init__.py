@@ -23,9 +23,9 @@ or you can run your own websever with:
 
 """
 
-from openc2lib.types.basetypes import Record, Choice, Enumerated, Array, ArrayOf, Map, MapOf
-from openc2lib.types.datatypes import L4Protocol, DateTime, Duration, TargetEnum, Nsid, ActionTargets, ActionArguments, Version, ResponseType
-from openc2lib.types.targettypes import IPv4Net, IPv4Connection, Features
+from openc2lib.types.base import Record, Choice, Enumerated, Array, ArrayOf, Map, MapOf
+from openc2lib.types.data import L4Protocol, DateTime, Duration, TargetEnum, Nsid, ActionTargets, ActionArguments, Version, ResponseType
+from openc2lib.types.targets import IPv4Net, IPv4Connection, Features
 
 from openc2lib.core.actions import Actions
 from openc2lib.core.producer import Producer

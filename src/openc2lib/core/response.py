@@ -2,8 +2,8 @@
 
 	This module defines the elements beard by a `Response`.
 """
-from openc2lib.types.basetypes import EnumeratedID, Map, ArrayOf
-from openc2lib.types.datatypes import Version, ActionTargets, Nsid
+from openc2lib.types.base import EnumeratedID, Map, ArrayOf
+from openc2lib.types.data import Version, ActionTargets, Nsid
 
 class StatusCode(EnumeratedID):
 	""" Status codes

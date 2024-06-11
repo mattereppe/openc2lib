@@ -6,7 +6,7 @@ implementation of Actuators for specific security functions.
 
 import aenum
 
-from openc2lib.types.basetypes  import Choice
+from openc2lib.types.base  import Choice
 from openc2lib.core.profile import Profiles
 
 class Actuator(Choice):

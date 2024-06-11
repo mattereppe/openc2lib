@@ -4,7 +4,7 @@
 """
 
 import aenum 
-from openc2lib.types.basetypes import Enumerated
+from openc2lib.types.base import Enumerated
 
 # TODO: Add full list of basic actions listed in Sec. 3.3.1
 class Actions(Enumerated):

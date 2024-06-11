@@ -6,7 +6,7 @@ to the Actuators.
 
 import logging
 
-from openc2lib.types.datatypes import DateTime, ResponseType
+from openc2lib.types.data import DateTime, ResponseType
 
 from openc2lib.core.encoder import Encoder
 from openc2lib.core.transfer import Transfer
