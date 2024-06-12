@@ -1,49 +1,18 @@
-"""OpenC2 Message structures
+"""OpenC2 Message structure
 
-This module defines the OpenC2 Message structure and its content type, as defined
+This module defines the OpenC2 Message structure, as defined
 in Sec. 3.2 of the Language Specification.
 
-The definition include: `Message`, `Content`, `Command`, and `Response`.
 """
 
-
-import enum
 import dataclasses
 import uuid
 
 from openc2lib.types.data import DateTime, Version
-from openc2lib.types.base import Record, Map
 
-from openc2lib.core.actions import Actions 
-from openc2lib.core.target import Target
-from openc2lib.core.response import StatusCode, Results
-from openc2lib.core.args import Args
-
-from openc2lib.core.actuator import Actuator
-
-_OPENC2_CONTENT_TYPE = "openc2"
-_OPENC2_VERSION = Version(1,0)
-
-class MessageType(enum.Enum):
-	"""OpenC2 Message Type
-	
-	Message type can be either `command` or `response`.
-	"""
-	command = 1
-	response = 2
-
-
-class Content:
-	""" Content of the OpenC2 Message
-
-		A content is the base class to derive either a `Command` or a `Response`. 
-	"""
-	msg_type: MessageType = None
-	"The type of Content (`MessageType`)"
-
-	def getType(self):
-		""" Returns the Content type """
-		return self.msg_type
+from openc2lib.core.content import MessageType, Content
+from openc2lib.core.version import _OPENC2_VERSION
+from openc2lib.core.content_type import _OPENC2_CONTENT_TYPE	
 
 @dataclasses.dataclass
 class Message:
@@ -98,48 +67,4 @@ class Message:
 		dic = self.__dict__
 		return dic
 
-
-# Init and other standard methods are automatically created
-@dataclasses.dataclass
-class Command(Content, Record):
-	"""OpenC2 Command
-
-	This class defines the structure of the OpenC2 Command. The name, meaning, and restrictions for
-	the fields are described in Sec. 3.3.1 of the Specification.
-
-	The `target` object is implicitely initialized by passing any valid `Target`.
-	"""
-	action: Actions
-	target: Target
-	args: Args = None
-	actuator: Actuator = None
-	command_id: str = None
-	msg_type = MessageType.command
-
-	# Mind that the __post_init__ hides Exceptions!!!! 
-	# If something fails in its code, it returns with no errors but does 
-	# not complete the code
-	def __post_init__(self):
-		if not isinstance(self.target, Target):
-			self.target = Target(self.target)
-		if not isinstance(self.actuator, Actuator) and self.actuator is not None:
-			self.actuator = Actuator(self.actuator)
-
-
-class Response(Content, Map):
-	"""OpenC2 Response
-
-		This class defines the structure of the OpenC2 Response. According to the definition
-			in Sec. 3.3.2 of the Language Specification, the `Response` contains a list of
-		  <key, value> pair. This allows for extensions by the Profiles.
-
-			Extensions to `Response` must extend `fieldtypes` according to the allowed field
-	 		names and types. `fieldtypes` is used to parse incoming OpenC2 messages and to build
-		   and initialize	the
-			correct Python objects for each \<key, value\> pair.		
-	"""
-		
-	fieldtypes = dict(status= StatusCode, status_text= str, results= Results)
-	"""The list of allowed \<key,value\> pair expected in a `Response`"""
-	msg_type = MessageType.response
 

@@ -10,8 +10,8 @@ from openc2lib.types.data import DateTime, ResponseType
 
 from openc2lib.core.encoder import Encoder
 from openc2lib.core.transfer import Transfer
-from openc2lib.core.message import Message, Response
-from openc2lib.core.response import StatusCode, StatusCodeDescription
+from openc2lib.core.message import Message
+from openc2lib.core.response import Response, StatusCode, StatusCodeDescription
 
 logger = logging.getLogger('openc2')
 

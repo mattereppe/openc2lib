@@ -3,7 +3,8 @@
 	This module provides the `Producer` class for implementing an OpenC2 Producer.
 
 """
-from openc2lib.core.message import Command, Message
+from openc2lib.core.message import Message
+from openc2lib.core.command import Command
 from openc2lib.core.encoder import Encoder
 from openc2lib.core.transfer import Transfer
 
