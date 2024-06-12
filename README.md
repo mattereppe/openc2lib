@@ -51,7 +51,7 @@ git clone https://github.com/mattereppe/openc2.git
 
 The repository includes a venv that contains all required Python 3.11 packages. Enter the `openc2` folder and activate the environment:
 ```
-. .venv/bin/activate
+. .openc2lib/bin/activate
 ```
 To use the library you must include the `<installdir>/src/` the Python path according to the download directory. You can either:
 - add the library path in your code (this must be done for every module):
