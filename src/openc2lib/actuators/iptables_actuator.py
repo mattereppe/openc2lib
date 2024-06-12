@@ -3,7 +3,7 @@
 	This module provides an example to create an `Actuator` for the SLPF profile.
 	It only answers to the request for available features.
 """
-from openc2lib import ArrayOf,ActionTargets, TargetEnum, Nsid, Version,Actions, Command, Response, StatusCode, StatusCodeDescription
+from openc2lib import ArrayOf,ActionTargets, TargetEnum, Nsid, Version,Actions, Command, Response, StatusCode, StatusCodeDescription, Features, ResponseType, Feature
 
 import openc2lib.profiles.slpf as slpf 
 
@@ -46,11 +46,49 @@ class IptablesActuator:
 			:param cmd: The `Command` including `Target` and optional `Args`.
 			:return: A `Response` including the result of the query and appropriate status code and messages.
 		"""
-		at = ActionTargets()
-		pf = ArrayOf(Nsid)()
-		pf.append(Nsid('slpf'))
-		res = slpf.Results(versions=ArrayOf(Version)([OPENC2VERS]), 
-				profiles=pf, pairs=slpf.AllowedCommandTarget)
+		
+		# Sec. 4.1 Implementation of the 'query features' command
+		if cmd.args is not None:
+			if ( len(cmd.args) > 1 ):
+				return Response(satus=StatusCode.BEDREQUEST, statust_text="Invalid query argument")
+			if ( len(cmd.args) == 1 ):
+				try:
+					if cmd.args['response_requested'] != ResponseType.complete:
+						raise KeyError
+				except KeyError:
+					return Response(status=StatusCode.BADREQUEST, status_text="Invalid query argument")
+
+		if ( cmd.target.getObj().__class__ == Features):
+			r = self.query_feature(cmd)
+		else:
+			return Response(status=StatusCode.BADREQUEST, status_text="Querying " + cmd.target.getName() + " not supported")
+
+		return r
+			
+
+	def query_feature(self, cmd):
+		""" Query features
+
+			Implements the 'query features' command according to the requirements in Sec. 4.1 of the Language Specification.
+		"""
+		features = {}
+		for f in cmd.target.getObj():
+			match f:
+				case Feature.versions:
+					features[Feature.versions.name]=ArrayOf(Version)([OPENC2VERS])	
+				case Feature.profiles:
+					pf = ArrayOf(Nsid)()
+					pf.append(Nsid(slpf.nsid))
+					features[Feature.profiles.name]=pf
+				case Feature.pairs:
+					features[Feature.pairs.name]=slpf.AllowedCommandTarget
+				case Feature.rate_limit:
+					return Response(status=StatusCode.NOTIMPLEMENTED, status_text="Feature 'rate_limit' not yet implemented")
+				case _:
+					return Response(status=StatusCode.NOTIMPLEMENTED, status_text="Invalid feature '" + f + "'")
+
+#at = ActionTargets()
+		res = slpf.Results(features)
 		r = Response(status=StatusCode.OK, status_text=StatusCodeDescription[StatusCode.OK], results=res)
 
 		return r

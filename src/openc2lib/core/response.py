@@ -92,7 +92,7 @@ class Results(Map):
 		This field is for internal use only and must not be set by any derived class.
 	"""
 
-	def set(self, version=None, profiles=None, pairs=None, rate_limit=None):
+	def set(self, versions=None, profiles=None, pairs=None, rate_limit=None):
 		""" Set values
 
 			This function may be used to set specific values of the `Results`, with a key=value syntax.
@@ -102,7 +102,7 @@ class Results(Map):
 			:param rate_limit: Maximum number of requests per minute supported by design or policy.
 			:return: None
 		"""
-		self['version']=version
+		self['versions']=versions
 		self['profiles']=profiles
 		self['pairs']=pairs
 		self['rate_limit']=rate_limit

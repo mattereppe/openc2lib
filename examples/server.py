@@ -1,4 +1,4 @@
-#!../.venv/bin/python3
+#!../.openc2lib/bin/python3
 # Example to use the OpenC2 library
 #
 

@@ -1,4 +1,4 @@
-#!../.venv/bin/python3
+#!../.openc2lib/bin/python3
 # Example to use the OpenC2 library
 #
 
@@ -25,8 +25,10 @@ def main():
 
 
 	arg = slpf.Args({'response_requested': oc2.ResponseType.complete})
+#	arg = slpf.Args({'response_requested': oc2.ResponseType.none})
 
-	cmd = oc2.Command(oc2.Actions.query, oc2.Features(), actuator=pf)
+	cmd = oc2.Command(oc2.Actions.query, oc2.Features([oc2.Feature.versions, oc2.Feature.profiles, oc2.Feature.pairs]), arg, actuator=pf)
+#	cmd = oc2.Command(oc2.Actions.query, oc2.Features([oc2.Feature.rate_limit]), arg, actuator=pf)
 
 	logger.info("Sending command: %s", cmd)
 	resp = p.sendcmd(cmd)
