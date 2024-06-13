@@ -167,6 +167,6 @@ TODO
 
 ## License
 
-TODO
+Licensed under the EUPL v1.2.
 
 
