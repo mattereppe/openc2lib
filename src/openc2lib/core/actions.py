@@ -19,9 +19,22 @@ class Actions(Enumerated):
 	locate = 2
 	query = 3
 	deny = 6
+	contain = 7
 	allow = 8
+	start = 9
+	stop = 10
+	restart = 11
+	cancel = 14
+	set = 15
 	update = 16
+	redirect = 18
+	create = 19
 	delete = 20
+	detonate = 22
+	restore = 23
+	copy = 28
+	investigate = 30
+	remediate = 32
 
 
 # DISABLED because not allowed by the Language Specification.

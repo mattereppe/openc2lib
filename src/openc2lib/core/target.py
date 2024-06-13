@@ -58,9 +58,5 @@ class Target(Choice):
 	register = Targets
 	""" Keeps the list of registered `Target`s """
 
-	def getName(self):
-		""" Returns the identifier associated to the Target type."""
-		return self.choice
-
 
 

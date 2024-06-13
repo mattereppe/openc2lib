@@ -7,6 +7,8 @@
 """
 
 
+from openc2lib.types.base.binary import Binary
+from openc2lib.types.base.binary_x import Binaryx
 from openc2lib.types.base.record import Record
 from openc2lib.types.base.choice import Choice
 from openc2lib.types.base.enumerated import Enumerated
