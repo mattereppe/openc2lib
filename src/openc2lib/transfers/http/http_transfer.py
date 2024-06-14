@@ -122,7 +122,7 @@ class HTTPTransfer(oc2.Transfer):
 		# TODO: How to manage HTTP response code? Can we safely assume they always match the Openc2 response?
 		try:
 			if response.text != "":
-				msg = self._fromhttp(response.headers, response.text)
+				msg, encoder = self._fromhttp(response.headers, response.text)
 			else:
 				msg = None
 		except ValueError as e:

@@ -29,7 +29,7 @@ def main():
 #	pf = slpf.slpf(dict(hostname='abete', named_group='firewalls', asset_id='iptables'))
 
 
-	arg = slpf.ExtArgs({'start_time': oc2.DateTime(), 'duration': 3000,'persistent': True, 'direction': slpf.Direction.ingress})
+	arg = slpf.Args({'start_time': oc2.DateTime(), 'duration': 3000,'persistent': True, 'direction': slpf.Direction.ingress})
 #arg = slpf.ExtArgs(start_time=oc2.DateTime(), response_requested=oc2.ResponseType.complete, duration= 3000,persistent= True, direction= slpf.Direction.ingress)
 #	arg = Args({'start_time': DateTime(), 'duration': 3000})
 
