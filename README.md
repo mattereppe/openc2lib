@@ -51,7 +51,7 @@ git clone https://github.com/mattereppe/openc2.git
 
 The repository includes a venv that contains all required Python 3.11 packages. Enter the `openc2` folder and activate the environment:
 ```
-. .openc2lib/bin/activate
+. .oc2-env/bin/activate
 ```
 To use the library you must include the `<installdir>/src/` the Python path according to the download directory. You can either:
 - add the library path in your code (this must be done for every module):
@@ -65,7 +65,7 @@ To use the library you must include the `<installdir>/src/` the Python path acco
   ```
 - add the library path to the venv (this is my preferred option):
   ```
-  echo '<_your_path_here_>/src' > .venv/lib/python3.11/site-packages/openc2lib.pth
+  echo '<_your_path_here_>/src' > .oc2-env/lib/python3.11/site-packages/openc2lib.pth
   ```
 
 A few scripts are available in the `examples` folder of the repository for sending a simple commmand to a remote actuator (see [Usage](#usage)).

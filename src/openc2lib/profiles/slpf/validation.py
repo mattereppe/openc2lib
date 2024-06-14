@@ -43,11 +43,16 @@ AllowedCommandArguments = ActionArguments()
 	An argument value of 'None' means the argument is valid for any supported target (see Table 2.3.1).
 	See Sec. 2.3.1-2.3.5 for the behaviour to be implemented in the actuators.
 """
+def fillin_allowed_command_arguments(AllowedCommandArguments, action, targets, args):
+	""" Fill in the table for actions with multiple targets """
+	for t in targets:
+		AllowedCommandArguments[(action, t)]=args
+	return AllowedCommandArguments
+
 # TODO: complete the list (if necessary)
-AllowedCommandArguments[(Actions.allow, None)] = ['response_requested', 'start_time', 'stop_time',
-	'duration','persistent','direction','insert_rule']
-AllowedCommandArguments[(Actions.deny, None)] = ['response_requested', 'start_time', 'stop_time',
-	'duration','persistent','direction','insert_rule','drop_process']
+args = ['response_requested', 'start_time', 'stop_time', 'duration','persistent','direction','insert_rule','drop_process']
+AllowedCommandArguments = fillin_allowed_command_arguments(AllowedCommandArguments, Actions.allow, AllowedCommandTarget[Actions.allow], args)
+AllowedCommandArguments = fillin_allowed_command_arguments(AllowedCommandArguments, Actions.deny, AllowedCommandTarget[Actions.deny], args)
 AllowedCommandArguments[(Actions.query, TargetEnum.features)] = ['response_requested']
 AllowedCommandArguments[(Actions.delete, TargetEnum[nsid+':rule_number'])] = ['response_requested', 'start_time']
 #AllowedCommandArguments[(Actions.update, TargetEnum.file)] = ['response_requested', 'start_time']
@@ -58,7 +63,7 @@ def validate_command(cmd):
 		Helper function to check the `Target` in a `Command` are valid for the `Action` according
 		to the SLPF profile.
 		:param cmd: The `Command` class to validate.
-	"""
+	""" 
 	try:
 		if cmd.action in AllowedActions and \
 			TargetEnum[cmd.target.getName()] in AllowedCommandTarget[cmd.action]:

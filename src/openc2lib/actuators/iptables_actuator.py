@@ -4,7 +4,9 @@
 	It only answers to the request for available features.
 """
 from openc2lib import ArrayOf,ActionTargets, TargetEnum, Nsid, Version,Actions, Command, Response, StatusCode, StatusCodeDescription, Features, ResponseType, Feature
-
+from openc2lib.actuators.SQLDatabase import SQLDatabase
+from openc2lib.actuators.iptables_manager import IptablesManager
+from openc2lib.core.actions import Actions
 import openc2lib.profiles.slpf as slpf 
 
 
@@ -18,26 +20,40 @@ class IptablesActuator:
 		This class provides a skeleton for implementing an `Actuator` according to the openc2lib approach.
 	"""
 	profile = slpf
-
+	
+	def __init__(self, args=None,db_name = "openc2_commands.db"):
+		self.db = SQLDatabase(db_name)
+		self.db.init_db()
 
 	def run(self, cmd):
-		""" Process `Command`
 
-			The `run` method executes an OpenC2 `Command` and returns a `Response`.
-		"""
 		if not slpf.validate_command(cmd):
 			return Response(status=StatusCode.NOTIMPLEMENTED, status_text='Invalid Action/Target pair')
-
 		if not slpf.validate_args(cmd):
 			return Response(status=StatusCode.NOTIMPLEMENTED, status_text='Option not supported')
 
+		print("******")
+
 		match cmd.action:
 			case Actions.query:
-				r = self.query(cmd)
+				result = self.query(cmd)
+			case Actions.allow:
+				result = self.allow(cmd)
+			case Actions.deny:
+				result = self.deny(cmd)
+			case Actions.update:
+				result = self.update(cmd)
+			case Actions.delete:
+				result = self.delete(cmd)
 			case _:
-				r = self.__notimplemented(cmd)	
+				result = self.__notimplemented(cmd)
 
-		return r
+		print("++++++")
+		return result
+
+	# def action_mapping(self, action, target):
+	# 	action_method = getattr(self, f"{action}", None)
+	# 	return action_method(target, self.args)
 
 	def query(self, cmd):
 		""" Query action
@@ -64,7 +80,6 @@ class IptablesActuator:
 			return Response(status=StatusCode.BADREQUEST, status_text="Querying " + cmd.target.getName() + " not supported")
 
 		return r
-			
 
 	def query_feature(self, cmd):
 		""" Query features
@@ -93,15 +108,66 @@ class IptablesActuator:
 
 		return r
 
+	# def action_mapping(self, action, target):
+	# 	action_method = getattr(self, f"{action}", None)
+	# 	return action_method(target, self.args)
+
+	def insert_handler(self, target, args, action, rule_number=None):
+		print("going to installa iptable rule")
+		error, cmd = IptablesManager.insert_rule(target, action)
+		print("iptables rule run: ", error, cmd)
+		rule_number = self.db.insert_command(cmd, rule_number)
+		print("db insertion:", rule_number)
+
+		if error is not 200:
+			return Response(status=StatusCode.INTERNALERROR, status_text="Internal error")
+		elif rule_number < 0:
+			return Response(status=StatusCode.INTERNALERROR, status_text="Internal error")
+		else:
+			res = slpf.Results(rule_number=slpf.RuleID(rule_number))
+			return Response(status=StatusCode.OK, status_text="OK", results=res)
+				
+		return error, rule_number 
+
 	def allow(self, cmd):
-		pass
+		target = cmd.target.getObj()
+		args = cmd.args
+		return self.insert_handler(target, args, "ACCEPT")
 
 	def deny(self, cmd):
-		pass
+		target = cmd.target.getObj()
+		args = cmd.args
+		return self.insert_handler(target, args, "DROP")
 
 	def update(self, cmd):
-		pass
+		target = cmd.target.getObj()
+		args = cmd.args
+		rule_number = int(cmd.target.getObj())
+		delete_result = self.delete_handler(target, args, rule_number)
+		iptables_target = cmd.args.get('iptables_target')
+		return self.insert_handler(target, args, iptables_target, rule_number)
 
+	def delete(self, cmd):
+		target = cmd.target.getObj()
+		args = cmd.args
+		rule_number = int(target)
+		cmd_data = self.db.get_command_from_rule_number(rule_number)
+		print("db: ", cmd_data)
+		if cmd_data is None:
+			return Response(status=StatusCode.INTERNALERROR, status_text="Internal error")
+		modified_cmd = IptablesManager.modify_command_for_deletion(cmd_data[0])
+		print("Commandn: ", modified_cmd)
+		err_code = IptablesManager.delete_rule(modified_cmd)
+		print("err_cod2: ", err_code)
+		if err_code is 200:
+			err_db = self.db.delete_command_by_rule_number(rule_number)
+			if err_db >= 0:
+			
+				print("err_db: ", err_db)
+				return Response(status=StatusCode.OK, status_text="OK")
+			
+		return Response(status=StatusCode.INTERNALERROR, status_text="Internal error")
+				
 	def __notimplemented(self, cmd):
 		""" Default response
 
