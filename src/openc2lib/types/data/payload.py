@@ -1,11 +1,12 @@
-import openc2.types.base
-from openc2lib.types.data import Binary, URI
+from openc2lib.types.base import Choice, Binary
+from openc2lib.types.data.uri import  URI
+from openc2lib.core.register import Register
 
 
-class Payload(openc2.types.base.Choice):
+class Payload(Choice):
 	""" OpenC2 Payload
 
 		Choice of literal content or URL (Sec. 3.4.2.13).
 	"""
-	register = {'bin': Binary, 'url': URI}
+	register = Register({'bin': Binary, 'url': URI})
 

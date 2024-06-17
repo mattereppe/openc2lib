@@ -1,8 +1,10 @@
-import dataclass
+import dataclasses
 
-import openc2lib.types.base
+from openc2lib.types.base import Record
+from openc2lib.types.data import Payload, Hashes
 
-class Artifact(openc2lib.types.base.Record):
+@dataclasses.dataclass
+class Artifact(Record):
 	""" OpenC2 Artifact
 
 		Implements the Artifact target (Section 3.4.1.1). 

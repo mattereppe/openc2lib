@@ -11,6 +11,7 @@ from openc2lib.encoders.json import JSONEncoder
 from openc2lib.transfers.http import HTTPTransfer
 
 import openc2lib.profiles.slpf as slpf
+import openc2lib.profiles.dumb as dumb
 
 
 #logging.basicConfig(filename='openc2.log',level=logging.DEBUG)
@@ -21,12 +22,14 @@ def main():
 	logger.info("Creating Producer")
 	p = oc2.Producer("producer.example.net", JSONEncoder(), HTTPTransfer("127.0.0.1", 8080))
 
-	pf = slpf.slpf({'hostname':'firewall', 'named_group':'firewalls', 'asset_id':'iptables'})
+#pf = slpf.slpf({'hostname':'firewall', 'named_group':'firewalls', 'asset_id':'iptables'})
+	pf = dumb.dumb({'hostname':'mockup', 'named_group':'testing', 'asset_id':'dumb'})
 
 
-	arg = slpf.Args({'response_requested': oc2.ResponseType.complete})
+	arg = oc2.Args({'response_requested': oc2.ResponseType.complete})
 #	arg = slpf.Args({'response_requested': oc2.ResponseType.none})
 
+	print("Register: ", oc2.Profiles)
 	cmd = oc2.Command(oc2.Actions.query, oc2.Features([oc2.Feature.versions, oc2.Feature.profiles, oc2.Feature.pairs]), arg, actuator=pf)
 #	cmd = oc2.Command(oc2.Actions.query, oc2.Features([oc2.Feature.rate_limit]), arg, actuator=pf)
 

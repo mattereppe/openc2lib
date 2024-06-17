@@ -12,10 +12,14 @@ from openc2lib.core.target import Targets
 from openc2lib.types.targets.ipv4_net import IPv4Net
 from openc2lib.types.targets.ipv4_connection import IPv4Connection
 from openc2lib.types.targets.features import Features
+from openc2lib.types.targets.artifact import Artifact
+from openc2lib.types.targets.device import Device
 
 
 
 # Register the list of available Targets
+Targets.add('artifact', Artifact, 1)
+Targets.add('device', Device, 3)
 Targets.add('features', Features, 9)
 Targets.add('ipv4_net', IPv4Net, 13)
 Targets.add('ipv4_connection', IPv4Connection, 15)
