@@ -11,17 +11,17 @@ The following table maps the OpenC2 elements and related Sections of the [OpenC2
 |---------------------|-----------|------------|------------------|
 | Message             | 3.2       | core       | message.py       |
 | Content             | 3.3       | core       | content.py       |
-| OpenC2 Command      | 3.3.1     | core       | message.py       |
+| OpenC2 Command      | 3.3.1     | core       | command.py       |
 | Action              | 3.3.1.1   | core       | actions.py       |
 | Target              | 3.3.1.2   | core       | target.py        |
 | Arguments           | 3.3.1.4   | core       | args.py          |
 | Actuator            | 3.3.1.3   | core       | actuator.py      |
-| OpenC2 Resposne     | 3.3.2     | core       | message.py       |
+| OpenC2 Response     | 3.3.2     | core       | response.py      |
 | Status Code         | 3.3.2.1   | core       | response.py      |
-| Results             | 3.3.2.2   | core       | response.py      |
-| Target types        | 3.4.1     | types      | targettypes.py   |
-| Data types          | 3.4.2     | types      | datatypes.py     |
-| Base structures     | 3.1       | types      | basetypes.py     |
+| Results             | 3.3.2.2   | core       | results.py       |
+| Target types        | 3.4.1     | types      | targets          |
+| Data types          | 3.4.2     | types      | data             |
+| Base structures     | 3.1       | types      | base             |
 
 
 
