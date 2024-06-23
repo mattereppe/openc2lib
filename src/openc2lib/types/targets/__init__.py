@@ -14,12 +14,18 @@ from openc2lib.types.targets.ipv4_connection import IPv4Connection
 from openc2lib.types.targets.features import Features
 from openc2lib.types.targets.artifact import Artifact
 from openc2lib.types.targets.device import Device
+from openc2lib.types.data.command_id import CommandID
+from openc2lib.types.targets.domain_name import DomainName
+from openc2lib.types.targets.email_addr import EmailAddr
 
 
 
 # Register the list of available Targets
 Targets.add('artifact', Artifact, 1)
+Targets.add('command', CommandID, 2)
 Targets.add('device', Device, 3)
+Targets.add('domain_name', DomainName, 7)
+Targets.add('email_addr', EmailAddr, 8)
 Targets.add('features', Features, 9)
 Targets.add('ipv4_net', IPv4Net, 13)
 Targets.add('ipv4_connection', IPv4Connection, 15)

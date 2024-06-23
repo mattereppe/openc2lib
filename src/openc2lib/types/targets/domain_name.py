@@ -10,14 +10,14 @@ class DomainName:
 		self.set(domainname)
 
 	def set(self, domainname):
-	""" Check hostname fullfils RFC 1123 requirements """
+		""" Check hostname fullfils RFC 1123 requirements """
 		if fqdn.FQDN(domainname).is_valid:
 			self._domainname = str(domainname)
 		else:
 			raise ValueError("Invalid hostname -- not compliant to RFC 1034")
 
 	def get(self):
-	""" Returns the hostname as string """
+		""" Returns the hostname as string """
 		return self._domainname
 
 	def __str__(self):

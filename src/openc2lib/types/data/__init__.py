@@ -26,6 +26,7 @@ from openc2lib.types.data.hashes import Hashes
 from openc2lib.types.data.uri import URI
 from openc2lib.types.data.hostname import Hostname
 from openc2lib.types.data.idn_hostname import IDNHostname
+from openc2lib.types.data.command_id import CommandID
 
 import openc2lib.types.data.mime_types
 		
