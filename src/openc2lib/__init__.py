@@ -25,8 +25,8 @@ or you can run your own websever with:
 
 
 from openc2lib.types.base import Binary, Binaryx, Record, Choice, Enumerated, Array, ArrayOf, Map, MapOf
-from openc2lib.types.data import L4Protocol, DateTime, Duration, TargetEnum, Nsid, ActionTargets, ActionArguments, Version, ResponseType, Feature, Hashes, Payload, Hostname, IDNHostname, CommandID
-from openc2lib.types.targets import IPv4Net, IPv4Connection, Features, Artifact, Device, DomainName
+from openc2lib.types.data import L4Protocol, DateTime, Duration, TargetEnum, Nsid, ActionTargets, ActionArguments, Version, ResponseType, Feature, Hashes, Payload, Hostname, IDNHostname
+from openc2lib.types.targets import Artifact, CommandID, Device, DomainName, EmailAddr, Features, File, IDNDomainName, IDNEmailAddr, IPv4Net, IPv6Net, IPv4Connection, IPv6Connection, MACAddr, Process, URI, IRI, Properties
 
 from openc2lib.core.actions import Actions
 from openc2lib.core.producer import Producer

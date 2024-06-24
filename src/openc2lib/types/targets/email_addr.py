@@ -13,7 +13,8 @@ class EmailAddr:
 		self.set(email)
 
 	def set(self, email):
-		emailinfo = email_validator.validate_email(email, check_deliverability=False)
+		""" Doesn't allow IDN email (RFC6531): there is a dedicated class for this (`IDNEmailAddr`). """
+		emailinfo = email_validator.validate_email(email, check_deliverability=False,allow_smtputf8=False)
 		self._emailaddr = emailinfo.normalized
 
 	def get(self):

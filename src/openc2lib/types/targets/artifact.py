@@ -7,7 +7,7 @@ from openc2lib.types.data import Payload, Hashes
 class Artifact(Record):
 	""" OpenC2 Artifact
 
-		Implements the Artifact target (Section 3.4.1.1). 
+		Implements the `artifact` target (Section 3.4.1.1). 
 		An array of bytes representing a file-like object or a link to that object.
 	"""
 	mime_type: str = None

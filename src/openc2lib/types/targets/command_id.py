@@ -2,7 +2,7 @@ import re
 
 from openc2lib.types.base import Record
 
-class CommandID(Record):
+class CommandID
 	""" OpenC2 Command-ID
 
 		Implements the `command` target (Section 3.4.2.16). 
