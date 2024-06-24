@@ -21,6 +21,12 @@ from openc2lib.types.data.response_type import ResponseType
 from openc2lib.types.data.target_enum import TargetEnum
 from openc2lib.types.data.action_targets import ActionTargets
 from openc2lib.types.data.action_arguments import ActionArguments
+from openc2lib.types.data.payload import Payload
+from openc2lib.types.data.hashes import Hashes
+from openc2lib.types.data.uri import URI
+from openc2lib.types.data.hostname import Hostname
+from openc2lib.types.data.idn_hostname import IDNHostname
+from openc2lib.types.data.command_id import CommandID
 
-
+import openc2lib.types.data.mime_types
 		

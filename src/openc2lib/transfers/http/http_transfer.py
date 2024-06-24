@@ -83,7 +83,6 @@ class HTTPTransfer(oc2.Transfer):
 		msg.version = oc2.Version.fromstr(hdr['Content-type'].split(';')[1].removeprefix("version="))
 		msg.encoding = encoder
 
-		
 		try:
 			msg.status = msg.content['status']
 		except:
@@ -209,6 +208,15 @@ class HTTPTransfer(oc2.Transfer):
 				resp.version = oc2.Message.version
 				resp.encoder = encoder
 				resp.status=oc2.StatusCode.BADREQUEST
+			# WARNING: The following code catch any exception and may prevent debugging
+			except Exception as e:
+				# TODO: Find better formatting (what should be returned if the request is not understood?)
+				content = oc2.Response(status=oc2.StatusCode.INTERNALERROR, status_text=str(e))
+				resp = oc2.Message(content)
+				resp.content_type = oc2.Message.content_type
+				resp.version = oc2.Message.version
+				resp.encoder = encoder
+				resp.status=oc2.StatusCode.INTERNALERROR
 			else:
 				logger.info("Received command: %s", cmd)
 				resp = callback(cmd)

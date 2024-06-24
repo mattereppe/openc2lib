@@ -10,26 +10,31 @@ class Binary(Openc2Type):
 	"""
 
 	def __init__(self, b=None):
-		""" Initialize from bytes or null """
+		""" Initializes from bytes or null """
 		if b is None:
-			self.data = None
-		else:
-			self.data = bytes(b)
+			b = b''
+		self.set(b)			
+
+	def set(self, b):
+		self._data = bytes(b)
+	
+	def get(self):
+		return self._data
 	
 	def __str__(self):
-		""" Return base64 encoding """
-		if self.data is not None:
-			return base64.b64encode(self.data).decode('ascii')
+		""" Returns base64 encoding """
+		if self._data is not None:
+			return base64.b64encode(self._data).decode('ascii')
 		else:
 			return ""
 			
 	def todict(self, e):
-		""" Encode with base64 """
-		return base64.b64encode(self.data).decode('ascii')	
+		""" Encodes with base64 """
+		return base64.b64encode(self._data).decode('ascii')	
 
 	@classmethod
 	def fromdict(cls, dic, e):
-		""" Build from base64encoding """
+		""" Builds from base64encoding """
 		try:
 			return cls( base64.b64decode(dic.encode('ascii')) )
 		except:		

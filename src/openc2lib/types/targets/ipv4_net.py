@@ -42,19 +42,19 @@ class IPv4Net:
 		    tmp = ipv4_net + "/" + str(prefix)
 		    net = ipaddress.IPv4Network(tmp)
 
-		self.ipv4_net = net.exploded
+		self.__ipv4_net = net.exploded
 	
 	def addr(self):
 		""" Returns address part only (no prefix) """
-		return ipaddress.IPv4Network(self.ipv4_net).network_address.exploded
+		return ipaddress.IPv4Network(self.__ipv4_net).network_address.exploded
 	
 	def prefix(self):
 		""" Returns prefix only """
-		return ipaddress.IPv4Network(self.ipv4_net).prefixlen
+		return ipaddress.IPv4Network(self.__ipv4_net).prefixlen
 	
 	def __str__(self):
-	    return ipaddress.IPv4Network(self.ipv4_net).exploded
+	    return ipaddress.IPv4Network(self.__ipv4_net).exploded
 	
 	def __repr__(self):
-	    return ipaddress.IPv4Network(self.ipv4_net).exploded
+	    return ipaddress.IPv4Network(self.__ipv4_net).exploded
 
