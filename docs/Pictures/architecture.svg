@@ -9,6 +9,9 @@
    id="svg1"
    inkscape:version="1.3.2 (091e20e, 2023-11-25)"
    sodipodi:docname="architecture.svg"
+   inkscape:export-filename="architecture.png"
+   inkscape:export-xdpi="600"
+   inkscape:export-ydpi="600"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -25,11 +28,11 @@
      inkscape:document-units="mm"
      inkscape:zoom="1.886996"
      inkscape:cx="342.34307"
-     inkscape:cy="73.662053"
-     inkscape:window-width="1768"
-     inkscape:window-height="1203"
-     inkscape:window-x="619"
-     inkscape:window-y="64"
+     inkscape:cy="73.397082"
+     inkscape:window-width="1512"
+     inkscape:window-height="916"
+     inkscape:window-x="0"
+     inkscape:window-y="38"
      inkscape:window-maximized="0"
      inkscape:current-layer="layer1"
      showgrid="false" />
@@ -76,24 +79,24 @@
     <text
        xml:space="preserve"
        style="font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.52778px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Bold Italic';stroke-width:0.264583"
-       x="45.352909"
+       x="107.51326"
        y="31.557894"
        id="text2"><tspan
          sodipodi:role="line"
          id="tspan2"
          style="font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.52778px;font-family:Arial;-inkscape-font-specification:'Arial Bold Italic';stroke-width:0.264583"
-         x="45.352909"
+         x="107.51326"
          y="31.557894">Consumer</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.52778px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Bold Italic';stroke-width:0.264583"
-       x="107.67587"
+       x="45.610943"
        y="31.559961"
        id="text2-9"><tspan
          sodipodi:role="line"
          id="tspan2-9"
          style="font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.52778px;font-family:Arial;-inkscape-font-specification:'Arial Bold Italic';stroke-width:0.264583"
-         x="107.67587"
+         x="45.610943"
          y="31.559961">Producer</tspan></text>
     <g
        id="g4">

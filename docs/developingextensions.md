@@ -64,38 +64,10 @@ The implementation of a `Transfer` is expected to:
 Implementation of new `Transfer`s included in the openc2lib must be placed in the `transfers` folder and be self-contained in a single module.
 
 
+## Define language extensions
 
-
-## Adding new profiles
-
-To add a new profile within the openc2lib source code, create a new directory in the `src/openc2lib/profiles` folder. Preferably name the folder with the nsid of the profile to be developed (e.g., `slpf` for the Statless Packet Filter profile). 
-
-### Create the actuator specifiers
-
-The _specifiers_ are the structure of any `Actuator` that implements the profile. They are defined by the Profile Specification (e.g., see [Sec. 2.1.4](https://docs.oasis-open.org/openc2/oc2slpf/v1.0/cs01/oc2slpf-v1.0-cs01.pdf) for the SLPF specifier).
-
-A specifier must be derived from `Profile` and the base structure it implements (likely, it will be an OpenC2 `Map`). It is suggested to name it with the nsid of the profile:
-```
-class <nsid>(Profile, Map):
-  ...
-```
-(see the [User Guide](userguide.md) for `Map` documentation)
-
-The specifier can provide the following methods:
-- `__init__` (MANDATORY) to initialize both the `Profile` and the base type. The `Profile` initialization is standard:
-  ```
-  Profile.__init__(self, 'slpf')
-  ```
-  The base type initialization will usually require to pass the initialization arguments to the base type. In the case of `Map`:
-  ```
-  Map.__init__(self, dic)
-  ```
-  where `dic` is the only argument passed to the specifier's ``__init__``.
-- `__str__` (RECOMMENDED) to provide a human-readable representation of the profile in log messages.
-
-### Define language extensions
-
-Define extensions to common types and elements described in the Language Specification. The following elements can be extended:
+Language extensions are typically defined as part of the definition of an Actuator profile. 
+The following elements can be extended:
 - targets;
 - arguments;
 - response results;
@@ -105,15 +77,78 @@ The list of `Actions` MUST NOT be extended (see Sec. 3.1.4 of the [Language Spec
 
 It is strongly recommended to follow the same naming conventions as adopted by the openc2lib (see the [Developer Guide](https://github.com/mattereppe/openc2/blob/main/docs/developerguide.md#naming-conventions)).
 
-Extensions are currently possible for `Map` and derived base structures (`MapOf`). This applies to both arguments (`Args`) and response results (`Results`). The extension (`Ext`) declares what is extended (`Base`), makes a copy of base field types, adds the list of additional fields, and sets the nsid:
+
+### Add new actuator profiles
+
+To add a new profile within the openc2lib source code, create a new directory in the `src/openc2lib/profiles` folder. Preferably name the folder with the nsid of the profile to be developed (e.g., `slpf` for the Statless Packet Filter profile). 
+
+#### Define the profile
+
+A Profile is identified by its namespace identifier and a unique name. Although there are not specific data structure defined by the specification, openc2lib wrap this information in a `Profile` class. The idea is to keep track of all profiles available within the system.
+
+When a new profile is being defined, a new class can be defined and derived from the base base `Profile` class. It must be registered as a new profile by the `@extension` decorator. Just define the `nsid` and `name` class attributes in the new profile.
+This is an example of profile definition for the SLPF:
 ```
+import openc2lib as oc2
+
+nsid = 'slpf'
+
+@oc2.extension(nsid = nsid)
+class Profile(oc2.Profile):
+	""" SLPF Profile
+
+		Defines the namespace identifier and the name of the SLPF Profile.
+	"""
+	nsid = nsid
+	name = 'http://docs.oasis-open.org/openc2/oc2slpf/v1.0/oc2slpf-v1.0.md'
+```
+(see below for additional information about the `extension` decorator.)
+
+
+#### Create the actuator specifier
+
+The core specification does not dictate the internal structure of an `Actuator`. Indeed, the `Actuator` field in the `Command` can be assigned different types, depending on the specific actuator profile. A new type must therefore be defined for each actuator profile, and it must be declared as such to allow openc2lib to correctly encode/decode it.
+The _specifiers_ are the structure of any `Actuator` that implements the profile. They are defined by the Profile Specification (e.g., see [Sec. 2.1.4](https://docs.oasis-open.org/openc2/oc2slpf/v1.0/cs01/oc2slpf-v1.0-cs01.pdf) for the SLPF specifier).
+
+To declare a Actuator specifier, use the `@actuator` decorator. This decorator automatically registers the new `Actuator`, enriches its definition with internal data, and makes it available to both `Producer`s and `Consumer`s.
+The following is an example for the SLPF actuator:
+```
+@oc2.actuator(nsid=Profile.nsid)
+class Specifiers(oc2.Map):
+	fieldtypes = dict(hostname=str, named_group=str, asset_id=str, asset_tuple = [str])
+```
+In this case, the actuator specifiers are derived from `Map`, according to the definition in the SLPF specification (see the [User Guide](userguide.md) for `Map` documentation).
+
+The specifier definition should also implement the `__init__` method to initialize class instances. It is also recommended to define a `__str__` function  to provide a human-readable representation of the actuator profile in log messages.
+
+### Define new targets
+
+Targets are just specific OpenC2 data types that can be used as `Target` in `Command`s. Any data type can be made a `Target` by decorating it with the `@target(name, nsid)` tag. This decorator automatically manages all the stuff to register new targets in openc2lib. It takes two arguments, namely:
+- `name`: the name associated to each type (e.g., see Sec. 3.3.1.2 in the [Language Specification](https://docs.oasis-open.org/openc2/oc2ls/v1.0/cs02/oc2ls-v1.0-cs02.pdf));
+- `nsid`: the namespace identifier of the profile that defines the `Target` (default to `None`, which means a `Target` defined in the core specification).
+
+This is an example for the SLPF profile:
+```
+@target(name='rule_number', nsid=Profile.nsid)
+class RuleID(int):
+	pass
+```
+(note that the `@target` decorator must be imported with its namespace according to common Python rules.)
+
+### Extend Map-based types
+
+Extensions are currently possible for `Map` and derived base structures (`MapOf`). For instance, both arguments (`Args`) and response results (`Results`) are currently extensible. To make additional data types extensible, they must be decorated with the `@extensible` tag.
+
+An extension must be declared with the `@extension(nsid)` decorator, where `nsid` is an argument that provides the namespace identifier where the extension is defined. Then, the extension class is derived from the base class. The extension must define only the additional fields that are not included in the base type. 
+
+The following is a generic example for an extension (`Ext`) of the base type (`Base`) in the namespace `xxxx`:
+```
+@extension(nsid='xxxx')
 class Ext(Base):
-   extend = Base
-   fieldtypes = Base.fieldtypes.copy()
-   fieldtypes['new_field']=new_field_type
-   ...
-   nsid = profile_name
+   fieldtypes = {'new_field': new_field_type, ... }
 ```
+The decorator manages all additional fields and declaration that are necessary to use the extension in openc2lib.
+
 It is possible (and this is the preferred approach) to define the extension with the same name of the base class. By proper referring to base and extended elements within the corresponding namespace, name collisions are avoided and the naming remains more uniform.
 For instance, the Args element and its extension could be unambigously referred to in the code in the following way:
 ```
@@ -125,33 +160,8 @@ args = Args(...)        # <- This instantiate the base Args class
 args = slpf.Args(...)   # <- This instantiate the extended Args class derived in the slpf profile
 ```
 
-The extension of `Argument` and `Result` will likely be based on additional structures. Define them as well in the profile folder. As best practice, data and target types should be defined in two different modules (datatypes and targettypes, respecitvely, see the [Developer guide](https://github.com/mattereppe/openc2/blob/main/docs/developerguide.md).
+The extension of `Args` and `Results` will likely be based on additional structures. Define them as well in the profile folder. As best practice, data and target types should be defined in two different modules (datatypes and targettypes, respecitvely, see the [Developer guide](https://github.com/mattereppe/openc2/blob/main/docs/developerguide.md).
 
-### Register extensions
-
-Extensions to `Target`, `Args`, and `Results` must be known to openc2lib to properly encode and decode messages that use these elements. 
-
-The registration of a new `Target` includes its name, class, id, and nsid. For instance, to register the 'rule_number' target defined by the SLPF profile:
-```
-from openc2lib import Targets
-
-Targets.add('rule_number', RuleID, 1024, nsid)
-```
-The id is taken from the specification (Table 2.1.2-2 in this case). 
-
-The registration of new `Args` and `Results` is even simpler:
-```
-from openc2lib.profiles.slpf.args import Args
-
-ExtendedArguments.add(nsid, Args)
-
-from openc2lib import ExtendedResults 
- 
-ExtendedResults.add(nsid, Results)
-```
-(assuming the local extensions within the profiles have been named `Args` and `Results`).
-
-Registration can be done in the `__init__.py` file. 
 
 ### Syntax validation
 
@@ -168,15 +178,14 @@ Command(target=slpf.rule_number, ...)
 slpf.Args(...)
 ```
 
-## Adding new actuators
+## Implement concrete actuators
 
-Implementing an `Actuator` is really straightforward. There are only two requirements for its interface:
-- an `Actuator` must set the class member `profile` to the profile it implements;
+Concrete actuators are server applications that translate an `Actuator` profile into commands and configurations on security functions. The same `Actuator` profile may be implemented by multiple concrete actuators, depending on the technology of the security function (e.g., an SLPF actuator may be used to control `iptables`, `pfsense`, etc.).
+
+Implementing an `Actuator` is really straightforward. There is  only one requirement for its interface:
 - an `Actuator` must implement a `run(cmd)` method that processes a command and returns the response.
 ```
 class Actuator:
-  profile = slpf
- 
   
   def run(self, cmd):
      ...
