@@ -6,12 +6,12 @@
 
 from openc2lib import Actions, StatusCode, ActionTargets, ActionArguments, TargetEnum
 
-from openc2lib.profiles.slpf.nsid import nsid
+from openc2lib.profiles.slpf.profile import Profile
 
 AllowedActions = [ Actions.query, Actions.deny, Actions.allow, Actions.deny, Actions.update, Actions.delete]
 """ List of allowed `Action`s """
 
-AllowedTargets = [ 'feature', 'file', 'ipv4_net', 'ipv6_net', 'ipv4_connection', 'ipv6_connection' , nsid+':rule_number']
+AllowedTargets = [ 'feature', 'file', 'ipv4_net', 'ipv6_net', 'ipv4_connection', 'ipv6_connection' , Profile.nsid+':rule_number']
 """ List of allowed `Target`s 
 
 	 This is probably not strictly necessary
@@ -33,7 +33,7 @@ AllowedCommandTarget[Actions.deny] = [TargetEnum.ipv4_connection, TargetEnum.ipv
 #AllowedCommandTarget[Actions.deny] = [TargetEnum.ipv4_connection, TargetEnum.ipv6_connection,
 #	TargetEnum.ipv4_net, TargetEnum.ipv6_net]
 AllowedCommandTarget[Actions.query] = [TargetEnum.features]
-AllowedCommandTarget[Actions.delete] = [TargetEnum[nsid+':rule_number']]
+AllowedCommandTarget[Actions.delete] = [TargetEnum[Profile.nsid+':rule_number']]
 #AllowedCommandTarget[Actions.update] = [TargetEnum.file]
 
 AllowedCommandArguments = ActionArguments()
@@ -54,7 +54,7 @@ args = ['response_requested', 'start_time', 'stop_time', 'duration','persistent'
 AllowedCommandArguments = fillin_allowed_command_arguments(AllowedCommandArguments, Actions.allow, AllowedCommandTarget[Actions.allow], args)
 AllowedCommandArguments = fillin_allowed_command_arguments(AllowedCommandArguments, Actions.deny, AllowedCommandTarget[Actions.deny], args)
 AllowedCommandArguments[(Actions.query, TargetEnum.features)] = ['response_requested']
-AllowedCommandArguments[(Actions.delete, TargetEnum[nsid+':rule_number'])] = ['response_requested', 'start_time']
+AllowedCommandArguments[(Actions.delete, TargetEnum[Profile.nsid+':rule_number'])] = ['response_requested', 'start_time']
 #AllowedCommandArguments[(Actions.update, TargetEnum.file)] = ['response_requested', 'start_time']
 
 def validate_command(cmd):

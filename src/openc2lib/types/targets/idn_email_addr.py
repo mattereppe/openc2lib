@@ -1,5 +1,7 @@
 from openc2lib.types.targets.email_addr import EmailAddr
+from openc2lib.core.target import target
 
+@target('idn_email_addr')
 class IDNEmailAddr(EmailAddr):
 	""" OpenC2 IDNEmailAddr
 

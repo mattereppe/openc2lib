@@ -2,8 +2,10 @@ import dataclasses
 
 from openc2lib.types.base import Record
 from openc2lib.types.data import Payload, Hashes
+from openc2lib.core.target import target
 
 @dataclasses.dataclass
+@target('artifact')
 class Artifact(Record):
 	""" OpenC2 Artifact
 

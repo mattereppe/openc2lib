@@ -1,5 +1,8 @@
 import macaddress
 
+from openc2lib.core.target import target
+
+@target('mac_addr')
 class MACAddr:
 	""" OpenC2 MACAddr
 

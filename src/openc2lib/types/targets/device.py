@@ -1,7 +1,9 @@
 from openc2lib.types.data.hostname import Hostname
 from openc2lib.types.data.idn_hostname import IDNHostname
 from openc2lib.types.base.map	import Map
+from openc2lib.core.target import target
 
+@target('device')
 class Device(Map):
 	""" Identify network device.
 		

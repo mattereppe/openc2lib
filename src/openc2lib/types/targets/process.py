@@ -2,7 +2,9 @@ from typing import Self
 
 from openc2lib.types.base import Map
 from openc2lib.types.targets import File
+from openc2lib.core.target import target
 
+@target('process')
 class Process(Map):
 	""" OpenC2 Process
 

@@ -1,7 +1,9 @@
 import re
 
 from openc2lib.types.base import Record
+from openc2lib.core.target import target
 
+@target('command')
 class CommandID
 	""" OpenC2 Command-ID
 

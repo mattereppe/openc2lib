@@ -29,12 +29,8 @@
 """
 
 
-from openc2lib import Profile, Profiles
-
-from openc2lib.profiles.slpf.nsid import nsid
-from openc2lib.profiles.slpf.profile import *
-
-Profiles.add(nsid, slpf, 1024)
+from openc2lib.profiles.slpf.profile import Profile
+from openc2lib.profiles.slpf.actuator import *
 
 from openc2lib import TargetEnum
 from openc2lib.profiles.slpf.data import Direction
@@ -42,14 +38,6 @@ from openc2lib.profiles.slpf.targets import RuleID
 
 
 # According to the standard, extended targets must be prefixed with the nsid
-from openc2lib import ExtendedArguments
 from openc2lib.profiles.slpf.args import Args
-
-ExtendedArguments.add(nsid, Args)
-
-from openc2lib import ExtendedResults
-from openc2lib.profiles.slpf.response import Results
-
-ExtendedResults.add(nsid, Results)
-
+from openc2lib.profiles.slpf.results import Results
 from openc2lib.profiles.slpf.validation import AllowedCommandTarget, AllowedCommandArguments, validate_command, validate_args

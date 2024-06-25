@@ -1,4 +1,8 @@
+import openc2lib as oc2
 
+from openc2lib.profiles.slpf.profile import Profile
+
+@oc2.target(name='rule_number', nsid=Profile.nsid)
 class RuleID(int):
 	""" OpenC2 Rule-ID
 

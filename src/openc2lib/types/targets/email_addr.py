@@ -1,7 +1,9 @@
 import email_validator
 
 from openc2lib.types.base import Record
+from openc2lib.core.target import target
 
+@target('email_addr')
 class EmailAddr:
 	""" OpenC2 Email Address
 

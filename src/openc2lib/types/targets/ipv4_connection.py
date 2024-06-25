@@ -3,8 +3,10 @@ import dataclasses
 import openc2lib.types.base
 
 from openc2lib.types.targets.ipv4_net import IPv4Net
+from openc2lib.core.target import target
 
 @dataclasses.dataclass
+@target('ipv4_connection')
 class IPv4Connection(openc2lib.types.base.Record):
 	"""OpenC2 IPv4 Connection
 		

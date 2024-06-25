@@ -3,8 +3,10 @@ import dataclasses
 import openc2lib.types.base
 
 from openc2lib.types.targets.ipv6_net import IPv6Net
+from openc2lib.core.target import target
 
 @dataclasses.dataclass
+@target('ipv6_connection')
 class IPv6Connection(openc2lib.types.base.Record):
 	"""OpenC2 IPv6 Connection
 		

@@ -4,8 +4,9 @@
 	registered within the system.
 """
 
-from openc2lib.core.register import Register
+from openc2lib.core.extensions import extensible
 
+@extensible
 class Profile:
 	"""OpenC2 Profile
 	
@@ -16,6 +17,12 @@ class Profile:
 		security functions, which in openc2lib terminology is named `Actuator`.
 
 		Each Profile defined for openc2lib must inherit from this class.
+	"""
+	fieldtypes = {'nsid': str, 'name': str}
+	""" Types of fields
+
+		The `fieldtypes` definition is not used in the current implementation. It is only provided
+		for compatibility with the extensibility mechanism. It might be used in the future.
 	"""
 	def __init__(self, nsid, name):
 		""" Creates the Profile
@@ -31,15 +38,4 @@ class Profile:
 
 	def __str__(self):
 		return self.nsid
-
-Profiles = Register()
-"""List of registered `Profile`s
-
-	This is a dictionary of available `Profile`s within the system. When a new `Profile` is defined,
-	it must be registered in openc2lib before being used.
-
-	Multiple registration of the same Profile will raise a `ValueError` Excepction.
-
-	Usage: see the `Register` class interface.
-"""
 

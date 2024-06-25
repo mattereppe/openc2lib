@@ -5,9 +5,10 @@
 """
 import openc2lib as oc2
 
-import openc2lib.profiles.slpf.nsid as profile_name
+from openc2lib.profiles.slpf.profile import Profile
 from openc2lib.profiles.slpf.targets import RuleID
 
+@oc2.extension(nsid=Profile.nsid)
 class Results(oc2.Results):
 	""" SLPF Results
 
@@ -20,12 +21,6 @@ class Results(oc2.Results):
 		remember. The recommended way to use in the code is to import the whole
 		slpf module as `slpf` and refer to this class as `slpf.Results`.
 	"""
-	extend = oc2.Results
-	""" The class to extend (`openc2lib.core.response.Results` defined in the core section). """
-	fieldtypes = oc2.Results.fieldtypes.copy()
-	""" Copy all `fieldtypes` defined in the base class. """
-	fieldtypes['rule_number']=RuleID
+	fieldtypes = {'rule_number': RuleID}
 	""" Extension with SLPF specific arguments (Sec. 2.2.2 of the SLPF Specification) """
-	nsid = profile_name
-	""" Namespace identifier to distinguish extensions """
 

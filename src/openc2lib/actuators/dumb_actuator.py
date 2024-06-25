@@ -4,6 +4,7 @@
 	message. Use it for testing only.
 """
 from openc2lib import ArrayOf,ActionTargets, TargetEnum, Nsid, Version,Results, StatusCode, StatusCodeDescription, Actions, Command, Response, ResponseType, Feature, Features
+import openc2lib.profiles.slpf as slpf
 import openc2lib.profiles.dumb as dumb 
 
 OPENC2VERS=Version(1,0)
@@ -19,10 +20,10 @@ class DumbActuator:
 		match cmd.action:
 			case Actions.query:
 				result = self.query(cmd)
-#			case Actions.allow:
-#				result = self.allow(cmd)
-#			case Actions.deny:
-#				result = self.deny(cmd)
+			case Actions.allow:
+				result = self.allow(cmd)
+			case Actions.deny:
+				result = self.deny(cmd)
 #			case Actions.update:
 #				result = self.update(cmd)
 #			case Actions.delete:
@@ -88,6 +89,25 @@ class DumbActuator:
 		r = Response(status=StatusCode.OK, status_text=StatusCodeDescription[StatusCode.OK], results=res)
 
 		return r
+	
+	def allow(self, cmd):
+		""" Allow IPv4Net/IPv4Connection
+
+			Do nothing, but return a `rule_number` just for testing response.
+		"""
+		res = slpf.Results({'rule_number': slpf.RuleID(1234)})
+		r = Response(status=StatusCode.OK, status_text=StatusCodeDescription[StatusCode.OK], results=res)
+		return r
+
+	def deny(self, cmd):
+		""" Deny IPv4Net/IPv4Connection
+
+			Do nothing, but return a `rule_number` just for testing response.
+		"""
+		res = Results({'rule_number': 1234})
+		r = Response(status=StatusCode.OK, status_text=StatusCodeDescription[StatusCode.OK], results=res)
+		return r
+
 
 	def copy(self, cmd):
 		return  Response(status=StatusCode.OK, status_text=StatusCodeDescription[StatusCode.OK])

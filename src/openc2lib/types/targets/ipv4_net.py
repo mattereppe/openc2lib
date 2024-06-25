@@ -1,7 +1,9 @@
 import ipaddress
 
 import openc2lib.types.data
+from openc2lib.core.target import target
 
+@target('ipv4_net')
 class IPv4Net:
 	"""OpenC2 IPv4 Address Range
 		

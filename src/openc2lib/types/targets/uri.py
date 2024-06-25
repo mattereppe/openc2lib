@@ -1,5 +1,8 @@
 import rfc3987
 
+from openc2lib.core.target import target
+
+@target('uri')
 class URI:
 	""" OpenC2 URI
 

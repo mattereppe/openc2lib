@@ -6,10 +6,6 @@
 """
 
 
-from openc2lib import Profile, Profiles
+from openc2lib.profiles.dumb.actuator import *
 
-from openc2lib.profiles.dumb.nsid import nsid
-from openc2lib.profiles.dumb.profile import *
-
-Profiles.add(nsid, dumb, 9999)
 

@@ -1,5 +1,8 @@
 import fqdn
 
+from openc2lib.core.target import target
+
+@target('domain_name')
 class DomainName:
 	""" A hostname that can be used to connect to this device over a network 
 		

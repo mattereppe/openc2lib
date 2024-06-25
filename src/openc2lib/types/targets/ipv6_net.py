@@ -1,7 +1,8 @@
 import ipaddress
 
-#import openc2lib.types.data
+from openc2lib.core.target import target
 
+@target('ipv6_net')
 class IPv6Net:
 	"""OpenC2 IPv6 Address Range
 		

@@ -5,10 +5,11 @@
 """
 import openc2lib as oc2
 
-import openc2lib.profiles.slpf.nsid as profile_name
+from openc2lib.profiles.slpf.profile import Profile
 from openc2lib.profiles.slpf.data import DropProcess, Direction
 from openc2lib.profiles.slpf.targets import RuleID
 
+@oc2.extension(nsid=Profile.nsid)
 class Args(oc2.Args):
 	""" SLPF Args
 
@@ -21,18 +22,6 @@ class Args(oc2.Args):
 		slpf module as `slpf` and refer to this class as `slpf.Args`.
 
 	"""
-	extend = oc2.Args
-	""" The class to extend (`openc2lib.core.args.Args` defined in the core section). """
-	fieldtypes = oc2.Args.fieldtypes.copy()
-	""" Copy all `fieldtypes` defined in the base class. """
-	fieldtypes['drop_process']=DropProcess
+	fieldtypes = {'drop_process': DropProcess, 'persistent': bool, 'direction': Direction, 'insert_rule': RuleID}
 	""" Extension with SLPF specific arguments (Sec. 2.1.3.2 of the SLPF Specification) """
-	fieldtypes['persistent']=bool
-	""" Extension with SLPF specific arguments (Sec. 2.1.3.2 of the SLPF Specification) """
-	fieldtypes['direction']=Direction
-	""" Extension with SLPF specific arguments (Sec. 2.1.3.2 of the SLPF Specification) """
-	fieldtypes['insert_rule']=RuleID
-	""" Extension with SLPF specific arguments (Sec. 2.1.3.2 of the SLPF Specification) """
-	nsid = profile_name
-	""" Namespace identifier to distinguish extensions """
 

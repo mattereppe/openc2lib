@@ -8,6 +8,7 @@ import aenum
 from openc2lib.types.base import Choice
 from openc2lib.types.data import TargetEnum
 from openc2lib.core.register import Register
+from openc2lib.core.extensions import Extensions
 
 
 class TargetRegister(Register):
@@ -44,19 +45,35 @@ class TargetRegister(Register):
 			return
 		raise ValueError("Target already registered")
 
-Targets = TargetRegister()
+Extensions['Targets'] = TargetRegister()
 """ List of available `Target`s
 
 	Include base Targets defined by the Language Specification and additional Targets defined by Profiles.
 """
+
+def target(name, nsid=None):
+	""" The `@target` decorator
+
+		Use this decorator to declare a `Target` in openc2lib extensions.
+		:param name: The name of the target, as provided by the corresponding specification.
+		:param nsid: The Profile NameSpace identifier (must be the same as defined by the corresponding Profile specification.
+		:result: The following class definition is registered as valid `Target` in openc2lib.
+	"""
+	def target_register(cls):
+		Extensions['Targets'].add(name, cls, None, nsid)
+		return cls
+	return target_register
 
 class Target(Choice):
 	""" OpenC2 Target in `Command`
 
 		This is the definition of the `target` carried in OpenC2 `Command`.
 	"""
-	register = Targets
-	""" Keeps the list of registered `Target`s """
+	register = Extensions['Targets']
+	""" Keeps the list of registered `Target`s 
+	
+		For internal use only. Do not delete or modify.
+	"""
 
 
 

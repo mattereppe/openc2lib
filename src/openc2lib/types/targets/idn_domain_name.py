@@ -1,5 +1,7 @@
 from openc2lib.types.data.idn_hostname import IDNHostname
+from openc2lib.core.target import target
 
+@target('idn_domain_name')
 class IDNDomainName(IDNHostname):
 	""" OpenC2 IDNDomainName
 

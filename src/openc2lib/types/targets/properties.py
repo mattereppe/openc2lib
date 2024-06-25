@@ -1,5 +1,7 @@
 from openc2lib.types.base import ArrayOf
+from openc2lib.core.target import target
 
+@target('properties')
 class Properties(ArrayOf(str)):
 	""" OpenC2 Properties
 

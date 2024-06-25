@@ -1,6 +1,8 @@
 from openc2lib.types.base import Map
 from openc2lib.types.data import Hashes
+from openc2lib.core.target import target
 
+@target('file')
 class File(Map):
 	""" OpenC2 File
 

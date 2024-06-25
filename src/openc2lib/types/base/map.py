@@ -15,7 +15,7 @@ class Map(Openc2Type, dict):
 		with their class definition. 
 		
 		Additionally, according to the Language Specification, `Map`s may be extended by
-		Profiles. Such extensions must use the `extend` and `regext` class attributes to 
+		Profiles. Such extensions must use the `base` and `register` class attributes to 
 		bind to the base element they extend and the `Profile` in which they are defined.
 	"""
 	fieldtypes: dict = None
@@ -24,7 +24,7 @@ class Map(Openc2Type, dict):
 		A `dictionary` which keys are field names and which values are the corresponding classes.
 		Must be provided by any derived class.
 	"""
-	extend = None
+	base = None
 	""" Base class
 
 		Data types defined in the Language Specification shall not set this field. Data types defined in
@@ -34,7 +34,7 @@ class Map(Openc2Type, dict):
 		Note: Extensions defined in the openc2lib context are recommended to use the same name of the base
 		Data Type, and to distinguish them through appropriate usage of the namespacing mechanism.
 	"""
-	regext = {}
+	register = None
 	""" Registered extensions
 
 		Classes that implement a Data Type defined in the Language Specification will use this field to
@@ -57,15 +57,15 @@ class Map(Openc2Type, dict):
 		"""
 		newdic=dict()
 
-		# This is necessary because self.extend.fieldtypes does
+		# This is necessary because self.base.fieldtypes does
 		# not exist for non-extended classes
-		if self.extend is None:
+		if self.base is None:
 			return e.todict(dict(self))
 			
 		for k,v in self.items():
 			if k not in self.fieldtypes:
 				raise ValueError('Unknown field: ', k)
-			if k in self.extend.fieldtypes:
+			if k in self.base.fieldtypes:
 				newdic[k] = v
 			else:
 				if self.nsid not in newdic:
@@ -93,9 +93,9 @@ class Map(Openc2Type, dict):
 		for k,v in dic.items():
 			if k in cls.fieldtypes:
 				objdic[k] = e.fromdict(cls.fieldtypes[k], v)
-			elif k in cls.regext:
+			elif k in cls.register:
 				logger.debug('   Using profile %s to decode: %s', k, v)
-				extension = cls.regext[k]
+				extension = cls.register[k]
 				for l,w in v.items():
 					objdic[l] = e.fromdict(extension.fieldtypes[l], w)
 			else:
