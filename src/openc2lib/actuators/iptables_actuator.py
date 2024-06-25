@@ -19,7 +19,7 @@ class IptablesActuator:
 
 		This class provides a skeleton for implementing an `Actuator` according to the openc2lib approach.
 	"""
-	profile = slpf
+#	profile = slpf
 	
 	def __init__(self, args=None,db_name = "openc2_commands.db"):
 		self.db = SQLDatabase(db_name)
@@ -31,8 +31,6 @@ class IptablesActuator:
 			return Response(status=StatusCode.NOTIMPLEMENTED, status_text='Invalid Action/Target pair')
 		if not slpf.validate_args(cmd):
 			return Response(status=StatusCode.NOTIMPLEMENTED, status_text='Option not supported')
-
-		print("******")
 
 		match cmd.action:
 			case Actions.query:
@@ -48,7 +46,6 @@ class IptablesActuator:
 			case _:
 				result = self.__notimplemented(cmd)
 
-		print("++++++")
 		return result
 
 	# def action_mapping(self, action, target):
@@ -93,7 +90,7 @@ class IptablesActuator:
 					features[Feature.versions.name]=ArrayOf(Version)([OPENC2VERS])	
 				case Feature.profiles:
 					pf = ArrayOf(Nsid)()
-					pf.append(Nsid(slpf.nsid))
+					pf.append(Nsid(slpf.Profile.nsid))
 					features[Feature.profiles.name]=pf
 				case Feature.pairs:
 					features[Feature.pairs.name]=slpf.AllowedCommandTarget

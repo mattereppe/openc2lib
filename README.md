@@ -49,10 +49,14 @@ git clone https://github.com/mattereppe/openc2.git
 ```
 (this creates an `openc2` folder).
 
-The repository includes a venv that contains all required Python 3.11 packages. Enter the `openc2` folder and activate the environment:
+First, create a virtual environment and populate it with Python dependecies:
+
 ```
+python3 -m venv .oc2-env
 . .oc2-env/bin/activate
+pip install -r requirements.txt
 ```
+
 To use the library you must include the `<installdir>/src/` the Python path according to the download directory. You can either:
 - add the library path in your code (this must be done for every module):
   ```
