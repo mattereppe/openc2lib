@@ -9,7 +9,7 @@ from openc2lib import ArrayOf,ActionTargets, TargetEnum, Nsid, Version,Results, 
 import openc2lib.profiles.slpf as slpf
 import openc2lib.profiles.dumb as dumb 
 
-logger = logging.getLogger('openc2')
+logger = logging.getLogger(__name__)
 
 OPENC2VERS=Version(1,0)
 """ Supported OpenC2 Version """
@@ -82,7 +82,6 @@ class DumbActuator:
 					pf = ArrayOf(Nsid)()
 					pf.append(dumb.Profile.nsid)
 					pf.append(slpf.Profile.nsid)
-					pf.append(slpf.nsid)
 					features[Feature.profiles.name]=pf
 				case Feature.pairs:
 					features[Feature.pairs.name]=[]
