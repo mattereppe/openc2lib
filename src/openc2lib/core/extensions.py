@@ -56,7 +56,6 @@ def extension(nsid):
 		setattr(cls, 'nsid', nsid)
 		Extensions[cls.__base__.__name__].add(nsid, cls)
 		cls.fieldtypes.update(copy.deepcopy(cls.__base__.fieldtypes))
-		print(cls.fieldtypes)
 		return cls
 	return extend_wrapper
 

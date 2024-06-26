@@ -15,11 +15,10 @@ OPENC2VERS=Version(1,0)
 
 # An implementation of the slpf profile. 
 class IptablesActuator:
-	""" Dumb SLPF implementation
+	""" Iptables SLPF implementation
 
-		This class provides a skeleton for implementing an `Actuator` according to the openc2lib approach.
+		This class provides an implementation of the SLPF `Actuator` for iptables.
 	"""
-#	profile = slpf
 	
 	def __init__(self, args=None,db_name = "openc2_commands.db"):
 		self.db = SQLDatabase(db_name)
@@ -32,21 +31,24 @@ class IptablesActuator:
 		if not slpf.validate_args(cmd):
 			return Response(status=StatusCode.NOTIMPLEMENTED, status_text='Option not supported')
 
-		match cmd.action:
-			case Actions.query:
-				result = self.query(cmd)
-			case Actions.allow:
-				result = self.allow(cmd)
-			case Actions.deny:
-				result = self.deny(cmd)
-			case Actions.update:
-				result = self.update(cmd)
-			case Actions.delete:
-				result = self.delete(cmd)
-			case _:
-				result = self.__notimplemented(cmd)
+		try:
+			match cmd.action:
+				case Actions.query:
+					response = self.query(cmd)
+				case Actions.allow:
+					response = self.allow(cmd)
+				case Actions.deny:
+					response = self.deny(cmd)
+				case Actions.update:
+					response = self.update(cmd)
+				case Actions.delete:
+					response = self.delete(cmd)
+				case _:
+					response = self.__notimplemented(cmd)
+		except Exception as e:
+			return self.__servererror(cmd, e)
 
-		return result
+		return response
 
 	# def action_mapping(self, action, target):
 	# 	action_method = getattr(self, f"{action}", None)
@@ -110,11 +112,8 @@ class IptablesActuator:
 	# 	return action_method(target, self.args)
 
 	def insert_handler(self, target, args, action, rule_number=None):
-		print("going to installa iptable rule")
 		error, cmd = IptablesManager.insert_rule(target, action)
-		print("iptables rule run: ", error, cmd)
 		rule_number = self.db.insert_command(cmd, rule_number)
-		print("db insertion:", rule_number)
 
 		if error is not 200:
 			return Response(status=StatusCode.INTERNALERROR, status_text="Internal error")
@@ -149,18 +148,13 @@ class IptablesActuator:
 		args = cmd.args
 		rule_number = int(target)
 		cmd_data = self.db.get_command_from_rule_number(rule_number)
-		print("db: ", cmd_data)
 		if cmd_data is None:
 			return Response(status=StatusCode.INTERNALERROR, status_text="Internal error")
 		modified_cmd = IptablesManager.modify_command_for_deletion(cmd_data[0])
-		print("Commandn: ", modified_cmd)
 		err_code = IptablesManager.delete_rule(modified_cmd)
-		print("err_cod2: ", err_code)
 		if err_code is 200:
 			err_db = self.db.delete_command_by_rule_number(rule_number)
 			if err_db >= 0:
-			
-				print("err_db: ", err_db)
 				return Response(status=StatusCode.OK, status_text="OK")
 			
 		return Response(status=StatusCode.INTERNALERROR, status_text="Internal error")
@@ -175,3 +169,18 @@ class IptablesActuator:
 
 		"""
 		return Response(status=StatusCode.NOTIMPLEMENTED, status_text='Command not implemented')
+
+	def __servererror(self, cmd, e):
+		""" Internal server error
+
+			Default response in case something goes wrong while processing the command.
+			:param cmd: The command that triggered the error.
+			:param e: The Exception returned.
+			:return: A standard INTERNALSERVERERROR response.
+		"""
+		if(logging.root.level < logging.INFO):
+			logger.warn("Returning details of internal exception")
+			logger.warn("This is only meant for debugging: change the log level for production environments")
+			return Response(status=StatusCode.INTERNALERROR, status_text='Internal server error: ' + str(e))
+		else:
+			return Response(status=StatusCode.INTERNALERROR, status_text='Internal server error')

@@ -3,9 +3,13 @@
 	This module provides a dumb actuator that always answer with a fixed 
 	message. Use it for testing only.
 """
+import logging
+
 from openc2lib import ArrayOf,ActionTargets, TargetEnum, Nsid, Version,Results, StatusCode, StatusCodeDescription, Actions, Command, Response, ResponseType, Feature, Features
 import openc2lib.profiles.slpf as slpf
 import openc2lib.profiles.dumb as dumb 
+
+logger = logging.getLogger('openc2')
 
 OPENC2VERS=Version(1,0)
 """ Supported OpenC2 Version """
@@ -15,28 +19,28 @@ OPENC2VERS=Version(1,0)
 class DumbActuator:
 	def run(self, cmd):
 
-		print("Helpme!!!")
+		try:
+			match cmd.action:
+				case Actions.query:
+					response = self.query(cmd)
+				case Actions.allow:
+					response = self.allow(cmd)
+				case Actions.deny:
+					response = self.deny(cmd)
+	#			case Actions.update:
+	#				response = self.update(cmd)
+	#			case Actions.delete:
+	#				response = self.delete(cmd)
+				case Actions.copy:
+					response = self.copy(cmd)
+				case Actions.scan:
+					response = self.scan(cmd)
+				case _:
+					response = self.__notimplemented(cmd)
+		except Exception as e:
+			return self.__servererror(cmd, e)
 
-		match cmd.action:
-			case Actions.query:
-				result = self.query(cmd)
-			case Actions.allow:
-				result = self.allow(cmd)
-			case Actions.deny:
-				result = self.deny(cmd)
-#			case Actions.update:
-#				result = self.update(cmd)
-#			case Actions.delete:
-#				result = self.delete(cmd)
-			case Actions.copy:
-				result = self.copy(cmd)
-			case Actions.scan:
-				result = self.scan(cmd)
-			case _:
-				print("Not implemented")
-				result = self.__notimplemented(cmd)
-
-		return result
+		return response
 
 	def query(self, cmd):
 		""" Query action
@@ -57,10 +61,10 @@ class DumbActuator:
 				except KeyError:
 					return Response(status=StatusCode.BADREQUEST, status_text="Invalid query argument")
 
-		if ( cmd.target.getObj().__class__ == Features):
-			r = self.query_feature(cmd)
-		else:
-			return Response(status=StatusCode.BADREQUEST, status_text="Querying " + cmd.target.getName() + " not supported")
+			if ( cmd.target.getObj().__class__ == Features):
+				r = self.query_feature(cmd)
+			else:
+				return Response(status=StatusCode.BADREQUEST, status_text="Querying " + cmd.target.getName() + " not supported")
 
 		return r
 
@@ -76,7 +80,9 @@ class DumbActuator:
 					features[Feature.versions.name]=ArrayOf(Version)([OPENC2VERS])	
 				case Feature.profiles:
 					pf = ArrayOf(Nsid)()
-					pf.append(Nsid("dumb"))
+					pf.append(dumb.Profile.nsid)
+					pf.append(slpf.Profile.nsid)
+					pf.append(slpf.nsid)
 					features[Feature.profiles.name]=pf
 				case Feature.pairs:
 					features[Feature.pairs.name]=[]
@@ -125,3 +131,20 @@ class DumbActuator:
 
 		"""
 		return Response(status=StatusCode.NOTIMPLEMENTED, status_text='Command not implemented')
+
+	def __servererror(self, cmd, e):
+		""" Internal server error
+
+			Default response in case something goes wrong while processing the command.
+			:param cmd: The command that triggered the error.
+			:param e: The Exception returned.
+			:return: A standard INTERNALSERVERERROR response.
+		"""
+		if(logging.root.level < logging.INFO):
+			logger.warn("Returning details of internal exception")
+			logger.warn("This is only meant for debugging: change the log level for production environments")
+			return Response(status=StatusCode.INTERNALERROR, status_text='Internal server error: ' + str(e))
+		else:
+			return Response(status=StatusCode.INTERNALERROR, status_text='Internal server error')
+
+
