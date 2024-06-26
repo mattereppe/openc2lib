@@ -19,7 +19,7 @@ import openc2lib as oc2
 from openc2lib.transfers.http.message import Message
 
 
-logger = logging.getLogger('openc2lib')
+logger = logging.getLogger(__name__)
 """ The logging facility in openc2lib """
 
 class HTTPTransfer(oc2.Transfer):

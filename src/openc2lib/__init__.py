@@ -45,5 +45,6 @@ from openc2lib.core.register import Register
 from openc2lib.core.extensions import Extensions, extension
 from openc2lib.core.actuator import actuator
 
+from openc2lib.utils.log_formatting import LogFormatter
 
 

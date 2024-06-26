@@ -13,7 +13,7 @@ from openc2lib.core.transfer import Transfer
 from openc2lib.core.message import Message
 from openc2lib.core.response import Response, StatusCode, StatusCodeDescription
 
-logger = logging.getLogger('openc2')
+logger = logging.getLogger(__name__)
 
 class Consumer:
 	"""OpenC2 Consumer

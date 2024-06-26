@@ -10,9 +10,6 @@ import copy
 import openc2lib as oc2
 
 
-#logger = logging.getLogger('openc2lib')
-#""" The logging facility in openc2lib """
-
 class Headers(oc2.Map):
 	""" HTTP Message Headers (see Sec. 3.3.2 of the Specification) 
 		

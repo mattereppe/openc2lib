@@ -4,8 +4,10 @@
 
 import logging
 import sys
+import datetime
 
 import openc2lib as oc2
+
 
 from openc2lib.encoders.json import JSONEncoder
 from openc2lib.transfers.http import HTTPTransfer
@@ -15,8 +17,19 @@ import openc2lib.profiles.dumb as dumb
 from openc2lib.actuators.dumb_actuator import DumbActuator
 
 #logging.basicConfig(filename='consumer.log',level=logging.DEBUG)
-logging.basicConfig(stream=sys.stdout,level=logging.INFO)
-logger = logging.getLogger('openc2')
+#logging.basicConfig(stream=sys.stdout,level=logging.DEBUG)
+#logger = logging.getLogger('openc2:'+__name__)
+# Declare the logger name
+logger = logging.getLogger()
+# Ask for 4 levels of logging: INFO, WARNING, ERROR, CRITICAL
+logger.setLevel(logging.INFO)
+# Create stdout handler for logging to the console 
+stdout_handler = logging.StreamHandler()
+stdout_handler.setLevel(logging.INFO)
+stdout_handler.setFormatter(oc2.LogFormatter(datetime=True,name=True))
+hdls = [ stdout_handler ]
+# Add both handlers to the logger
+logger.addHandler(stdout_handler)
 	
 def main():
 
@@ -27,7 +40,6 @@ def main():
 	actuators[('dumb','dumb')]=DumbActuator()
 
 	c = oc2.Consumer("testconsumer", actuators, JSONEncoder(), HTTPTransfer("127.0.0.1", 8080))
-
 
 	c.run()
 

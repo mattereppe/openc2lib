@@ -3,14 +3,11 @@
 	The definition of the (exendible) arguments of the OpenC2 Command 
 	(Sec. 3.3.1.4 of the Language Specification).
 """
-import logging
 
 from openc2lib.types.data import DateTime, Duration, ResponseType
 from openc2lib.types.base import Map
 from openc2lib.core.register import Register
 from openc2lib.core.extensions import extensible
-
-logger = logging.getLogger('openc2lib')
 
 @extensible
 class Args(Map):

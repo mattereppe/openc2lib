@@ -9,7 +9,7 @@ import aenum
 import enum
 import logging
 
-logger = logging.getLogger('openc2lib')
+logger = logging.getLogger(__name__)
 """ Logging features
 
 	Most of logging from this modules are conceived for debugging only.
