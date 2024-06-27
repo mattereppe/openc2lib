@@ -1,5 +1,4 @@
 from openc2lib.types.base.openc2_type import Openc2Type
-from openc2lib.types.base.logger import logger
 
 class Array(Openc2Type, list):
 	""" OpenC2 Array

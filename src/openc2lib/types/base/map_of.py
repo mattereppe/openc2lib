@@ -1,6 +1,9 @@
+import logging
+
 from openc2lib.types.base.openc2_type import Openc2Type
 from openc2lib.types.base.map import Map
-from openc2lib.types.base.logger import logger
+
+logger = logging.getLogger(__name__)
 
 class MapOf:
 	""" OpenC2 MapOf
