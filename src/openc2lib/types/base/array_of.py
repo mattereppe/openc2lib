@@ -1,5 +1,9 @@
+import logging
+
 from openc2lib.types.base.openc2_type import Openc2Type
 from openc2lib.types.base.array import Array
+
+logger = logging.getLogger(__name__)
 
 class ArrayOf:
 	""" OpenC2 ArrayOf

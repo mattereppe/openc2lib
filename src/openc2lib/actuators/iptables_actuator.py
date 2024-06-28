@@ -3,12 +3,15 @@
 	This module provides an example to create an `Actuator` for the SLPF profile.
 	It only answers to the request for available features.
 """
+import logging
+
 from openc2lib import ArrayOf,ActionTargets, TargetEnum, Nsid, Version,Actions, Command, Response, StatusCode, StatusCodeDescription, Features, ResponseType, Feature
 from openc2lib.actuators.SQLDatabase import SQLDatabase
 from openc2lib.actuators.iptables_manager import IptablesManager
 from openc2lib.core.actions import Actions
 import openc2lib.profiles.slpf as slpf 
 
+logger = logging.getLogger(__name__)
 
 OPENC2VERS=Version(1,0)
 """ Supported OpenC2 Version """
