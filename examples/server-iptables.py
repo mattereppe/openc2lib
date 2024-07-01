@@ -30,7 +30,7 @@ def main():
 # Instantiate the list of available actuators, using a dictionary which key
 # is the assed_id of the actuator.
 	actuators = {}
-	actuators[(slpf.nsid,'iptables')]=IptablesActuator()
+	actuators[(slpf.Profile.nsid,'iptables')]=IptablesActuator()
 
 	c = oc2.Consumer("testconsumer", actuators, JSONEncoder(), HTTPTransfer("172.17.0.11", 8080))
 

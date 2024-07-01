@@ -29,7 +29,7 @@ def main():
                                   8080))
 
 
-    pf = slpf.slpf({'hostname': 'firewall', 'named_group': 'firewalls', 'asset_id': 'iptables'})
+    pf = slpf.Specifiers({'hostname': 'firewall', 'named_group': 'firewalls', 'asset_id': 'iptables'})
 
     arg = slpf.Args({'response_requested': oc2.ResponseType.complete})
     #	arg = slpf.Args({'response_requested': oc2.ResponseType.none})
