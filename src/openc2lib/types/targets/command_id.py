@@ -4,7 +4,7 @@ from openc2lib.types.base import Record
 from openc2lib.core.target import target
 
 @target('command')
-class CommandID
+class CommandID:
 	""" OpenC2 Command-ID
 
 		Implements the `command` target (Section 3.4.2.16). 
@@ -18,10 +18,10 @@ class CommandID
 	def set(self, cmdid):
 		""" Sets the value """
 		if re.search("^\S{0,36}$",cmdid) is None:
-			throw ValueError("Invalid Command-ID")
+			raise ValueError("Invalid Command-ID")
 		self._cmdid = cmdid
 
-	def get(self.cmdid):
+	def get(cmdid):
 		""" Returns the value """
 		return self._cmdid
 
