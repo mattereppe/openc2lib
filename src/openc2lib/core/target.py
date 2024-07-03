@@ -41,7 +41,10 @@ class TargetRegister(Register):
 		except ValueError:
 			# The item is not in the list
 			self[name] = target
-			aenum.extend_enum(TargetEnum, name, identifier)
+			if identifier is None:
+				aenum.extend_enum(TargetEnum, name)
+			else:
+				aenum.extend_enum(TargetEnum, name, identifier)
 			return
 		raise ValueError("Target already registered")
 
