@@ -34,7 +34,7 @@ AllowedCommandTarget[Actions.deny] = [TargetEnum.ipv4_connection, TargetEnum.ipv
 #	TargetEnum.ipv4_net, TargetEnum.ipv6_net]
 AllowedCommandTarget[Actions.query] = [TargetEnum.features]
 AllowedCommandTarget[Actions.delete] = [TargetEnum[Profile.nsid+':rule_number']]
-#AllowedCommandTarget[Actions.update] = [TargetEnum.file]
+AllowedCommandTarget[Actions.update] = [TargetEnum.file]
 
 AllowedCommandArguments = ActionArguments()
 """ List of allowed `Args` for each `Action` 
@@ -55,7 +55,7 @@ AllowedCommandArguments = fillin_allowed_command_arguments(AllowedCommandArgumen
 AllowedCommandArguments = fillin_allowed_command_arguments(AllowedCommandArguments, Actions.deny, AllowedCommandTarget[Actions.deny], args)
 AllowedCommandArguments[(Actions.query, TargetEnum.features)] = ['response_requested']
 AllowedCommandArguments[(Actions.delete, TargetEnum[Profile.nsid+':rule_number'])] = ['response_requested', 'start_time']
-#AllowedCommandArguments[(Actions.update, TargetEnum.file)] = ['response_requested', 'start_time']
+AllowedCommandArguments[(Actions.update, TargetEnum.file)] = ['response_requested', 'start_time']
 
 def validate_command(cmd):
 	""" Validate a `Command` 
