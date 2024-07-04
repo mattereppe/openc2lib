@@ -10,7 +10,7 @@ class File(Map):
 		Properties of a file. A "File" Target MUST contain at least one property.
 
 	"""
-	fields = {'name': str, 'path': str, 'hashes': Hashes}
+	fieldtypes = {'name': str, 'path': str, 'hashes': Hashes}
 	"""
 		Internal class members are just provided as reference for valid fields and to map their name
 		to the expected type. They shall not be instantiated or used directly.
@@ -19,11 +19,13 @@ class File(Map):
 		`hashes`: One or more cryptographic hash codes of the file contents 
 	"""
 
+#def __init__(self, file: str = None, path: str = None, hashes: Hashes = None):
 	def __init__(self, file: dict):
 		super().__init__(file)
 		# Explicit control on each field is carried out to manage the possibility of wrong
 		# inputs or inputs defined by extensions
-		for x in self.keys():
-			if x in self.fields:
-				return
-		raise ValueError("A 'File' Target MUST contain at least one property.")
+		try: 
+			self.check_valid_fields()
+		except ValueError:
+			raise ValueError("A 'File' Target MUST contain at least one property.")
+		# TypeError exception is not caught and passed upwards unaltered

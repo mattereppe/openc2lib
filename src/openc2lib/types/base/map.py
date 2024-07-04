@@ -46,6 +46,29 @@ class Map(Openc2Type, dict):
 		shall not modify this field.
 	"""
 
+	def check_valid_fields(self, min_num=1):
+		""" Check whether field names are valid
+	
+			Check if supplied field names are compliant with the `fieldtypes` list. Only check the name 
+			and number of fields, but does not perform any type checking.
+	
+			:param min_num: Check that at list min_num fields are supplied (usually, at least 1 field must 
+					be supplied to create a valid object). Default to 1.
+			:return: True if validity check is passed, raise a ValueError exception otherwise.
+		"""
+		count = 0
+		for x in self.keys():
+			if x in self.fieldtypes:
+				count += 1
+			else:
+				logger.error("Invalid field: %s", str(x))	
+				raise TypeError("Invalid field")
+		if count >= min_num:
+			return True
+		else:
+			raise ValueError("Too few fields provided")
+		
+
 	def todict(self, e):
 		""" Converts to dictionary 
 		
@@ -93,16 +116,20 @@ class Map(Openc2Type, dict):
 		objdic = {}
 		extension = None
 		logger.debug('Building %s from %s in Map', cls, dic)
-		for k,v in dic.items():
-			if k in cls.fieldtypes:
-				objdic[k] = e.fromdict(cls.fieldtypes[k], v)
-			elif k in cls.register:
-				logger.debug('   Using profile %s to decode: %s', k, v)
-				extension = cls.register[k]
-				for l,w in v.items():
-					objdic[l] = e.fromdict(extension.fieldtypes[l], w)
-			else:
-				raise TypeError("Unexpected field: ", k)
+		try:
+			for k,v in dic.items():
+				if k in cls.fieldtypes:
+					objdic[k] = e.fromdict(cls.fieldtypes[k], v)
+				elif k in cls.register:
+					logger.debug('   Using profile %s to decode: %s', k, v)
+					extension = cls.register[k]
+					for l,w in v.items():
+						objdic[l] = e.fromdict(extension.fieldtypes[l], w)
+				else:
+					raise TypeError("Unexpected field: ", k)
+		except TypeError:
+			logger.error("Unable to decode. Ill-formed object: %s", cls.__name__)
+		
 
 		if extension is not None:
 			cls = extension

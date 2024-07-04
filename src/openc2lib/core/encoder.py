@@ -17,6 +17,9 @@ logger = logging.getLogger(__name__)
 
 _UNCODED = (bool, str, int, float)
 
+class EncoderError(Exception):
+	pass
+
 class Encoders(aenum.Enum):
 	""" List of available Encoders
 	
@@ -186,5 +189,8 @@ class Encoder:
 		except AttributeError:
 			logger.debug("Falling back: Encoder.objfromdict for %s", clstype)
 			return Encoder.__objfromdict(clstype, dic)
+		except Exception as e:
+			logger.warning("Unable to decode. Returning EncoderError due to: %s", type(e).__name__)
+			raise EncoderError("Unable to parse message")
 		
 

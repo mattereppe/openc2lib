@@ -28,7 +28,8 @@ class Process(Map):
 		super().__init__(process)
 		# Explicit control on each field is carried out to manage the possibility of wrong
 		# inputs or inputs defined by extensions
-		for x in self.keys():
-			if x in self.fields:
-				return
-		raise ValueError("A 'Process' Target MUST contain at least one property.")
+		try: 
+			self.check_valid_fields()
+		except ValueError:
+			raise ValueError("A 'File' Target MUST contain at least one property.")
+		# TypeError exception is not caught and passed upwards unaltered
