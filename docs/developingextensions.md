@@ -172,13 +172,13 @@ Recursion should be used with care, to avoid infinite or anyway too deep depende
 - use the `@make_recursive` decorator in front of the class definition.
 
 This is an example for the `Process` target:
-  ```
+<pre>
   from typing import Self
   ...
   @Map.make_recursive
   class Process(Map):
   	fieldtypes = {'pid': int, 'name': str, 'cwd': str, 'executable': File, 'parent': <b>Self</b>, 'command_line': str}
-  ```
+</pre>
 As a result, the `Map` class has the following `fieldtypes` definition:
 <pre>
 fieldtypes = {'pid': int, 'name': str, 'cwd': str, 'executable': File, 'parent': <b>Process</b>, 'command_line': str}
