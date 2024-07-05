@@ -180,11 +180,10 @@ This is an example for the `Process` target:
   	fieldtypes = {'pid': int, 'name': str, 'cwd': str, 'executable': File, 'parent': <b>Self</b>, 'command_line': str}
   ```
 As a result, the `Map` class has the following `fieldtypes` definition:
-```
 <pre>
 fieldtypes = {'pid': int, 'name': str, 'cwd': str, 'executable': File, 'parent': <b>Process</b>, 'command_line': str}
 </pre>
-```
+
 
 The `@make_recursive` decorator is implemented for each base type (e.g., `Map`). Check the code documentation to know what base types actually implement this helper.
 
