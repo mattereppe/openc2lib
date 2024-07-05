@@ -162,6 +162,30 @@ args = slpf.Args(...)   # <- This instantiate the extended Args class derived in
 
 The extension of `Args` and `Results` will likely be based on additional structures. Define them as well in the profile folder. As best practice, data and target types should be defined in two different modules (datatypes and targettypes, respecitvely, see the [Developer guide](https://github.com/mattereppe/openc2/blob/main/docs/developerguide.md).
 
+### Recursive definitions
+
+There may singular cases where an object is recursive, namely it contains another object of the same time. Such an example is represented by the `Process` target, which internally may carry an instance of its parent. 
+However, Python does not allow to define such types in a straighforward way.
+
+Recursion should be used with care, to avoid infinite or anyway too deep dependencies. `openc2lib` addresses this issue by providing a specific design pattern. It is based on the Python `typing.Self` annotation and the `@make_recursive` decorator provided by some `openc2lib` classes (e.g., `Map`). The design pattern entails the following step
+- use the `typing.Self` annotation for any field that should be instantiated to the same class in which it is defined;
+- use the `@make_recursive` decorator in front of the class definition.
+
+This is an example for the `Process` target:
+  ```
+  from typing import Self
+  ...
+  @Map.make_recursive
+  class Process(Map):
+  	fieldtypes = {'pid': int, 'name': str, 'cwd': str, 'executable': File, 'parent': ***Self***, 'command_line': str}
+  ```
+As a result, the `Map` class has the following `fieldtypes` definition:
+```
+fieldtypes = {'pid': int, 'name': str, 'cwd': str, 'executable': File, 'parent': ***Process***, 'command_line': str}
+```
+
+The `@make_recursive` decorator is implemented for each base type (e.g., `Map`). Check the code documentation to know what base types actually implement this helper.
+
 
 ### Syntax validation
 
@@ -193,4 +217,5 @@ class Actuator:
 ```
 
 Internally, an `Actuator` is expected to have the configuration to locate the device it is controlling and the code to control it. It is also expected to perform command validation, to detect any action or option that it does not support (which may be more restrictive than the generic profile validation).
+
 
