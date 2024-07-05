@@ -177,11 +177,11 @@ This is an example for the `Process` target:
   ...
   @Map.make_recursive
   class Process(Map):
-  	fieldtypes = {'pid': int, 'name': str, 'cwd': str, 'executable': File, 'parent': <pre>Self</pre>, 'command_line': str}
+  	fieldtypes = {'pid': int, 'name': str, 'cwd': str, 'executable': File, 'parent': <b>Self</b>, 'command_line': str}
   ```
 As a result, the `Map` class has the following `fieldtypes` definition:
 ```
-fieldtypes = {'pid': int, 'name': str, 'cwd': str, 'executable': File, 'parent': <pre>Process</pre>, 'command_line': str}
+fieldtypes = {'pid': int, 'name': str, 'cwd': str, 'executable': File, 'parent': <b>Process</b>, 'command_line': str}
 ```
 
 The `@make_recursive` decorator is implemented for each base type (e.g., `Map`). Check the code documentation to know what base types actually implement this helper.
