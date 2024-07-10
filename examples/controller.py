@@ -22,7 +22,7 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 # Create stdout handler for logging to the console 
 stdout_handler = logging.StreamHandler()
-stdout_handler.setLevel(logging.INFO)
+stdout_handler.setLevel(logging.DEBUG)
 stdout_handler.setFormatter(oc2.LogFormatter(datetime=True,name=True))
 hdls = [ stdout_handler ]
 # Add both handlers to the logger

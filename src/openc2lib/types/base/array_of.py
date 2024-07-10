@@ -64,32 +64,51 @@ class ArrayOf:
 		
 				return objlis
 			
+			def validate(self, types: bool=True, num_min: int = 0, num_max: int = None):
+				""" Validate the list 
+		
+					Validation checks the types of the item and the size of the array. By properly combining the options,
+					validation may include only a specific aspect.
+					:param types: Set to `True` to validate the types of element in the list (Default: `True`).
+					:param num_min: Set to the minimun number of elements; 0 to disable (Default: 0).
+					:param num_max: Set to the maximun number of elements; None to disable (Default: None).
+					:return: True if every required condition is satisfied. Otherwise, a `ValueError` Exception is raised.
+				"""
+				for i in self:
+					if types and not isinstance(i, self.fieldtype):
+						raise ValueError("Invalid field type")
+
+					 	
+				return super().validate(num_min, num_max)
+			
 			# This is the code if I would like to do type checking
 			# when inserting data
-#			def append(self, item):
-#				if isinstance(item, self.fieldtype):
-#					super().append(item)
-#				else:
-#					raise ValueError(self.fieldtype,' allowed only')
-#			
-#			def insert(self, index, item):
-#				if isinstance(item, self.fieldtype):
-#					super().insert(index, item)
-#				else:
-#					raise ValueError(self.fieldtype,' allowed only')
-#			
-#			def __add__(self, item):
-#				if isinstance(item, self.fieldtype):
-#					super().__add__(item)
-#				else:
-#					raise ValueError(self.fieldtype,' allowed only')
-#			
-#			def __iadd__(self, item):
-#				if isinstance(item, self.fieldtype):
-#					super().__iadd__(item)
-#				else:
-#					raise ValueError(self.fieldtype,' allowed only')
+			def __init__(self, args=[]):
+
+				super().__init__(args)
+
+				converted_items = []
+				for idx, val in enumerate(self):
+					self[idx] = (self.fieldtype(val))
+
+				
+			def append(self, item):
+				item = self.fieldtype(item)
+				super().append(item)
+			
+			def insert(self, index, item):
+				item = self.fieldtype(item)
+				super().insert(index, item)
+			
+			def __add__(self, item):
+				item = self.fieldtype(item)
+				super().__add__(item)
+			
+			def __iadd__(self, item):
+				item = self.fieldtype(item)
+				super().__iadd__(item)
 
 		return ArrayOf
+
 
 

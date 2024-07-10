@@ -110,13 +110,14 @@ class HTTPTransfer(oc2.Transfer):
 		openc2headers={'Content-Type': content_type, 'Accept': content_type, 'Date': oc2.DateTime(date).httpdate()}
 
 		logger.info("Sending to %s", self.url)
-		logger.info("HTTP Content:\n%s", openc2data)
+		logger.info("HTTP Request Content:\n%s", openc2data)
 
 		# Send the OpenC2 message and get the response
 		if self.scheme == 'https':
 			logger.warning("Certificate validation disabled!")
 		response = requests.post(self.url, data=openc2data, headers=openc2headers, verify=False)
 		logger.info("HTTP got response: %s", response)
+		logger.info("HTTP Response Content:\n%s", response.text)
 	
 		# TODO: How to manage HTTP response code? Can we safely assume they always match the Openc2 response?
 		try:

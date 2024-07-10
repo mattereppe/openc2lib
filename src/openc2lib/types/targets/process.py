@@ -5,6 +5,7 @@ from openc2lib.types.targets import File
 from openc2lib.core.target import target
 
 @target('process')
+@Map.make_recursive
 class Process(Map):
 	""" OpenC2 Process
 
@@ -12,7 +13,7 @@ class Process(Map):
 		Common properties of an instance of a computer program as executed on an operating system.
 
 	"""
-	fields = {'pid': int, 'name': str, 'cwd': str, 'executable': File, 'parent': Self, 'command_line': str}
+	fieldtypes = {'pid': int, 'name': str, 'cwd': str, 'executable': File, 'parent': Self, 'command_line': str}
 	"""
 		Internal class members are just provided as reference for valid fields and to map their name
 		to the expected type. They shall not be instantiated or used directly.
@@ -24,12 +25,21 @@ class Process(Map):
 		`command_line`: The full command line invocation used to start this process, including all arguments 
 	"""
 
-	def __init__(self, process: dict):
-		super().__init__(process)
+	def __init__(self, *args, **kwargs):
+		""" Initialize the `Process`
+
+			This object can be initialized both with a dictionary and with keyword arguments. For valid
+			fields that can be used, see `Process`. 
+			Keyword arguments take precedence over non-keyword arguments.
+			Non-keyword arguments must precede keyword arguments.
+			:param args: Dictionary of key/value pairs. 
+			:param kwargs: Keyword arguments.
+		"""
+		super().__init__(*args, **kwargs)
 		# Explicit control on each field is carried out to manage the possibility of wrong
 		# inputs or inputs defined by extensions
 		try: 
-			self.check_valid_fields()
+			self.validate_fields()
 		except ValueError:
-			raise ValueError("A 'File' Target MUST contain at least one property.")
+			raise ValueError("A 'Process' Target MUST contain at least one property.")
 		# TypeError exception is not caught and passed upwards unaltered

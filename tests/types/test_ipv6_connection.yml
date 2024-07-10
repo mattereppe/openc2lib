@@ -1,0 +1,145 @@
+test_good_connections:
+- dst: "::1"
+  src: "::/64"
+  dport: 25
+  sport: 6850
+  proto: "tcp"
+- dst: "2001::/64"
+  src: "2001::1"
+  dport: 25
+  sport: 6850
+  proto: "tcp"
+- dst: "2001::/64"
+  src: "2001::1/128"
+  dport: 2500
+  sport: 6850
+  proto: "tcp"
+- dst: "2001::/64"
+  src: "2001::1/128"
+  dport: 63
+  sport: 63850
+  proto: "sctp"
+- dst: "2001::/64"
+  src: "2001::1/128"
+  dport: 1024
+  sport: 850
+  proto: "icmp"
+- dst: "2000:0123:4567:89ab:cdef:0000:ffff:1/128"
+  src: "2000:0123:4567:89ab:0000:0000:0000:0/64"
+  dport: 8080
+  sport: 32115
+  proto: "tcp"
+- dst: "2001::/64"
+  src: "2001::1/128"
+  dport: 1
+  sport: 1
+  proto: "udp"
+  dport: 65535
+  sport: 6850
+  proto: "sctp"
+- dst: "2000::1/128"
+  src: "2000:1::/64"
+  dport: 
+  sport: 
+  proto: 
+- dst: "::10.0.0.1"
+  src: "::192.168.0.1"
+  dport: 
+  sport: 
+  proto: 
+- dst: "2001:ffff:0000:0001::10.0.0.1"
+  src: 
+  dport: 25
+  sport: 6850
+  proto: "tcp"
+- dst: 
+  src: "2001::192.168.0.1"
+  dport: 25
+  sport: 6850
+  proto: "tcp"
+- dst: 
+  src: "2001:0000:0000:0000:0000:0001:192.168.0.1"
+  dport: 
+  sport: 0
+  proto: "tcp"
+- dst: 
+  src: 
+  dport: 
+  sport: 
+  proto: "icmp"
+- dst: 
+  src: 
+  dport: 25
+  sport: 
+  proto: 
+test_bad_connections:
+- dst: ":::"
+  src: "::1/0"
+  dport: 25
+  sport: 6850
+  proto: "tcp"
+- dst: "::1"
+  src: "::1/64"
+  dport: 25
+  sport: 6850
+  proto: "tcp"
+- dst: "2001::1/64"
+  src: "2001::1"
+  dport: 25
+  sport: 6850
+  proto: "tcp"
+- dst: "2001::1/64"
+  src: "2001::1/0"
+  dport: 2500
+  sport: 6850
+  proto: "tcp"
+- dst: "10.3.0.1"
+  src: "192.168.10.1"
+  dport: 25000
+  sport: 6850
+  proto: "tcp"
+- dst: "2000::0::0/64"
+  src: "::0::0/64"
+  dport: 25
+  sport: 65535
+  proto: "udp"
+- dst: "2001::/64"
+  src: "2001::1/0"
+  dport: 25
+  sport: 6850
+  proto: "udp"
+- dst: "2000:0123:4567:89ab:cdef:0000:ffff:1/0"
+  src: "2000::0123:4567:89ab:cdef:0000:ffff:1/128"
+  dport: 63
+  sport: 63850
+  proto: "netbios"
+- dst: "gooogle.com"
+  src: "2000::0123:4567:89ab:cdef:0000:ffff:1/128"
+  dport: 1024
+  sport: 850
+  proto: "udp"
+- dst: "::1/64"
+  src: "::1:1/64"
+  dport: "smtp"
+  sport: 32115
+  proto: "tcp"
+- dst: "::1:1:1"
+  src: "2000::/64"
+  dport: 1
+  sport: 1
+  proto: 15
+- dst: "2000::1:0/128"
+  src: "2000::1/64"
+  dport: 65535
+  sport: 0
+  proto: "sccp"
+- dst: 
+  src: "2001:0001:0000:0000:0000:0000:0001:192.168.0.1"
+  dport: 
+  sport: 0
+  proto: "tcp"
+- dst: None
+  src: None
+  dport: None
+  sport: None
+  proto: None

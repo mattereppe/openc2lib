@@ -128,28 +128,14 @@ class Encoder:
 		for k,v in dic.items():
 			if v is not None:
 				newdic[Encoder.todict(k)] = Encoder.todict(v)
-#			if not isinstance(v, __UNCODED):
-#				dic[k] = Encoder.todict(v)
 		return newdic
 
 	@staticmethod
 	def __iteratelist(lis):
 		objlist = []
 		for i in lis:
-#			if isinstance(i, __UNCODED):
-#				objlist.append(i)
-#			else:
-#				print("append: ", i)
-#				objlist.append( Encoder.todict(i) )
 			objlist.append( Encoder.todict(i) )
 		return objlist	
-
-#  NOT USED
-#  They Python way: "try ... except ... "
-#	@staticmethod
-#	def hasmethod(obj, method):
-#		return callable(hasattr(obj, method, None))
-
 
 	@staticmethod
 	def todict(obj):
@@ -190,7 +176,7 @@ class Encoder:
 			logger.debug("Falling back: Encoder.objfromdict for %s", clstype)
 			return Encoder.__objfromdict(clstype, dic)
 		except Exception as e:
-			logger.warning("Unable to decode. Returning EncoderError due to: %s", type(e).__name__)
+			logger.warning("Unable to decode: %s. Returning EncoderError due to: %s", str(dic), type(e).__name__)
 			raise EncoderError("Unable to parse message")
 		
 

@@ -23,13 +23,7 @@ class Binaryx(Binary):
 	@classmethod
 	def fromdict(cls, dic, e):
 		""" Builds from base64encoding """
-		print("binary16 decoder")
-		print("cls: ", cls)
-		print("dic: ", dic)
-		print("e: ", e)
 		try:
-			print("value: ", dic)
-			print("ascii: ", dic.encode('ascii'))
 			return cls( base64.b16decode(dic.encode('ascii')) )
 		except:		
 			raise TypeError("Unexpected b16 value: ", dic)

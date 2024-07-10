@@ -1,4 +1,5 @@
 import logging
+import typing
 
 from openc2lib.types.base.openc2_type import Openc2Type
 
@@ -20,6 +21,11 @@ class Map(Openc2Type, dict):
 		Additionally, according to the Language Specification, `Map`s may be extended by
 		Profiles. Such extensions must use the `base` and `register` class attributes to 
 		bind to the base element they extend and the `Profile` in which they are defined.
+
+		For derived types that are recursive (i.e., they need to hold an instance of their same
+		type internally), declare the type of the recursive field as `typing.Self`, and 
+		use the `@make_recursive` decorator in front of the class definition.
+		(See also (recursive definitions)[https://github.com/mattereppe/openc2lib/blob/main/docs/developingextensions.md#recursive-definitions] in the documentation)
 	"""
 	fieldtypes: dict = None
 	""" Field types
@@ -46,7 +52,29 @@ class Map(Openc2Type, dict):
 		shall not modify this field.
 	"""
 
-	def check_valid_fields(self, min_num=1):
+	def __init__(self, *args, **kwargs):
+		""" Create and validate objects
+
+			Store the map and convert the fields to appropriate types, whenever possible.
+			It accepts both plain dictionaries (as first arguments) and keyword arguments (last elements)
+			and automatically merges them. Keyword arguments take precedence over non-keyword
+			arguments.
+
+			:param args: One or more dictionaries or maps used to initialize this object.
+			:param kwargs: keyword arguments used to initialize this object.
+		"""
+		raw = {}
+
+		for arg in args:
+			raw.update(arg)
+		# This step is indeed not strictly necessary, but used to give keyword arguments
+		# precedence over non-keyword arguments.
+		raw.update(kwargs)
+		for k,v in raw.items():
+			self[k] = self.fieldtypes[k](v)
+
+
+	def validate_fields(self, min_num=1):
 		""" Check whether field names are valid
 	
 			Check if supplied field names are compliant with the `fieldtypes` list. Only check the name 
@@ -63,11 +91,29 @@ class Map(Openc2Type, dict):
 			else:
 				logger.error("Invalid field: %s", str(x))	
 				raise TypeError("Invalid field")
+			if not isinstance(self[x], self.fieldtypes[x]):
+				raise TypeError("Invalid field type for: " + x)
 		if count >= min_num:
 			return True
 		else:
 			raise ValueError("Too few fields provided")
 		
+	@staticmethod
+	def make_recursive(cls):
+		""" Make this class recursive
+
+			This method can be used as a decorator to make a Map-derived class recurive, namely to hold objects
+			of the same type in `fieldtypes`. To use this function, just declare the field that must be of the same
+			type as the class as `typing.Self`, and use the `@make_recursive` decorator at declaration time.
+			:param: No arguments must be specified when using this method as a decorator.
+			:return: A new instance of the class, where all types in `fieldtypes` marked as `typing.Self` are replaced
+		  		with the class instance.
+		"""	
+		for k,v in cls.fieldtypes.items():
+			if v == typing.Self:
+				cls.fieldtypes[k] = cls
+
+		return cls
 
 	def todict(self, e):
 		""" Converts to dictionary 

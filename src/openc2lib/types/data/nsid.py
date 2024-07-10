@@ -22,7 +22,7 @@ class Nsid(str):
 			This method is provided to deserialize an OpenC2 message according to the openc2lib approach.
 			This method should only be used internally the openc2lib.
 			:param name: Text string with the namespace identifier..
-			:param e: `Encoder` instance to be used (only included to be compliance with the function footprint.
+			:param e: `Encoder` instance to be used (only included to be compliance with the function footprint).
 			:return: `Version` instance.
 		"""
 		return Nsid(name)

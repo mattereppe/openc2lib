@@ -49,6 +49,7 @@ class DumbActuator:
 			:param cmd: The `Command` including `Target` and optional `Args`.
 			:return: A `Response` including the result of the query and appropriate status code and messages.
 		"""
+
 		
 		# Sec. 4.1 Implementation of the 'query features' command
 		if cmd.args is not None:
@@ -60,7 +61,6 @@ class DumbActuator:
 						raise KeyError
 				except KeyError:
 					return Response(status=StatusCode.BADREQUEST, status_text="Invalid query argument")
-
 			if ( cmd.target.getObj().__class__ == Features):
 				r = self.query_feature(cmd)
 			else:
@@ -74,6 +74,7 @@ class DumbActuator:
 			Implements the 'query features' command according to the requirements in Sec. 4.1 of the Language Specification.
 		"""
 		features = {}
+
 		for f in cmd.target.getObj():
 			match f:
 				case Feature.versions:
@@ -88,7 +89,7 @@ class DumbActuator:
 				case Feature.rate_limit:
 					return Response(status=StatusCode.NOTIMPLEMENTED, status_text="Feature 'rate_limit' not yet implemented")
 				case _:
-					return Response(status=StatusCode.NOTIMPLEMENTED, status_text="Invalid feature '" + f + "'")
+					return Response(status=StatusCode.NOTIMPLEMENTED, status_text="Invalid feature '" + str(f) + "'")
 
 		res = Results(features)
 		r = Response(status=StatusCode.OK, status_text=StatusCodeDescription[StatusCode.OK], results=res)

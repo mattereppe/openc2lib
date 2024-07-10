@@ -16,7 +16,13 @@ class Binary(Openc2Type):
 		self.set(b)			
 
 	def set(self, b):
-		self._data = bytes(b)
+		""" Set the value internally and covert it, if necessary. """
+		if isinstance(b, bytes):
+			self._data = bytes(b)
+		elif  isinstance(b, Binary):
+			self._data = b
+		else:
+			raise ValueError("Binary type needs binary value")
 	
 	def get(self):
 		return self._data

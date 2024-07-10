@@ -2,10 +2,12 @@ import dataclasses
 
 import openc2lib.types.base
 
+from openc2lib.types.data.port import Port
+from openc2lib.types.data.l4_protocol import L4Protocol
 from openc2lib.types.targets.ipv6_net import IPv6Net
 from openc2lib.core.target import target
 
-@dataclasses.dataclass
+#@dataclasses.dataclass
 @target('ipv6_connection')
 class IPv6Connection(openc2lib.types.base.Record):
 	"""OpenC2 IPv6 Connection
@@ -22,6 +24,13 @@ class IPv6Connection(openc2lib.types.base.Record):
 	""" Destination port """
 	protocol: openc2lib.types.data.L4Protocol = None
 	""" L4 protocol """
+
+	def __init__(self, src_addr = None, src_port = None, dst_addr = None, dst_port = None, protocol = None):
+		self.src_addr = IPv6Net(src_addr) if src_addr is not None else None
+		self.src_port = Port(src_port) if src_port is not None else None
+		self.dst_addr = IPv6Net(dst_addr) if dst_addr is not None else None
+		self.dst_port = Port(dst_port) if dst_port is not None else None
+		self.protocol = L4Protocol[protocol] if protocol is not None else None
 
 	def __repr__(self):
 		return (f"IPv6Connection(src='{self.src_addr}', sport={self.src_port}, "

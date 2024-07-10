@@ -1,13 +1,24 @@
 import rfc3987
 
 from openc2lib.core.target import target
+import openc2lib.types.data.uri as data
 
 @target('uri')
-class URI:
+class URI(data.URI):
 	""" OpenC2 URI
 
 		Implements the `uri` target (Section 3.4.1.17). 
 		A uniform resource identifier (URI) - RFC 3986.
+
+		Note that the standard define the URI type as part of targets, but
+		it is also used in the Payload, which is a data type. This breaks 
+		the assumption of openc2lib that `target`s uses `data` and not vice-versa.
+		Therefore, a data.URI type is defined, which is used to create the target.
+		Users must be aware to distinguish between the two types, namely using 
+		`target.URI` as a Target, and `data.URI` as a data type.
+
+		openc2lib only binds `URI` to `target.URI`. If you need to use `data.URI` to build
+		a payload, call it as `types.data.URI`.
 	"""
 		
 	def __init__(self, uri):

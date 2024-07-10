@@ -46,5 +46,6 @@ from openc2lib.core.extensions import Extensions, extension
 from openc2lib.core.actuator import actuator
 
 from openc2lib.utils.log_formatting import LogFormatter
+from openc2lib.utils.media_types import MediaTypes
 
 

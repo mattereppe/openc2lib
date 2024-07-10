@@ -8,3 +8,4 @@ class Properties(ArrayOf(str)):
 		Implements the `properties` target (Section 3.4.1.16). 
 		Data attribute associated with an Actuator: a list of names that uniquely identify its properties.
 	"""
+	pass

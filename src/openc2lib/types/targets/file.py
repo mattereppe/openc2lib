@@ -19,13 +19,21 @@ class File(Map):
 		`hashes`: One or more cryptographic hash codes of the file contents 
 	"""
 
-#def __init__(self, file: str = None, path: str = None, hashes: Hashes = None):
-	def __init__(self, file: dict):
-		super().__init__(file)
+	def __init__(self, *args, **kwargs):
+		""" Initialize the `File`
+
+			This object can be initialized both with a dictionary and with keyword arguments. For valid
+			fields that can be used, see `File`. 
+			Keyword arguments take precedence over non-keyword arguments.
+			Non-keyword arguments must precede keyword arguments.
+			:param args: Dictionary of key/value pairs. 
+			:param kwargs: Keyword arguments.
+		"""
+		super().__init__(*args, **kwargs)
 		# Explicit control on each field is carried out to manage the possibility of wrong
 		# inputs or inputs defined by extensions
 		try: 
-			self.check_valid_fields()
+			self.validate_fields()
 		except ValueError:
 			raise ValueError("A 'File' Target MUST contain at least one property.")
 		# TypeError exception is not caught and passed upwards unaltered

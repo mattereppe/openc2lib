@@ -4,11 +4,11 @@ class Hostname:
 	""" A hostname that can be used to connect to this device over a network """
 		
 	def __init__(self, hostname):
-		self.set(hostname)
+		self.set(str(hostname))
 
 	def set(self, hostname):
 		""" Check hostname fullfils RFC 1123 requirements """
-		if fqdn.FQDN(hostname, min_labels=1).is_valid:
+		if fqdn.FQDN(str(hostname), min_labels=1).is_valid:
 			self._hostname = str(hostname)
 		else:
 			raise ValueError("Invalid hostname -- not compliant to RFC 1123")

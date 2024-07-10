@@ -7,7 +7,7 @@ class IDNHostname:
 	"""
 		
 	def __init__(self, hostname):
-		self.set(hostname)
+		self.set(str(hostname))
 
 	def set(self, hostname):
 		""" Check hostname fullfils RFC 1123 requirements """

@@ -1,3 +1,5 @@
+import email_validator
+
 from openc2lib.types.targets.email_addr import EmailAddr
 from openc2lib.core.target import target
 
