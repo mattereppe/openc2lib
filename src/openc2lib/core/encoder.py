@@ -16,6 +16,9 @@ logger = logging.getLogger(__name__)
 """
 
 _UNCODED = (bool, str, int, float)
+""" Basic types that do not need further encoding """
+_NOTSTRING = (bool, int, float)
+""" Types that must not be converted to strings """
 
 class EncoderError(Exception):
 	pass
@@ -103,6 +106,9 @@ class Encoder:
 
 		if isinstance(obj, dict):
 			return  Encoder.__iteratedic(obj)
+
+		if isinstance(obj, _NOTSTRING):
+			return obj
 
 		# Default: return a string representation of the object
 		return str(obj)
