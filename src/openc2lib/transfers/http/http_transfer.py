@@ -101,6 +101,13 @@ class HTTPTransfer(oc2.Transfer):
 			:param encoder: The encoder to use for encoding the `msg`.
 			:return: An OpenC2  response (`Response`).
 		"""
+		# The HTTP Transfer Specification requires the "to" field, even if this is not mandatory for the Language Specification.
+		# If no "to" field is provided, use the destination host.
+		if msg.to is None:
+			msg.to = []  
+		if not msg.to:
+			msg.to.append(self.host)
+
 		# Convert the message to the specific HTTP representation
 		openc2data = self._tohttp(msg, encoder)
 
