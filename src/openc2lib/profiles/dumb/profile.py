@@ -4,7 +4,7 @@
 
 import openc2lib as oc2
 
-@oc2.extension(nsid = 'dumb')
+@oc2.extension(nsid = 'x-dumb')
 class Profile(oc2.Profile):
 	""" Dumb Profile
 
