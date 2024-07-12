@@ -29,6 +29,7 @@ class IptablesActuator:
 
 	def run(self, cmd):
 
+
 		if not slpf.validate_command(cmd):
 			return Response(status=StatusCode.NOTIMPLEMENTED, status_text='Invalid Action/Target pair')
 		if not slpf.validate_args(cmd):
@@ -104,11 +105,14 @@ class IptablesActuator:
 				case _:
 					return Response(status=StatusCode.NOTIMPLEMENTED, status_text="Invalid feature '" + f + "'")
 
-#at = ActionTargets()
-		res = slpf.Results(features)
-		r = Response(status=StatusCode.OK, status_text=StatusCodeDescription[StatusCode.OK], results=res)
+		res = None
+		try:
+			res = slpf.Results(features)
+		except Exception as e:
+			return __servererror(cmd, e)
 
-		return r
+		return  Response(status=StatusCode.OK, status_text=StatusCodeDescription[StatusCode.OK], results=res)
+
 
 	# def action_mapping(self, action, target):
 	# 	action_method = getattr(self, f"{action}", None)
@@ -181,9 +185,9 @@ class IptablesActuator:
 			:param e: The Exception returned.
 			:return: A standard INTERNALSERVERERROR response.
 		"""
+		logger.warn("Returning details of internal exception")
+		logger.warn("This is only meant for debugging: change the log level for production environments")
 		if(logging.root.level < logging.INFO):
-			logger.warn("Returning details of internal exception")
-			logger.warn("This is only meant for debugging: change the log level for production environments")
 			return Response(status=StatusCode.INTERNALERROR, status_text='Internal server error: ' + str(e))
 		else:
 			return Response(status=StatusCode.INTERNALERROR, status_text='Internal server error')
