@@ -60,6 +60,3 @@ def extension(nsid):
 	return extend_wrapper
 
 
-
-
-#	The @property decorator is used to customize getters and setters for class attributes.
