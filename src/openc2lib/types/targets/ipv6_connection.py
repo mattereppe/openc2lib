@@ -30,7 +30,7 @@ class IPv6Connection(openc2lib.types.base.Record):
 		self.src_port = Port(src_port) if src_port is not None else None
 		self.dst_addr = IPv6Net(dst_addr) if dst_addr is not None else None
 		self.dst_port = Port(dst_port) if dst_port is not None else None
-		self.protocol = L4Protocol[protocol] if protocol is not None else None
+		self.protocol = L4Protocol[str(protocol)] if protocol is not None else None
 
 	def __repr__(self):
 		return (f"IPv6Connection(src='{self.src_addr}', sport={self.src_port}, "
