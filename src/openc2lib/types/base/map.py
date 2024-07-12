@@ -181,7 +181,7 @@ class Map(Openc2Type, dict):
 			cls = extension
 
 		try:
-			logger.debug("Building %s with %s", clstype, objdic)
+			logger.debug("Building %s with %s", cls, objdic)
 			return  cls(objdic)
 		except Exception as e:
 			logger.ERROR("Unable to instantiate %s from %s", cls, objdic)
