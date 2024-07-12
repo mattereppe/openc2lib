@@ -161,7 +161,7 @@ class Map(Openc2Type, dict):
 		"""
 		objdic = {}
 		extension = None
-		logger.debug('Building %s from %s in Map', cls, dic)
+		logger.debug('Decoding %s from %s in Map', cls, dic)
 		try:
 			for k,v in dic.items():
 				if k in cls.fieldtypes:
@@ -180,5 +180,10 @@ class Map(Openc2Type, dict):
 		if extension is not None:
 			cls = extension
 
-		return cls(objdic)
+		try:
+			logger.debug("Building %s with %s", clstype, objdic)
+			return  cls(objdic)
+		except Exception as e:
+			logger.ERROR("Unable to instantiate %s from %s", cls, objdic)
+			raise TypeError("Unable to instantiate class " + cls)
 

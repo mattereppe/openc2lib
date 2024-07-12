@@ -1,6 +1,9 @@
 import inspect
+import logging
 
 from openc2lib.types.base.openc2_type import Openc2Type
+
+logger = logging.getLogger(__name__)
 
 class Record(Openc2Type):
 	""" OpenC2 Record
@@ -55,6 +58,7 @@ class Record(Openc2Type):
 		objdic = {}
 		# Retrieve class type for each field in the dictionary
 		fielddesc = None
+		logger.debug("Decondig: %s with %s", dic, clstype)
 		for tpl in inspect.getmembers(clstype):
 			if tpl[0] == '__annotations__':
 				fielddesc = tpl[1]
@@ -64,8 +68,12 @@ class Record(Openc2Type):
 				raise Exception("Unknown field '" + k + "' from message")
 			objdic[k] = e.fromdict(fielddesc[k], v)
 
-
 		# A record should always have more than one field, so the following statement 
 		# should not raise exceptions
-		return clstype(**objdic)
+		try:
+			logger.debug("Building %s with %s", clstype, objdic)
+			return clstype(**objdic)
+		except Exception as e:
+			logger.warning("Unable to decode: %s. Returning EncoderError due to: %s", str(dic), type(e).__name__)
+			raise EncoderError("Unable to parse message")
 
