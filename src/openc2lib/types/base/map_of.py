@@ -35,8 +35,31 @@ class MapOf:
 		
 				Note: no `todict()` method is provided, since `Map.todict()` is fine here.
 			"""
-			fieldtypes = {ktype: vtype}
+			fieldtypes = {'key': ktype, 'value': vtype}
 			""" The type of values stored in this container """
+
+			def __init__(self, *args, **kwargs):
+				""" Create and validate objects
+		
+					Store the map and convert the fields to appropriate types, whenever possible.
+					It accepts both plain dictionaries (as first arguments) and keyword arguments (last elements)
+					and automatically merges them. Keyword arguments take precedence over non-keyword
+					arguments.
+		
+					:param args: One or more dictionaries or maps used to initialize this object.
+					:param kwargs: keyword arguments used to initialize this object.
+				"""
+				raw = {}
+
+				for arg in args:
+					raw.update(arg)
+				# This step is indeed not strictly necessary, but used to give keyword arguments
+				# precedence over non-keyword arguments.
+				raw.update(kwargs)
+				for k,v in raw.items():
+					self[self.fieldtypes['key'](k)] = self.fieldtypes['value'](v)
+		
+
 
 			@classmethod
 			def fromdict(cls, dic, e):
@@ -54,9 +77,8 @@ class MapOf:
 				objdic = {}
 				logger.debug('Building %s from %s in MapOf', cls, dic)
 				for k,v in dic.items():
-					kclass = list(cls.fieldtypes)[0]
-					objk = e.fromdict(kclass, k)
-					objdic[objk] = e.fromdict(cls.fieldtypes[kclass], v)
+					objk = e.fromdict(cls.fieldtypes['key'], k)
+					objdic[objk] = e.fromdict(cls.fieldtypes['value'], v)
 				return objdic
 
 		return MapOf
