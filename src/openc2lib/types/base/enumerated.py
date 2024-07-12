@@ -44,3 +44,5 @@ class Enumerated(Openc2Type, aenum.Enum):
 		except:
 			raise TypeError("Unexpected enum value: ", dic)
 	
+	def __str__(self):
+		return self.name
