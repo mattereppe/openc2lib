@@ -10,7 +10,7 @@ class Binary(Openc2Type):
 	"""
 
 	def __init__(self, b=None):
-		""" Initializes from bytes or null """
+		""" Initializes from bytes, Binary, base64 strings, or null """
 		if b is None:
 			b = b''
 		self.set(b)			
@@ -20,7 +20,10 @@ class Binary(Openc2Type):
 		if isinstance(b, bytes):
 			self._data = bytes(b)
 		elif  isinstance(b, Binary):
-			self._data = b
+			self._data = b.get()
+		elif isinstance(b, str): 
+		# Assume this is a base64-encoded string
+			self._data = base64.b64decode(b)
 		else:
 			raise ValueError("Binary type needs binary value")
 	
@@ -34,14 +37,15 @@ class Binary(Openc2Type):
 		else:
 			return ""
 			
-	def todict(self, e):
+	def todict(self, e=None):
 		""" Encodes with base64 """
 		return base64.b64encode(self._data).decode('ascii')	
 
 	@classmethod
-	def fromdict(cls, dic, e):
+	def fromdict(cls, dic, e=None):
 		""" Builds from base64encoding """
 		try:
-			return cls( base64.b64decode(dic.encode('ascii')) )
+#return cls( base64.b64decode(dic.encode('ascii')) )
+			return cls( base64.b64decode(dic))
 		except:		
 			raise TypeError("Unexpected b64 value: ", dic)
