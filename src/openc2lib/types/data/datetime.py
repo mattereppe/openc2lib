@@ -1,6 +1,6 @@
 import datetime 
 
-class DateTime:
+class DateTime(int):
 	""" OpenC2 Date-Time
 
 		This is used to represents dates and times according to Sec. 3.4.2.2.
