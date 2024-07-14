@@ -14,6 +14,7 @@ import logging
 import copy
 
 from flask import Flask, request, make_response
+from werkzeug.exceptions import HTTPException, UnsupportedMediaType
 
 import openc2lib as oc2
 from openc2lib.transfers.http.message import Message
@@ -68,13 +69,13 @@ class HTTPTransfer(oc2.Transfer):
 		content_type =hdr['Content-type']
 
 		if not content_type.removeprefix('application/').startswith(oc2.Message.content_type):
-			raise ValueError("Unsupported content type")
+			raise UnsupportedMediaType("Unsupported content type")
 
 		enctype = content_type.removeprefix('application/'+oc2.Message.content_type+'+').split(';')[0]
 		try:
 			encoder = oc2.Encoders[enctype].value
 		except KeyError:
-			raise ValueError("Unsupported encoding scheme: " + enctype)
+			raise UnsupportedMediaType("Unsupported encoding scheme: " + enctype)
 
 		# HTTP processing to extract the headers
 		# and the transport body
@@ -208,11 +209,13 @@ class HTTPTransfer(oc2.Transfer):
 			try:
 				cmd, encoder = server._recv(request.headers, request.data.decode('UTF-8') )
 				# TODO: Add the code to answer according to 'response_requested'
-			except ValueError as e:
-				# TODO: Find better formatting (what should be returned if the request is not understood?)
+			except UnsupportedMediaType as e:
+				# We were not able to understand the OpenC2 Message. 
+				#	We must include "to" to be compliant; we'll use the client address.
 				content = oc2.Response(status=oc2.StatusCode.BADREQUEST, status_text=str(e))
 				resp = oc2.Message(content)
 				resp.content_type = oc2.Message.content_type
+				resp.to = [ str(request.remote_addr) ]
 				resp.version = oc2.Message.version
 				resp.encoder = encoder
 				resp.status=oc2.StatusCode.BADREQUEST
@@ -225,6 +228,11 @@ class HTTPTransfer(oc2.Transfer):
 				resp.version = oc2.Message.version
 				resp.encoder = encoder
 				resp.status=oc2.StatusCode.INTERNALERROR
+				# Partial decoding of the OpenC2 message is trickly with the current encoder,
+				# hence it is not implemented. A non-HTTP exception means no fields in the 
+				# OpenC2 message were read (this might be improved in the future according to
+				# the LS requirements.
+				resp.to = [ str(request.remote_addr) ]
 			else:
 				logger.info("Received command: %s", cmd)
 				resp = callback(cmd)
