@@ -37,7 +37,7 @@ from openc2lib.core.command import Command
 from openc2lib.core.response import StatusCode, StatusCodeDescription, Response
 from openc2lib.core.results import Results
 from openc2lib.core.args import Args
-from openc2lib.core.encoder import Encoder, Encoders, register_encoder
+from openc2lib.core.encoder import Encoder, Encoders, register_encoder, EncoderError
 from openc2lib.core.transfer import Transfer
 from openc2lib.core.profile import Profile
 from openc2lib.core.target import target
