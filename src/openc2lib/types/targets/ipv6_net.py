@@ -53,8 +53,10 @@ class IPv6Net:
 		return ipaddress.IPv6Network(self.__ipv6_net).prefixlen
 	
 	def __str__(self):
-	    return ipaddress.IPv6Network(self.__ipv6_net).exploded
+#return ipaddress.IPv6Network(self.__ipv6_net).exploded
+	    return ipaddress.IPv6Network(self.__ipv6_net).compressed
 	
 	def __repr__(self):
-	    return ipaddress.IPv6Network(self.__ipv6_net).exploded
+#return ipaddress.IPv6Network(self.__ipv6_net).exploded
+	    return ipaddress.IPv6Network(self.__ipv6_net).compressed
 
