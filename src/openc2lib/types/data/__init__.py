@@ -11,6 +11,7 @@ import dataclasses
 
 
 from openc2lib.types.data.ipv4_addr import IPv4Addr
+from openc2lib.types.data.ipv6_addr import IPv6Addr
 from openc2lib.types.data.port import Port
 from openc2lib.types.data.l4_protocol import L4Protocol
 from openc2lib.types.data.datetime import DateTime
