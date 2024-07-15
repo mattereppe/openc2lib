@@ -176,7 +176,8 @@ class HTTPTransfer(oc2.Transfer):
 			:return: An openc2lib `Message` (first) and an `Encoder` instance (second).
 		"""
 
-		logger.debug("Received body: %s", data)
+		logger.debug("Received HTTP body: %s")
+		logger.debug(data)
 		msg, encoder = self._fromhttp(headers, data)
 		logger.info("Received command: %s", msg)
   			
@@ -219,6 +220,20 @@ class HTTPTransfer(oc2.Transfer):
 				resp.version = oc2.Message.version
 				resp.encoder = encoder
 				resp.status=oc2.StatusCode.BADREQUEST
+				resp.to = [ str(request.remote_addr) ]
+			except oc2.EncoderError as e:
+				# TODO: Find better formatting (what should be returned if the request is not understood?)
+				content = oc2.Response(status=oc2.StatusCode.BADREQUEST, status_text=str(e))
+				resp = oc2.Message(content)
+				resp.content_type = oc2.Message.content_type
+				resp.version = oc2.Message.version
+				resp.encoder = encoder
+				resp.status=oc2.StatusCode.BADREQUEST
+				# Partial decoding of the OpenC2 message is trickly with the current encoder,
+				# hence it is not implemented. A non-HTTP exception means no fields in the 
+				# OpenC2 message were read (this might be improved in the future according to
+				# the LS requirements.
+				resp.to = [ str(request.remote_addr) ]
 			# WARNING: The following code catch any exception and may prevent debugging
 			except Exception as e:
 				# TODO: Find better formatting (what should be returned if the request is not understood?)
@@ -228,10 +243,6 @@ class HTTPTransfer(oc2.Transfer):
 				resp.version = oc2.Message.version
 				resp.encoder = encoder
 				resp.status=oc2.StatusCode.INTERNALERROR
-				# Partial decoding of the OpenC2 message is trickly with the current encoder,
-				# hence it is not implemented. A non-HTTP exception means no fields in the 
-				# OpenC2 message were read (this might be improved in the future according to
-				# the LS requirements.
 				resp.to = [ str(request.remote_addr) ]
 			else:
 				logger.info("Received command: %s", cmd)

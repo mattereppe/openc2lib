@@ -183,6 +183,6 @@ class Encoder:
 			return Encoder.__objfromdict(clstype, dic)
 		except Exception as e:
 			logger.warning("Unable to decode: %s. Returning EncoderError due to: %s", str(dic), type(e).__name__)
-			raise EncoderError("Unable to parse message")
+			raise EncoderError("Invalid message")
 		
 
