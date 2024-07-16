@@ -34,8 +34,8 @@ def main():
 	p = oc2.Producer("producer.example.net", JSONEncoder(), HTTPTransfer("127.0.0.1", 8080))
 #	p = oc2.Producer("producer.example.net", JSONEncoder(), HTTPTransfer("172.17.0.11", 8080))
 
-#pf = slpf.Specifiers({'hostname':'firewall', 'named_group':'firewalls', 'asset_id':'iptables'})
-	pf = dumb.dumb({'hostname':'mockup', 'named_group':'testing', 'asset_id':'dumb'})
+	pf = slpf.Specifiers({'hostname':'firewall', 'named_group':'firewalls', 'asset_id':'iptables'})
+#	pf = dumb.dumb({'hostname':'mockup', 'named_group':'testing', 'asset_id':'dumb'})
 
 
 	arg = oc2.Args({'response_requested': oc2.ResponseType.complete})

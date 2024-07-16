@@ -37,7 +37,7 @@ def main():
 # is the assed_id of the actuator.
 	actuators = {}
 	actuators[(slpf.Profile.nsid,'iptables')]=IptablesActuator()
-	actuators[('dumb','dumb')]=DumbActuator()
+	actuators[('x-dumb','dumb')]=DumbActuator()
 
 	c = oc2.Consumer("testconsumer", actuators, JSONEncoder(), HTTPTransfer("127.0.0.1", 8080))
 

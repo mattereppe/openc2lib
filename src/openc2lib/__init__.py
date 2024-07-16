@@ -29,6 +29,7 @@ from openc2lib.types.data import Port, L4Protocol, DateTime, Duration, TargetEnu
 from openc2lib.types.targets import Artifact, CommandID, Device, DomainName, EmailAddr, Features, File, IDNDomainName, IDNEmailAddr, IPv4Net, IPv6Net, IPv4Connection, IPv6Connection, MACAddr, Process, URI, IRI, Properties
 
 from openc2lib.core.actions import Actions
+from openc2lib.core.actuator import Actuator
 from openc2lib.core.producer import Producer
 from openc2lib.core.consumer import Consumer
 from openc2lib.core.message import Message

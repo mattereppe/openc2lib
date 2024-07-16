@@ -1,0 +1,22 @@
+test_good_uris:
+- uri: "ftp://ftp.is.co.za/rfc/rfc1808.txt"
+- uri: "http://www.ietf.org/rfc/rfc2396.txt"
+- uri: "ldap://[2001:db8::7]/c=GB?objectClass?one"
+- uri: "mailto:John.Doe@example.com"
+- uri: "news:comp.infosystems.www.servers.unix"
+- uri: "tel:+1-816-555-1212"
+- uri: "telnet://192.0.2.16:80/"
+- uri: "urn:oasis:names:specification:docbook:dtd:xml:4.1.2"
+
+test_bad_uris:
+- uri: "4http:"
+- uri: "http^:"
+- uri: "http!:"
+- uri: "http;:"
+#- uri: "http#::"
+#- uri: "http/:"
+#- uri: "http?:"
+- uri: "http%:"
+- uri: "http:##"
+- uri: "http:%//"
+- uri: "http://:;host#"

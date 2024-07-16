@@ -15,7 +15,7 @@ def random_strings():
 			rnd.append(''.join(random.choices(string.printable, k=length)))
 	return rnd
 
-@parametrize_from_file('test_mime_types.yml')
+@parametrize_from_file('parameters/test_mime_types.yml')
 def test_mime_types(mime_type):
 	Artifact.validate_syntax = True
 	Artifact.validate_iana = True
