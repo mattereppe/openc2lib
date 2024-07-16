@@ -121,6 +121,12 @@ In this case, the actuator specifiers are derived from `Map`, according to the d
 
 The specifier definition should also implement the `__init__` method to initialize class instances. It is also recommended to define a `__str__` function  to provide a human-readable representation of the actuator profile in log messages.
 
+### Define new types
+
+*** WARNING: need to better check and revise this Section ***
+
+Adding new types can be done within each new Profile. Beaware that new types usually needs to support the "copy-constructor", i.e., they must support initialization from an object of the same type.
+
 ### Define new targets
 
 Targets are just specific OpenC2 data types that can be used as `Target` in `Command`s. Any data type can be made a `Target` by decorating it with the `@target(name, nsid)` tag. This decorator automatically manages all the stuff to register new targets in openc2lib. It takes two arguments, namely:
