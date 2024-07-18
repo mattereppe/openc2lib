@@ -71,8 +71,15 @@ class Map(Openc2Type, dict):
 		# precedence over non-keyword arguments.
 		raw.update(kwargs)
 		for k,v in raw.items():
-			self[k] = self.fieldtypes[k](v)
-
+			# When a field is an instance of an extensible class, such extensible class can be 
+			# safely used to initialize it. Otherwise, we assume a plain dictionary is given, 
+		 	# or anything else that can be initialized by the plain fieldtype (of course, this
+			# may fail).
+			if isinstance(v, self.fieldtypes[k]):
+				self[k] = v
+			else:
+				logger.debug("%s is not an instance of %s. Trying anyway to initialize it....", v, self.fieldtypes[k])
+				self[k] = self.fieldtypes[k](v)
 
 	def validate_fields(self, min_num=1):
 		""" Check whether field names are valid
@@ -164,6 +171,7 @@ class Map(Openc2Type, dict):
 		logger.debug('Decoding %s from %s in Map', cls, dic)
 		try:
 			for k,v in dic.items():
+				# Check whether each field is in the base class on in an extension
 				if k in cls.fieldtypes:
 					objdic[k] = e.fromdict(cls.fieldtypes[k], v)
 				elif k in cls.register:
@@ -186,4 +194,6 @@ class Map(Openc2Type, dict):
 		except Exception as e:
 			logger.ERROR("Unable to instantiate %s from %s", cls, objdic)
 			raise TypeError("Unable to instantiate class " + cls)
+
+	
 
