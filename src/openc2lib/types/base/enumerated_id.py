@@ -17,6 +17,7 @@ class EnumeratedID(Enumerated):
 		the IDs are not integers.
 	"""
 
+
 	def todict(self, e):
 		""" Converts to dictionary 
 		

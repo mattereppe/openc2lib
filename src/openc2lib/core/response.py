@@ -40,7 +40,7 @@ StatusCodeDescription = {StatusCode.PROCESSING: 'Processing',
 """
 
 class Response(Content, Map):
-	"""OpenC2 Response
+	""" OpenC2 Response
 
 		This class defines the structure of the OpenC2 Response. According to the definition
 			in Sec. 3.3.2 of the Language Specification, the `Response` contains a list of
@@ -49,10 +49,25 @@ class Response(Content, Map):
 			Extensions to `Response` must extend `fieldtypes` according to the allowed field
 	 		names and types. `fieldtypes` is used to parse incoming OpenC2 messages and to build
 		   and initialize	the
-			correct Python objects for each \<key, value\> pair.		
+			correct Python objects for each <key, value> pair.		
 	"""
 		
 	fieldtypes = dict(status= StatusCode, status_text= str, results= Results)
-	"""The list of allowed \<key,value\> pair expected in a `Response`"""
+	""" The list of allowed <key,value> pair expected in a `Response`"""
 	msg_type = MessageType.response
+
+	def __init__(self, *args, **kwargs):
+		super().__init__(*args, **kwargs)
+		self.validate_fields()
+
+	def validate_fields(self):
+		""" Check the `status` field is present """
+		if not 'status' in self:
+			raise ValueError("A Response must contain the status field")
+
+
+
+
+
+
 

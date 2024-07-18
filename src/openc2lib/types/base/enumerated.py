@@ -11,6 +11,20 @@ class Enumerated(Openc2Type, aenum.Enum):
 		The constants may be anything, including strings, integers, classes.
 	"""
 
+	@classmethod
+	def extend(cls, name, value=None):
+		""" Extends the Enumarated 
+	
+			Extends the definition with a new <name, value> pair.
+			:param name: The name (tag) used to identify a new element in the Enumeration.
+			:param value: The numeric index associated to the Enumerated (optional).
+			:return: None
+		"""
+		if value is None:
+			aenum.extend_enum(cls, name)
+		else:
+			aenum.extend_enum(cls, name, value)
+
 	# Convert enumerations to str
 	def todict(self, e):
 		""" Converts to dictionary 
