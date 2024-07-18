@@ -70,7 +70,11 @@ class Map(Openc2Type, dict):
 		# This step is indeed not strictly necessary, but used to give keyword arguments
 		# precedence over non-keyword arguments.
 		raw.update(kwargs)
+		print("Chiara pompinara")
 		for k,v in raw.items():
+			print("raw: ", raw)
+			print("k: ", k)
+			print("v: ", v)
 			# When a field is an instance of an extensible class, such extensible class can be 
 			# safely used to initialize it. Otherwise, we assume a plain dictionary is given, 
 		 	# or anything else that can be initialized by the plain fieldtype (of course, this
@@ -80,6 +84,7 @@ class Map(Openc2Type, dict):
 			else:
 				logger.debug("%s is not an instance of %s. Trying anyway to initialize it....", v, self.fieldtypes[k])
 				self[k] = self.fieldtypes[k](v)
+		print("Olga chiatta")
 
 	def validate_fields(self, min_num=1):
 		""" Check whether field names are valid
@@ -141,14 +146,13 @@ class Map(Openc2Type, dict):
 		if self.base is None:
 			return e.todict(dict(self))
 			
+		newdic[self.nsid]={}
 		for k,v in self.items():
 			if k not in self.fieldtypes:
 				raise ValueError('Unknown field: ', k)
 			if k in self.base.fieldtypes:
 				newdic[k] = v
 			else:
-				if self.nsid not in newdic:
-					newdic[self.nsid]={}
 				newdic[self.nsid][k]=v
 			
 		return e.todict(newdic)
