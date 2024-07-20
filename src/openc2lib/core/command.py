@@ -36,6 +36,8 @@ class Command(Content, Record):
 	# If something fails in its code, it returns with no errors but does 
 	# not complete the code
 	def __post_init__(self):
+		if not isinstance(self.action, Actions):
+			raise TypeError("Invalid action")
 		if not isinstance(self.target, Target):
 			self.target = Target(self.target)
 		if not isinstance(self.actuator, Actuator) and self.actuator is not None:

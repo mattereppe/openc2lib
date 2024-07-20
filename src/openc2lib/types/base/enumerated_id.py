@@ -45,6 +45,8 @@ class EnumeratedID(Enumerated):
 			:param e: The `Encoder that is being used.
 			:return: An instance of this class initialized from the dictionary values.
 		"""
+		if not isinstance(dic, int):
+			raise ValueError("EnumeratedID must be int type")
 		try:
 			return cls(int(dic))
 		except:

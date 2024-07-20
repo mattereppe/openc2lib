@@ -63,6 +63,9 @@ class Record(Openc2Type):
 			if tpl[0] == '__annotations__':
 				fielddesc = tpl[1]
 
+		
+		if not isinstance(dic, dict):
+			raise EncoderError("Invalid data type for Record")
 		for k,v in dic.items():
 			if k not in fielddesc:
 				raise Exception("Unknown field '" + k + "' from message")

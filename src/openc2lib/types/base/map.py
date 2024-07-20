@@ -168,6 +168,8 @@ class Map(Openc2Type, dict):
 		objdic = {}
 		extension = None
 		logger.debug('Decoding %s from %s in Map', cls, dic)
+		if not isinstance(dic, dict):
+			raise TypeError("Map type needs a dictionary")
 		try:
 			for k,v in dic.items():
 				# Check whether each field is in the base class on in an extension
@@ -182,6 +184,7 @@ class Map(Openc2Type, dict):
 					raise TypeError("Unexpected field: ", k)
 		except TypeError:
 			logger.error("Unable to decode. Ill-formed object: %s", cls.__name__)
+			raise(EncoderError)
 		
 
 		if extension is not None:
