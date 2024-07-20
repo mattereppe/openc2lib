@@ -41,31 +41,30 @@ def load_files(cmd_path):
 	cmds_files = [
     os.path.join(cmd_path,f) for f in os.listdir(cmd_path) if os.path.isfile(os.path.join(cmd_path, f))
 	]
-	print(cmds_files)
 
 # use this if you want to debug a single file
 #	cmds_files = [ "openc2-json-schema/src/test/resources/commands/bad/action_notarget.json" ]
 
 	return cmds_files
 
-def load_commands(cmd_path):
-	""" Create an openc2lib command from a json string or file. 
+def load_json(path):
+	""" Load an openc2lib command/response from a json string or file. 
 		
 		It expects the command in a string; alternatively, the file containing the json can be given by
 		specifying its keyword. If both are given, the string is used. """
 
-	cmds_files = load_files(cmd_path)
+	files = load_files(path)
 # use this if you want to debug a single file
 #cmds_files = [ "openc2-json-schema/src/test/resources/commands/bad/action_notarget.json" ]
 
-	cmds_list = []
-	for f in cmds_files:
-		print("file ", f)
+	lst = []
+	for f in files:
+		print("Processing file ", f)
 
 		with open(f, 'r') as j:
-			cmds_list.append(  json.load(j) )
+			lst.append(  json.load(j) )
 
-	return cmds_list
+	return lst
 
 def send_raw_command(url, oc2hdrs, oc2data):
 	""" This function emulates a faulty producer that sends invalid openc2 messages (only the body in http) """

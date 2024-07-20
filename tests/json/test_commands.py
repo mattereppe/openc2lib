@@ -5,8 +5,8 @@ import ipaddress
 import json
 import json_schema_validation
 
-from commands import load_commands, load_files, send_raw_command
-from openc2lib import Encoder, Command, Response, Message, StatusCode
+from helpers import load_json, load_files, send_raw_command
+from openc2lib import Encoder, Command, Response, Message, StatusCode, EncoderError
 import openc2lib.profiles.slpf
 import openc2lib.transfers.http
 import openc2lib.transfers.http.message as http
@@ -128,6 +128,7 @@ def fix_uuid(cmd):
 		cmd['target']['x-acme:container']['container_id'] = cmd['target']['x-acme:container']['container_id'].lower()
 
 def validate_json(caplog):
+	""" Check the openc2 json messages exchanged between the consumer and the producer are valid according to the schema """
 	
 # WARNING: the visible logs are those generated within this function. Everything else in the fixture does not produce logs
 	assert len(caplog.messages) == 2
@@ -144,16 +145,23 @@ def validate_json(caplog):
 
 	return True
 
-@pytest.mark.parametrize("cmd", load_commands(command_path_good) )
+@pytest.mark.parametrize("cmd", load_json(command_path_good) )
 @pytest.mark.dependency(name="test_decoding")
 def test_decoding(cmd):
+	""" Test 'good' commands can be successfully decoded by openc2lib """
 	print("Command json: ", cmd)
 	c = Encoder.decode(Command, cmd)
 	assert type(c) == Command
 
-@pytest.mark.parametrize("cmd", load_commands(command_path_good) )
+@pytest.mark.parametrize("cmd", load_json(command_path_good) )
 @pytest.mark.dependency(name="test_encoding", depends=["test_decoding"])
 def test_encoding(cmd):
+	""" Test 'good' commands can be successfully encoded by openc2lib
+
+		The test decodes 'good' commands, and then create again the json. Finally, the original
+		and created json are compared. A number of fixes are applied to account for different
+		representations of the values (e.g., lowercase/uppercase).
+	"""
 	print("Command json: ", cmd)
 	oc2_cmd = Encoder.decode(Command, cmd)
 	# Use to dict because the Encoder.encode method returns a str
@@ -166,9 +174,14 @@ def test_encoding(cmd):
 	assert cmd == oc2_json
 
 
-@pytest.mark.parametrize("cmd", load_commands(command_path_good) )
+@pytest.mark.parametrize("cmd", load_json(command_path_good) )
 @pytest.mark.dependency(depends=["test_decoding", "test_encoding"])
 def test_sending(cmd, create_producer, caplog):
+	""" Test 'good' messages are successfully sent to the remote party and a response is received.
+
+		Validate the openc2 json messages exchanged. The response is often an error because the majority
+		of features are not implemented in the available actuators.
+	"""
 	c = Encoder.decode(Command, cmd)
 
 # Filter the log to get what I need
@@ -186,26 +199,33 @@ def test_sending(cmd, create_producer, caplog):
 	validate_json(caplog)
 	assert True
 
-@pytest.mark.parametrize("cmd_files", load_files(command_path_bad) )
-def test_decoding_invalid(cmd_files):
-	print("Command json: ", cmd_files)
+@pytest.mark.parametrize("cmd_file", load_files(command_path_bad) )
+def test_decoding_invalid(cmd_file):
+	""" Check invalid commands raise exceptions when decoded """
+	print("Command file: ", cmd_file)
 	# It may also raises while loading the files, since they may be empty
-	for f in cmd_files:
-		with pytest.raises(Exception):
-			print("File: ", f)
-			with open(f, 'r') as fcmd:
-				cmd = json.load(fcmd) 
-				print("Command json: ", cmd)
-				Encoder.decode(Command, cmd)
+	with open(cmd_file, 'r') as fcmd:
+		try:
+			cmd = json.load(fcmd) 
+		except json.decoder.JSONDecodeError:
+			cmd = ""
+		with pytest.raises( (TypeError, ValueError, KeyError, EncoderError) ):
+			print("Command json: ", cmd)
+			Encoder.decode(Command, cmd)
 		
 
 @pytest.mark.parametrize("file",  load_files(command_path_bad)  )
 def test_response_to_invalid_commands(file, http_url, http_headers, http_body):
+	""" Send invalid commands and check a BADREQUEST is returned
+
+		Read invalid commands from file and send them to a Consumer. Commands are not encoded (because invalid).
+		Check that a BADREQUEST status is returned.
+	"""
 	print("Command json: ", file)
 	# It may also raises while loading the files, since they may be empty
 	count = 0
 #	for f in cmd_files:
-	print("File: " , file)
+#print("File: " , file)
 	with open(file, 'r') as fcmd:
 		try:
 			cmd = json.load(fcmd) 
@@ -215,13 +235,13 @@ def test_response_to_invalid_commands(file, http_url, http_headers, http_body):
 				cmd = {}	
 			else:
 				raise ValueError("Unable to read json")
-		print("Command json: ", cmd)
+#		print("Command json: ", cmd)
 		http_body['body']['openc2']['request'] = cmd
-		print("HTTP body: ", json.dumps(http_body))
+#		print("HTTP body: ", json.dumps(http_body))
 		response = send_raw_command(http_url, http_headers, json.dumps(http_body))
 
 		assert response.status_code == 400
-		print("response text: ", response.text)
+#		print("response text: ", response.text)
 
 		msg = JSONEncoder.decode(response.text, http.Message)
 		assert msg.body.getObj().getObj()['status'] == StatusCode.BADREQUEST
