@@ -175,7 +175,7 @@ def test_encoding(cmd):
 
 
 @pytest.mark.parametrize("cmd", load_json(command_path_good) )
-@pytest.mark.dependency(depends=["test_decoding", "test_encoding"])
+#@pytest.mark.dependency(depends=["test_decoding", "test_encoding"])
 def test_sending(cmd, create_producer, caplog):
 	""" Test 'good' messages are successfully sent to the remote party and a response is received.
 

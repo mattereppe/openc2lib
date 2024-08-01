@@ -1,0 +1,21 @@
+#!/bin/bash
+# Run the simulation and got statistics
+
+# Remove existing log files
+rm -rf controller.log server.log
+
+# Run the simulation (change the number of trials)
+./controller.py
+
+# Collect log file from the server
+cp ../../examples/server.log .
+
+# Collect statistics
+awk -f server.awk server.log  | gawk -f stat-server.awk > server.txt
+awk -f controller.awk controller.log  | gawk -f stat-controller.awk > controller.txt
+
+# For network traces:
+# Use wireshark to capture, display filter "HTTP", View -> Time from previous displayed
+# Export packet dissection as txt
+# Run the following awk filter:
+grep "HTTP/1.1"  nettrace.txt| grep -v "POST" | awk 'BEGIN{ tot=0; count=0; min=99999; max=0} { tot+=$2; count++; if( $2 < min ) min=$2; if (max < $2) max=$2;} END{printf("Tot\tAvg\tMin\tMax\n"); printf("%s\t%s\t%s\t%s\n",count, tot/count, min, max);}'

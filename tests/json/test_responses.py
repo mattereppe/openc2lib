@@ -41,7 +41,7 @@ def test_decoding(rsp):
 	assert type(c) == Response
 
 @pytest.mark.parametrize("rsp", load_json(response_path_good) )
-#@pytest.mark.dependency(name="test_encoding", depends=["test_decoding"])
+@pytest.mark.dependency(name="test_encoding", depends=["test_decoding"])
 def test_encoding(rsp):
 	print("Response json: ", rsp)
 	oc2_rsp = Encoder.decode(Response, rsp)
