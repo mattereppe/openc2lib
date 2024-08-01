@@ -19,14 +19,14 @@ logger = logging.getLogger('openc2producer')
 
 def main():
     logger.info("Creating Producer")
-    # p = oc2.Producer("producer.example.net",
-    #                  JSONEncoder(),
-    #                  HTTPTransfer("192.168.197.128",
-    #                               5000))
     p = oc2.Producer("producer.example.net",
                      JSONEncoder(),
-                     HTTPTransfer("127.0.0.1",
+                     HTTPTransfer("172.17.0.11",
                                   8080))
+    # p = oc2.Producer("producer.example.net",
+    #                  JSONEncoder(),
+    #                  HTTPTransfer("127.0.0.1",
+    #                               5000))
 
 
     pf = slpf.Specifiers({'hostname': 'firewall', 'named_group': 'firewalls', 'asset_id': 'iptables'})
@@ -34,10 +34,12 @@ def main():
     arg = slpf.Args({'response_requested': oc2.ResponseType.complete})
     #	arg = slpf.Args({'response_requested': oc2.ResponseType.none})
 
-# cmd = oc2.Command(oc2.Actions.query, oc2.Features([oc2.Feature.versions, oc2.Feature.profiles, oc2.Feature.pairs]), arg, actuator=pf)
+    # cmd = oc2.Command(oc2.Actions.query, oc2.Features([oc2.Feature.versions, oc2.Feature.profiles, oc2.Feature.pairs]), arg, actuator=pf)
     # cmd = oc2.Command(oc2.Actions.query, oc2.Features([oc2.Feature.pairs]), arg, actuator=pf)
     # cmd = oc2.Command(oc2.Actions.allow, oc2.IPv4Net('130.0.16.0/20'), arg, actuator=pf)
-    cmd = oc2.Command(oc2.Actions.deny, oc2.IPv4Net('130.0.0.1'), arg, actuator=pf)
+    # cmd = oc2.Command(oc2.Actions.deny, oc2.IPv4Net('130.0.0.1'), arg, actuator=pf)
+    # cmd = oc2.Command(oc2.Actions.delete, slpf.RuleID(1), arg, actuator=pf)
+    cmd = oc2.Command(oc2.Actions.update, oc2.File({'path':'http://192.168.197.128:8080','name':'iptables-rules.v4'}), arg, actuator=pf)
 
     logger.info("Sending command: %s", cmd)
     resp = p.sendcmd(cmd)
