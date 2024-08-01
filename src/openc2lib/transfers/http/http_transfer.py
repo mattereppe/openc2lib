@@ -176,10 +176,9 @@ class HTTPTransfer(oc2.Transfer):
 			:return: An openc2lib `Message` (first) and an `Encoder` instance (second).
 		"""
 
-		logger.debug("Received HTTP body: %s")
+		logger.info("Received HTTP body: \n%s", data)
 		logger.debug(data)
 		msg, encoder = self._fromhttp(headers, data)
-		logger.info("Received command: %s", msg)
   			
 		return msg, encoder
 	
@@ -213,6 +212,7 @@ class HTTPTransfer(oc2.Transfer):
 			except UnsupportedMediaType as e:
 				# We were not able to understand the OpenC2 Message. 
 				#	We must include "to" to be compliant; we'll use the client address.
+				logger.warn("Unsupported MediaType: discarding request")
 				content = oc2.Response(status=oc2.StatusCode.BADREQUEST, status_text=str(e))
 				resp = oc2.Message(content)
 				resp.content_type = oc2.Message.content_type
@@ -222,6 +222,7 @@ class HTTPTransfer(oc2.Transfer):
 				resp.status=oc2.StatusCode.BADREQUEST
 				resp.to = [ str(request.remote_addr) ]
 			except oc2.EncoderError as e:
+				logger.warn("Unable to understand the request: discarding")
 				# TODO: Find better formatting (what should be returned if the request is not understood?)
 				content = oc2.Response(status=oc2.StatusCode.BADREQUEST, status_text=str(e))
 				resp = oc2.Message(content)
@@ -237,6 +238,7 @@ class HTTPTransfer(oc2.Transfer):
 			# WARNING: The following code catch any exception and may prevent debugging
 			except Exception as e:
 				# TODO: Find better formatting (what should be returned if the request is not understood?)
+				logger.warn("Internal error: discarding request")
 				content = oc2.Response(status=oc2.StatusCode.INTERNALERROR, status_text=str(e))
 				resp = oc2.Message(content)
 				resp.content_type = oc2.Message.content_type
@@ -249,7 +251,7 @@ class HTTPTransfer(oc2.Transfer):
 				resp = callback(cmd)
 
 			
-			logger.debug("Got response: %s", resp)
+			logger.info("Got response: %s", resp)
 			
 			# TODO: Set HTTP headers as appropriate
 			hdrs, data = server._respond(resp, encoder)
