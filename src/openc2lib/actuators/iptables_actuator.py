@@ -16,6 +16,11 @@ logger = logging.getLogger(__name__)
 OPENC2VERS=Version(1,0)
 """ Supported OpenC2 Version """
 
+MY_IDS = {'hostname': None,
+			'named_group': None,
+			'asset_id': 'iptables',
+			'asset_tuple': None }
+
 # An implementation of the slpf profile. 
 class IptablesActuator:
 	""" Iptables SLPF implementation
@@ -30,10 +35,23 @@ class IptablesActuator:
 	def run(self, cmd):
 
 
+		# Check if the Command is compliant with the implemented profile
 		if not slpf.validate_command(cmd):
 			return Response(status=StatusCode.NOTIMPLEMENTED, status_text='Invalid Action/Target pair')
 		if not slpf.validate_args(cmd):
 			return Response(status=StatusCode.NOTIMPLEMENTED, status_text='Option not supported')
+
+		# Check if the Specifiers are actually served by this Actuator
+		try:
+			if not self.__is_addressed_to_actuator(cmd.actuator.getObj()):
+				return Response(status=StatusCode.NOTFOUND, status_text='Requested Actuator not available')
+		except AttributeError:
+			# If no actuator is given, execute the command
+			pass
+		except Exception as e:
+			return Response(status=StatusCode.INTERNALERROR, status_text='Unable to identify actuator')
+
+		return Response(status=StatusCode.NOTFOUND, status_text='Fake response for local testing')
 
 		try:
 			match cmd.action:
@@ -57,6 +75,22 @@ class IptablesActuator:
 	# def action_mapping(self, action, target):
 	# 	action_method = getattr(self, f"{action}", None)
 	# 	return action_method(target, self.args)
+
+	def __is_addressed_to_actuator(self, actuator):
+		""" Checks if this Actuator must run the command """
+		if len(actuator) == 0:
+			# Empty specifier: run the command
+			return True
+
+		for k,v in actuator.items():
+			try:
+				if v == MY_IDS[k]:
+					return True
+			except KeyError:
+				pass
+
+		return False
+		
 
 	def query(self, cmd):
 		""" Query action
