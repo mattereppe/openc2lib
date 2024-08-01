@@ -24,9 +24,15 @@ logger.setLevel(logging.INFO)
 stdout_handler = logging.StreamHandler()
 stdout_handler.setLevel(logging.DEBUG)
 stdout_handler.setFormatter(oc2.LogFormatter(datetime=True,name=True))
+
 hdls = [ stdout_handler ]
 # Add both handlers to the logger
 logger.addHandler(stdout_handler)
+# Add file logger
+file_handler = logging.FileHandler("controller.log")
+file_handler.setLevel(logging.INFO)
+file_handler.setFormatter(oc2.LogFormatter(datetime=True,name=True, datefmt='%t'))
+logger.addHandler(file_handler)
 
 def main():
 	logger.info("Creating Producer")
@@ -38,9 +44,9 @@ def main():
 #	pf = dumb.dumb({'hostname':'mockup', 'named_group':'testing', 'asset_id':'dumb'})
 
 
-	arg = oc2.Args({'response_requested': oc2.ResponseType.complete})
+#	arg = oc2.Args({'response_requested': oc2.ResponseType.complete})
 #	arg = slpf.Args({'response_requested': oc2.ResponseType.none})
-#	arg = slpf.Args({'response_requested': oc2.ResponseType.complete, 'direction': slpf.Direction.ingress})
+	arg = slpf.Args({'response_requested': oc2.ResponseType.complete, 'direction': slpf.Direction.ingress})
 
 	cmd = oc2.Command(oc2.Actions.query, oc2.Features([oc2.Feature.versions, oc2.Feature.profiles, oc2.Feature.pairs]), arg, actuator=pf)
 #	cmd = oc2.Command(oc2.Actions.allow, oc2.IPv4Net("172.19.0.0/24"), arg, actuator=pf)

@@ -22,14 +22,20 @@ from openc2lib.actuators.dumb_actuator import DumbActuator
 # Declare the logger name
 logger = logging.getLogger()
 # Ask for 4 levels of logging: INFO, WARNING, ERROR, CRITICAL
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.INFO)
 # Create stdout handler for logging to the console 
 stdout_handler = logging.StreamHandler()
-stdout_handler.setLevel(logging.DEBUG)
+stdout_handler.setLevel(logging.INFO)
 stdout_handler.setFormatter(oc2.LogFormatter(datetime=True,name=True))
-hdls = [ stdout_handler ]
 # Add both handlers to the logger
 logger.addHandler(stdout_handler)
+# Add file logger
+file_handler = logging.FileHandler("server.log")
+file_handler.setLevel(logging.INFO)
+file_handler.setFormatter(oc2.LogFormatter(datetime=True,name=True, datefmt='%t'))
+logger.addHandler(file_handler)
+# ?????
+hdls = [ stdout_handler , file_handler]
 	
 def main():
 
