@@ -51,7 +51,7 @@ class IptablesActuator:
 		except Exception as e:
 			return Response(status=StatusCode.INTERNALERROR, status_text='Unable to identify actuator')
 
-		return Response(status=StatusCode.NOTFOUND, status_text='Fake response for local testing')
+#return Response(status=StatusCode.NOTFOUND, status_text='Fake response for local testing')
 
 		try:
 			match cmd.action:
