@@ -7,6 +7,12 @@ class Choice(Openc2Type):
 
 		It expect all allowed values to be provided in a `Register` class, which must be defined
 		as class attribute `register` in all derived classes (see `Target` and `Actuator` as examples).
+
+		Note that the current implementation requires all possible choices to be of different types. 
+		Due to this limitation, it is not currently possible to define, e.g., more than an object of
+		type `str`. In such a case, distinct data types must be defined and used for the `str` objects.
+		This limitation should have limited impact, since the `Choice`  is expected to be used
+		to select between different data types.
 	"""
 	register = None
 	""" List of registered name/class options available """
