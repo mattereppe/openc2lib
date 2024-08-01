@@ -29,7 +29,7 @@ class Specifiers(oc2.Map):
 		:param named_group: User defined collection of devices with SLPF functionality.
 		:param asset_id: Unique identifier for a particular SLPF.
 		:param asset_tuple: Unique tuple identifier for a particular SLPF consisting 
-			of a list of up to 10 strings.
+			of a list of up to 10 strings. Not clear the definition and its usage.
 	"""
 
 	def __init__(self, dic):

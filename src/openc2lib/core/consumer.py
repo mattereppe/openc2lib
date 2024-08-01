@@ -166,6 +166,7 @@ class Consumer:
 		try:
 			# TODO: How to merge multiple responses?
 			# for a in actuators.items(): 
+			logger.info("Dispatching command to: %s", actuator[0])
 			response_content = actuator[0].run(msg.content) 
 		except (IndexError,AttributeError):
 			response_content = Response(status=StatusCode.NOTFOUND, status_text='No actuator available')
