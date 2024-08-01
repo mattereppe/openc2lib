@@ -197,7 +197,10 @@ def test_sending(cmd, create_producer, caplog):
 	assert type(resp.content) == Response
 
 	validate_json(caplog)
-	assert True
+	assert resp.content['status'] == StatusCode.BADREQUEST or \
+		resp.content['status'] == StatusCode.NOTIMPLEMENTED or \
+		resp.content['status'] == StatusCode.NOTFOUND
+		
 
 @pytest.mark.parametrize("cmd_file", load_files(command_path_bad) )
 def test_decoding_invalid(cmd_file):
