@@ -30,6 +30,9 @@ class Binary(Openc2Type):
 	def get(self):
 		return self._data
 	
+	def __len__(self):
+		return len(self._data)
+
 	def __str__(self):
 		""" Returns base64 encoding """
 		if self._data is not None:

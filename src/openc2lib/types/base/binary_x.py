@@ -20,6 +20,9 @@ class Binaryx(Binary):
 			self._data = base64.b16decode(b.upper())
 		else:
 			raise ValueError("Binary type needs binary value")
+
+	def __len__(self):
+		return len(self._data)
 	
 	def __str__(self):
 		""" Returns base64 encoding """
