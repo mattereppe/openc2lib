@@ -1,4 +1,4 @@
-# Run the test suites
+# Runnig the test suites
 
 There are multiple tests available to check the compliance of openc2lib with the Language Specification, concerning data types, serialization, and message exchange.
 
