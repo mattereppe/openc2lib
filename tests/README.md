@@ -9,3 +9,11 @@ To run these tests, enter the ```types``` folder and run:
 # pytest
 ```
 
+## Encoding/Deconding messages
+This is a more complete set of tests concerning the correct decoding and encoding of json messages taken from a third party site.
+To run the test, enter the ```json``` folder and run:
+```
+# pytest test_commands.py
+# pytest test_response.py
+```
+To perform these tests, a Consumer must run and answer to requests from the Producer, which is emulated in the tests. The Consumer will likely use dumb actuators because the commands usually does not make sense for a real function.
