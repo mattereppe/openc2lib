@@ -1,0 +1,11 @@
+{
+  "action": "deny",
+  "target": {
+    "uri": "https://example.com"
+  },
+  "actuator": {
+    "slpf": {
+      "asset_id": "123456"
+    }
+  }
+}

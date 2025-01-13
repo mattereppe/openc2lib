@@ -1,0 +1,100 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "https://oasis-open.org/openc2-http/v1.0/request.json",
+	"title": "The OASIS OpenC2 HTTP 1.0 Transfer Spec Request Schema",
+	"type": "object",
+	
+	"required": [
+		"body"
+	],
+
+	"properties": {
+		"headers": { "$ref": "#/definitions/headers" },
+	    "body": { "$ref": "#/definitions/body" },
+	    "signature": { "$ref": "#/definitions/signature" }
+	},
+	"additionalProperties": false,
+	
+	"definitions": {
+
+		"headers": {
+			"title": "HTTP OpenC2 Message Headers",
+			"$comment": "These headers are defined by the HTTP Transfer specification and are not part of the OpenC2 Language Specification",
+			"type": "object",
+			"required": [
+				"to"
+			],
+			"properties": {
+				"request_id": {
+					"title": "A unique identifier created by the Producer and copied by Consumer into all Responses, in order to support reference to a particular Command, transaction, or event chain",
+					"type": "string"
+				},
+				"created": {
+					"title": "Creation date/time of the content",
+					"type": "integer",
+					"minimum": 0
+				},
+				"from": {
+					"title": "Authenticated identifier of the creator of or authority for execution of a message",
+					"type": "string"
+				},
+				"to": {
+					"title": "Authenticated identifier(s) of the authorized recipient(s) of a message",
+					"type": "array",
+			    	"uniqueItems": true,
+			      "items": {
+			         "title": "Authenticated identifiers of the creator",
+			         "type": "string"
+			    	},
+					"minItems": 0
+				}
+			}
+		},
+
+		"body": {
+			"title": "HTTP OpenC2 Message Body",
+			"type": "object",
+			"properties": {
+				"openc2": {
+					"title": "A generic envelop to carry OpenC2 messages",
+					"$ref": "#/definitions/openc2-content"
+  				}
+			},
+			"minProperties": 1,
+			"maxProperties": 1,
+			"additionalProperties": false
+		},
+
+		"signature": {
+			"title": "HTTP OpenC2 Message Signature",
+			"$comment": "Not defined in the Language Specification",
+			"type": "string"
+		},
+
+		"openc2-content": {
+			"title": "The OpenC2 envelop to carry requests, responses, or notifications",
+			"type": "object",
+			"properties": {
+				"request": {
+					"type": "object",
+					"title": "OpenC2 Command as defined by the Language Specification",
+					"$comment": "Validation is not performed by this schema"
+				},
+				"response": {
+					"type": "object",
+					"title": "OpenC2 Response as defined by the Language Specification",
+					"$comment": "Validation is not performed by this schema"
+				},
+				"notification": {
+					"type": "object",
+					"title": "OpenC2 Event",
+					"$comment": "Validation is not performed by this schema; the definition is not included in the Language Specification 1.0"
+				}
+			},
+			"minProperties": 1,
+			"maxProperties": 1,
+			"additionalProperties": false
+		}
+	}
+
+}
