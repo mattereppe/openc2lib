@@ -1,0 +1,23 @@
+test_good_names:
+- name: localhost.localdomain
+- name: verylonghostnamemadeofupto63charactersforthehostpartasrequired.localdomain
+- name: localhost.verylongdomainnamemadeofupto255charactersforthedomainpart.verylongdomainnamemadeofupto255charactersforthedomainpart.verylongdomainnamemadeofupto255charactersforthedomainpart.verylongdomainnamemadeofupto255charactersforthedomainpart.domain
+- name: 'a.b.c.d'
+- name: 10.0.0.1
+test_bad_names:
+- name: localhost
+- name: verylongdomainnamemadeofmorethan63charactersforthehostpartasrequired.localdomain
+- name: localhost.verylongdomainnamemadeofupto63charactersforthehostpartasrequired
+- name: localhost.verylongdomainnamemadeofupto255charactersforthedomainpart.verylongdomainnamemadeofupto255charactersforthedomainpart.verylongdomainnamemadeofupto255charactersforthedomainpart.verylongdomainnamemadeofupto255charactersforthedomainpart.verylongdomainnamemadeofupto255charactersforthedomainpart
+- name: 'localhost@localdomain'
+- name: 'localhost.localdomain^'
+- name: 'localhost.localdomain&'
+- name: 'localhost.localdomain/'
+- name: '#localhost.localdomain'
+- name: 'localhost%localdomain'
+- name: 'localhost.localdomain-'
+- name: 'localhost.localdomain$'
+- name: 'localhost.localdomain,'
+- name: 'localhost.localdomain:'
+- name: 'localhost-localdomain'
+- name: 'localhost.localdomainà'

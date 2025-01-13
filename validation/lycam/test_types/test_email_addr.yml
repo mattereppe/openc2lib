@@ -1,0 +1,14 @@
+test_good_names:
+- name: 'user@localhost.localdomain'
+- name: 'user@host.domain'
+test_bad_names:
+- name: 'user'
+- name: 'user:pass@domain'
+- name: 'user@domain'
+- name: 'user-domain'
+- name: 'user@domain.eu/path'
+- name: 'user@domain.eu#tag'
+- name: 'user@domain:eu'
+- name: 'user@192.168.0.1'
+- name: 'user@192.168.0.1.in-addr.arpa'
+- name: 'üsér@ìntèrnétíöñâl.domain'
