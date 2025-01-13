@@ -1,6 +1,6 @@
-# Runnig the test suites
+# Runnig the validation test suites
 
-There are multiple tests available to check the compliance of openc2lib with the Language Specification, concerning data types, serialization, and message exchange.
+There are multiple tests available to check the compliance of openc2lib with the Language Specification, concerning data types, serialization, and message exchange. The same tests are available for both ```openc2lib``` and ```lycam```, with the necessary profiles definitions for each tool. Test concerning the exchange of messages over the network are not available for ```lycam```, since this library does not include a transfer protocol.
 
 ## Data types
 A first set of tests concerns the correct instantiation of data, including both data, targets, args, artifacts, and commands.
@@ -16,7 +16,10 @@ To run the test, enter the ```json``` folder and run:
 # pytest test_commands.py
 # pytest test_response.py
 ```
-To perform these tests, a Consumer must run and answer to requests from the Producer, which is emulated in the tests. The Consumer will likely use dumb actuators because the commands usually does not make sense for a real function.
+To perform these tests, a Consumer must run and answer to requests from the Producer, which is emulated in the tests. A dumb consumer is also available that uses dumb actuators because the commands usually does not make sense for a real function:
+```
+# ../../examples/server-testing.py
+```
 
 ## Performance analysis 
 The following procedure describes how to collect performance measures when running both the Producer and the Consumer on localhost. This makes perfect sense for this kind of analysis, to avoid counting the random effects of network traversal.
@@ -27,7 +30,7 @@ First, remove existing log files, if any.
 ```
 Run the server:
 ```
-# ../../examples/server.py
+# ../../examples/server-testing.py
 ```
 
 Then run the simulation (change the number of trials in the Producer according to your needs):
