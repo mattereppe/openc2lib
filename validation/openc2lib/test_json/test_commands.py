@@ -27,8 +27,8 @@ import digits_and_chars
 
 
 # Parameters to get good and bad samples of json messages
-command_path_good = "openc2-json-schema/tests/commands/good"
-command_path_bad = "openc2-json-schema/tests/commands/bad"
+command_path_good = "../../openc2-json-schema/tests/commands/good"
+command_path_bad = "../../openc2-json-schema/tests/commands/bad"
 
 
 class JSONDump(logging.Filter):
@@ -45,7 +45,7 @@ def check_command(cmd):
 # The command in openc2-json-schema/src/test/resources/commands/good/deny_uri_actuator_multiple.json
 # does not conform to the language specification, since the actuator is defined as "Choice", hence
 # it cannot contain multiple values.
-# I removed the x-esm actuator and renamed the file to deny_uri.json; I moved the original file to 
+# I removed the x-acme actuator and renamed the file to deny_uri.json; I moved the original file to 
 # the "bad" examples. 
 #
 # The command in openc2-json-schema/src/test/resources/commands/good/allow_ipv6net_wikipedia8_prefix2.json
@@ -157,7 +157,7 @@ def test_decoding(cmd):
 	assert type(c) == Command
 
 @pytest.mark.parametrize("cmd", load_json(command_path_good) )
-@pytest.mark.dependency(name="test_encoding", depends=["test_decoding"])
+#@pytest.mark.dependency(name="test_encoding", depends=["test_decoding"])
 def test_encoding(cmd):
 	""" Test 'good' commands can be successfully encoded by openc2lib
 

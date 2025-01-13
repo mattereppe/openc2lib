@@ -26,8 +26,8 @@ import digits_and_chars
 
 
 # Parameters to get good and bad samples of json messages
-response_path_good = "openc2-json-schema/tests/responses/good"
-response_path_bad = "openc2-json-schema/tests/responses/bad"
+response_path_good = "../../openc2-json-schema/tests/responses/good"
+response_path_bad = "../../openc2-json-schema/tests/responses/bad"
 
 # WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING 
 # 
