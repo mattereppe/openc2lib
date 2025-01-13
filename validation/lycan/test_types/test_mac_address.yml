@@ -1,0 +1,11 @@
+test_good_nets:
+- address: "001122445566"
+- address: "778899aabbccddee"
+- address: "778899aabbcc"
+test_bad_nets:
+- address: "001122334455667799"
+- address: "00112233445566"
+- address: "macddress"
+- address: 25
+- address: "10.2.4.1"
+- address: "macaddress.domain.eu"

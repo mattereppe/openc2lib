@@ -1,0 +1,10 @@
+{
+  "action": "deny",
+  "target": {
+    "file": {
+      "hashes": {
+        "md5": "0313FD399B143FC40CD52A1679018305"
+      }
+    }
+  }
+}

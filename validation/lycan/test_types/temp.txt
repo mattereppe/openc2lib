@@ -1,0 +1,3 @@
+{
+	"action": "query", 
+	"target": {"x-thing:id": {"name": "target"}}, "args": {"custom_args": {"name": "args"}}, "actuator": {"x-acme-widget": {"name": "hello", "version": {"name": "actuator"}}}}

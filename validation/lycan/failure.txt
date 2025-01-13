@@ -1,0 +1,161 @@
+types
+=====
+
+Artifacts:
+- fails to discard random strings (invalid mime_types)
+- does not distinguish automatically between "uri" and "bin"
+
+Devices:
+- does not raise exception for improper usage of IDN hostnames in "hostname"
+- fails to raise exception on empty device
+
+DomainName:
+- fails to discard bad names
+
+EmailAddr:
+- non-compliant name (EmailAddress instead of EmailAddr)
+- fails to discard bad names
+
+Features:
+- the components are strings, not enumerated
+- in case of duplicates, it raises an error and does not behave as if duplicate(s) were not present
+
+File:
+- cannot be initialized from Map (can be with **args)
+
+IDNDomainName:
+- non compliant name (InternationalizedDomainName)
+- fails to discard bad names
+
+IDNEmailAddr
+- non-compliant name (InternationalizedEmailAddress)
+
+IPv4Connection:
+- failed to discard all bad connection parameters
+
+IPv4Net:
+- inconsistent name (IPv4Address)
+- did not recognize bad addresses
+
+IPv6Connection:
+- failed to discard all bad connection parameters
+
+IPv6Net:
+- inconsistent name (IPv6Address)
+- did not recognize bad addresses
+
+MACAddr
+- inconsisten name (MACAddress)
+- did not recognize bad addresses
+
+Process:
+- does not accept dictionary as input to complex fields (File, Process)
+
+URIs:
+- fails to recognize bad URIs
+
+Binary:
+- only takes base64-encoded inputs
+
+Hashes
+- only works for 128 md5
+- fails to use lowercase letters in hex
+
+Properties
+- strings are iterable and are treated as arrays, even if this is questionable
+(not all test could be run becuase the Array openc2lib struct is missing)
+
+Commands
+========
+
+Capital "X" (X-mycompany)
+- raises an exception (questionable)
+
+Dots (x-mycompany.example.com)
+- fails to detect dots in name
+
+Specialchar (x-maycompany/foo;bar)
+- fails to detect characters not allowed
+
+...
+(all those that fails are due to bad input controls, including strict adherence to grammar rules)
+============================================== short test summary info ===============================================
+FAILED test_invalid_commands.py::test_invalid_command[allow_ipv4_net_badcidr-Exception] - Failed: DID NOT RAISE <class 'Exception'>
+FAILED test_invalid_commands.py::test_invalid_command[allow_ipv4_net_badip-Exception] - Failed: DID NOT RAISE <class 'Exception'>
+FAILED test_invalid_commands.py::test_invalid_command[allow_ipv4_net_cidr-Exception] - Failed: DID NOT RAISE <class 'Exception'>
+FAILED test_invalid_commands.py::test_invalid_command[allow_ipv6_net_prefix-Exception] - Failed: DID NOT RAISE <class 'Exception'>
+FAILED test_invalid_commands.py::test_invalid_command[allow_ipv6_net_wikipedia3-Exception] - Failed: DID NOT RAISE <class 'Exception'>
+FAILED test_invalid_commands.py::test_invalid_command[allow_ipv6_net_wikipedia8_prefix2-Exception] - Failed: DID NOT RAISE <class 'Exception'>
+FAILED test_invalid_commands.py::test_invalid_command[query_feature_ext_args_dots-Exception] - Failed: DID NOT RAISE <class 'Exception'>
+FAILED test_invalid_commands.py::test_invalid_command[query_feature_ext_args_specialchar-Exception] - Failed: DID NOT RAISE <class 'Exception'>
+FAILED test_invalid_commands.py::test_invalid_command[start_container_ext_specialchar1-Exception] - Failed: DID NOT RAISE <class 'Exception'>
+FAILED test_invalid_commands.py::test_invalid_command[start_container_ext_specialchar2-Exception] - Failed: DID NOT RAISE <class 'Exception'>
+FAILED test_invalid_commands.py::test_invalid_command[start_container_ext_underscore_first1-Exception] - Failed: DID NOT RAISE <class 'Exception'>
+FAILED test_invalid_commands.py::test_invalid_command[start_container_ext_underscore_first2-Exception] - Failed: DID NOT RAISE <class 'Exception'>
+=========================================== 12 failed, 24 passed in 0.19s ===========================================
+
+
+json
+====
+
+[Note: all tests concerning hashes succeed just because I capitalized all value in the samples; otherwise lycam fails to detect lower-case value
+This might not be wrong, since the LS says the hex alphabet is made of uppercase letters. However, RFC 4648 allows both lowercase and uppercase
+letters, and let the choice to the application.]
+
+Commands:
+---------
+
+Test-deconding: 0 failures. However, there are 4 IP addresses not compliant with RFCs.
+
+Test-encoding: 3 failures:
+	- slpf_rule is re-encoded as string ('1234') instead of integer (1234)
+	- x-acme:features is not encoded according to its definition.
+		It is encoded as 
+			"x-acme:feature": [ ] 
+		instead of 
+			"x-acme:features": { "features": [] }
+		(I think the second definition is correct because it does not consider the specific semantic
+		 that the "feature" word may have, and it is the encoding of other objects, like x-acme:container)
+[	- multiple profiles inside the actuator are not re-encoded:
+			{'slpf': {'asset_id': '123456'}, 'x-acme': {'endpoint_id': '567890'}}}
+		(the output only includes the 'slpf' part)	
+		It seems there is no way to associate multiple CustomActuator together:
+			act=acme.AcmeActuator(asset_id=id, endpoint_id="iptables1")
+		(You can just instantiate 1 single class)
+	>>> This is no more present since I moved the corresponding sample to the "bad" commands <<<]
+
+Test-invalid-decoding: 11 failures:
+============================================== short test summary info ===============================================
+FAILED test_commands.py::test_decoding_invalid[openc2-json-schema/tests/commands/bad/args_empty.json] - Failed: DID NOT RAISE <class 'Exception'>
+FAILED test_commands.py::test_decoding_invalid[openc2-json-schema/tests/commands/bad/query_features_ext_args_capX.json] - Failed: DID NOT RAISE <class 'Exception'>
+FAILED test_commands.py::test_decoding_invalid[openc2-json-schema/tests/commands/bad/query_multiple_target_extensions.json] - Failed: DID NOT RAISE <class 'Exception'>
+FAILED test_commands.py::test_decoding_invalid[openc2-json-schema/tests/commands/bad/allow_ipv4net_badip.json] - Failed: DID NOT RAISE <class 'Exception'>
+FAILED test_commands.py::test_decoding_invalid[openc2-json-schema/tests/commands/bad/allow_ipv6net_wikipedia3.json] - Failed: DID NOT RAISE <class 'Exception'>
+FAILED test_commands.py::test_decoding_invalid[openc2-json-schema/tests/commands/bad/openc2_response_text.json] - Failed: DID NOT RAISE <class 'Exception'>
+FAILED test_commands.py::test_decoding_invalid[openc2-json-schema/tests/commands/bad/allow_ipv4net_badcidr.json] - Failed: DID NOT RAISE <class 'Exception'>
+FAILED test_commands.py::test_decoding_invalid[openc2-json-schema/tests/commands/bad/query_features_ext_args_nox-.json] - Failed: DID NOT RAISE <class 'Exception'>
+FAILED test_commands.py::test_decoding_invalid[openc2-json-schema/tests/commands/bad/query_features_ext_args_dots.json] - Failed: DID NOT RAISE <class 'Exception'>
+FAILED test_commands.py::test_decoding_invalid[openc2-json-schema/tests/commands/bad/openc2_response.json] - Failed: DID NOT RAISE <class 'Exception'>
+FAILED test_commands.py::test_decoding_invalid[openc2-json-schema/tests/commands/bad/query_features_ext_args_specialchar.json] - Failed: DID NOT RAISE <class 'Exception'>
+===================================== 11 failed, 22 passed, 2 warnings in 0.26s =====================================
+[ +4 due to re-classification from 'good' to 'bad' samples ]
+
+Responses:
+----------
+
+Test-decoding: 0 failures
+
+Test-encoding: 0 failures
+
+Test-decoding-invalid: 9 failures
+============================================== short test summary info ===============================================
+FAILED test_responses.py::test_decoding_invalid[openc2-json-schema/tests/responses/bad/status_negative.json] - Failed: DID NOT RAISE <class 'Exception'>
+FAILED test_responses.py::test_decoding_invalid[openc2-json-schema/tests/responses/bad/status_too_low.json] - Failed: DID NOT RAISE <class 'Exception'>
+FAILED test_responses.py::test_decoding_invalid[openc2-json-schema/tests/responses/bad/status_asbool.json] - Failed: DID NOT RAISE <class 'Exception'>
+FAILED test_responses.py::test_decoding_invalid[openc2-json-schema/tests/responses/bad/query_features_all_badprofile.json] - Failed: DID NOT RAISE <class 'Exception'>
+FAILED test_responses.py::test_decoding_invalid[openc2-json-schema/tests/responses/bad/status_too_high.json] - Failed: DID NOT RAISE <class 'Exception'>
+FAILED test_responses.py::test_decoding_invalid[openc2-json-schema/tests/responses/bad/status_asstring.json] - Failed: DID NOT RAISE <class 'Exception'>
+FAILED test_responses.py::test_decoding_invalid[openc2-json-schema/tests/responses/bad/results_unknown_profile.json] - Failed: DID NOT RAISE <class 'Exception'>
+FAILED test_responses.py::test_decoding_invalid[openc2-json-schema/tests/responses/bad/status_asdouble.json] - Failed: DID NOT RAISE <class 'Exception'>
+FAILED test_responses.py::test_decoding_invalid[openc2-json-schema/tests/responses/bad/openc2_command_query_features_all.json] - Failed: DID NOT RAISE <class 'Exception'>
+====================================== 9 failed, 5 passed, 2 warnings in 0.23s =======================================

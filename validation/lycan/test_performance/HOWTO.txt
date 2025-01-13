@@ -1,0 +1,10 @@
+#!/bin/bash
+# Run the simulation and got statistics
+
+# Run the simulation (change the number of trials)
+./controller.py > data.log
+
+
+# Collect statistics
+awk -F ":" -f encoding.awk data.log | awk -F ":" -f stat-controller.awk
+

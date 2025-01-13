@@ -1,0 +1,122 @@
+test_good_connections:
+- dst: "10.0.0.1"
+  src: "192.168.0.1"
+  dport: 25
+  sport: 6850
+  proto: "tcp"
+- dst: "10.0.0.1"
+  src: "192.168.0.1"
+  dport: 25
+  sport: 6850
+  proto: "tcp"
+- dst: "10.3.0.1"
+  src: "192.168.10.1"
+  dport: 2500
+  sport: 6850
+  proto: "tcp"
+- dst: "10.0.0.1"
+  src: "192.168.0.1"
+  dport: 25
+  sport: 6850
+  proto: "udp"
+- dst: "8.8.8.8"
+  src: "192.168.0.1"
+  dport: 63
+  sport: 63850
+  proto: "sctp"
+- dst: "145.0.0.0/8"
+  src: "192.168.0.1"
+  dport: 1024
+  sport: 850
+  proto: "udp"
+- dst: "1.1.1.1"
+  src: "92.68.10.111"
+  dport: 8080
+  sport: 32115
+  proto: "tcp"
+- dst: "12.12.12.255"
+  src: "192.168.0.255"
+  dport: 1
+  sport: 1
+  proto: "udp"
+- dst: "10.10.10.10"
+  src: "192.168.255.0/24"
+  dport: 65535
+  sport: 6850
+  proto: "sctp"
+- dst: "10.0.0.1"
+  src: "192.168.0.1"
+  dport: 
+  sport: 
+  proto: 
+- dst: "10.0.0.1"
+  src: 
+  dport: 25
+  sport: 6850
+  proto: "tcp"
+- dst: 
+  src: "192.168.0.1"
+  dport: 25
+  sport: 6850
+  proto: "tcp"
+- dst: 
+  src: "192.168.0.1"
+  dport: 
+  sport: 0
+  proto: "tcp"
+- dst: 
+  src: 
+  dport: 
+  sport: 
+  proto: "tcp"
+- dst: 
+  src: 
+  dport: 25
+  sport: 
+  proto: 
+test_bad_connections:
+- dst: "10.0.0.1000"
+  src: "192.168.0.0/24"
+  dport: 25
+  sport: 6850
+  proto: "tcp"
+- dst: "10.3.0.1"
+  src: "a192.168.10.1"
+  dport: 25000
+  sport: 6850
+  proto: "tcp"
+- dst: "10.0.0.1"
+  src: "192.168.0.1/8"
+  dport: 25
+  sport: 65535
+  proto: "udp"
+- dst: "8.8.8.8"
+  src: "192.168.0.1"
+  dport: 63
+  sport: 63850
+  proto: "netbios"
+- dst: "gooogle.com"
+  src: "192.168.0.1"
+  dport: 1024
+  sport: 850
+  proto: "udp"
+- dst: "1.1.1.1"
+  src: "92.68.10.111"
+  dport: "smtp"
+  sport: 32115
+  proto: "tcp"
+- dst: "12.12.12.255"
+  src: "192.168.0.255"
+  dport: 1
+  sport: 1
+  proto: 15
+- dst: "10.10.10.10"
+  src: "192.168.255.1"
+  dport: 65535
+  sport: 0
+  proto: "sccp"
+- dst: None
+  src: None
+  dport: None
+  sport: None
+  proto: None
