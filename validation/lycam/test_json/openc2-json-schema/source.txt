@@ -1,1 +1,0 @@
-https://github.com/bberliner/openc2-json-schema
