@@ -1,0 +1,10 @@
+{
+  "action": "remediate",
+  "target": {
+    "file": {
+      "hashes": {
+        "sha256": "5C2D6DAAF85A710605678F8E7EF0B725B33303F3234197B9DC4B46196734A4F0"
+      }
+    }
+  }
+}

@@ -1,4 +1,4 @@
-#!../../.oc2-env/bin/python3
+#!../../../.oc2-env/bin/python3
 # Example to use the OpenC2 library
 #
 
