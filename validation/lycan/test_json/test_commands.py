@@ -86,7 +86,7 @@ def test_encoding(cmd):
 	"""
 	print("Command json: ", cmd)
 	oc2_cmd = openc2.parse(cmd)
-#print(oc2_cmd)
+	print("Lycan data: ", oc2_cmd)
 	bar = json.loads(oc2_cmd.serialize())
 	print("Re-encoded Command json: ", bar)
 

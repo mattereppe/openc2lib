@@ -1,13 +1,17 @@
-#!../../../../lycan/.venv/bin/python3
+#!../../../.oc2-env/bin/python3
 # Example to use the OpenC2 library
 #
 
-import logging
 import sys
+import time
 import json
 
-import openc2
-import time
+import openc2lib as oc2
+
+from openc2lib.encoders.json import JSONEncoder
+
+import openc2lib.profiles.slpf as slpf
+import openc2lib.profiles.dumb as dumb
 
 from helpers import load_files
 
@@ -27,7 +31,8 @@ response_path_good = "openc2-responses-good"
 NUM_TESTS = 100
 
 def main():
-	cmd_files = load_files(command_path_good) 
+
+	cmd_files = load_files(command_path_good)
 	rsp_files = load_files(response_path_good)
 
 	for i in range(1, NUM_TESTS+1):
@@ -36,27 +41,27 @@ def main():
 
 			with open(c) as f:
 				cmd_txt=f.read()
-
 			print("Decoding started at time: ", time.time())
-			cmd = openc2.parse(json.loads(cmd_txt))
+			cmd = JSONEncoder.decode(cmd_txt, oc2.Command)
 			print("Decoding ended at time: ", time.time())
-	
-			print("Encoding started at time: ", time.time())
-			json.dumps(cmd.serialize())
-			print("Encoding ended at time: ", time.time())
 
+			print("Encoding started at time: ", time.time())
+			JSONEncoder.encode(cmd)
+			print("Encoding ended at time: ", time.time())
+	
 		for r in rsp_files:
 
-			with open(c) as f:
+			with open(r) as f:
 				rsp_txt=f.read()
-
 			print("Decoding started at time: ", time.time())
-			rsp = openc2.parse(json.loads(rsp_txt))
+			rsp = JSONEncoder.decode(rsp_txt, oc2.Response)
 			print("Decoding ended at time: ", time.time())
 
 			print("Encoding started at time: ", time.time())
-			json.dumps(rsp.serialize())
+			JSONEncoder.encode(rsp)
 			print("Encoding ended at time: ", time.time())
+	
+
 
 if __name__ == '__main__':
 	main()

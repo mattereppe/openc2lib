@@ -34,12 +34,16 @@ class UuidProperty(openc2.properties.Property):
 #		print("Dictionary: ", dic)
 #		return dic
 
+
 @openc2.properties.CustomProperty(
     "x-acme",
     [
         ("firewall_status", openc2.properties.StringProperty()),
         ("container_id", openc2.properties.StringProperty()),
-        ("features", openc2.properties.EnumProperty(allowed=["versions", "profiles", "schema"])),
+#        ("features", openc2.properties.EnumProperty(allowed=["versions", "profiles", "schema"])),
+        ("features", openc2.properties.ListProperty(
+					openc2.properties.EnumProperty(
+						allowed=["versions", "profiles", "schema"]))),
     ],
 )
 class AcmeProperty(object):

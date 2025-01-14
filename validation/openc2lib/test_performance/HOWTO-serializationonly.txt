@@ -2,7 +2,7 @@
 # Run the simulation and got statistics
 
 # Run the simulation (change the number of trials)
-./controller.py > data.log
+./controller-serialization-only.py > data.log
 
 
 # Collect statistics
