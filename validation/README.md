@@ -56,4 +56,14 @@ For network traces:
   ```
   # grep "HTTP/1.1"  nettrace.txt| grep -v "POST" | awk 'BEGIN{ tot=0; count=0; min=99999; max=0} { tot+=$2; count++; if( $2 < min ) min=$2; if (max < $2) max=$2;} END{printf("Tot\tAvg\tMin\tMax\n"); printf("%s\t%s\t%s\t%s\n",count, tot/count, min, max);}'
   ```
+
+  For serialization and deserialization measures only (both for ```oc2lib``` and ```Lycan```), run the following executables:
+  ```
+  # ./controller-serialization-only.py > data.log        <-- openc2lib
+  # ./controller.py > data.log                           <-- Lycan
+  ```
+  and then collect data with:
+  ```
+  # wk -F ":" -f encoding.awk data.log | awk -F ":" -f stat.awk > stat.txt
+  ```
   
