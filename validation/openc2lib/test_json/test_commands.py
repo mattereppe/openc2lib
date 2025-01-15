@@ -19,6 +19,10 @@ sys.path.insert(0, "../profiles/")
 
 import acme
 import mycompany
+import mycompany_capX
+import mycompany_dots
+import mycompany_nox
+import mycompany_specialchar
 import mycompany_with_underscore
 import example
 import esm

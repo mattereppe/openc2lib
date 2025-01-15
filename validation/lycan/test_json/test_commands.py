@@ -13,6 +13,7 @@ sys.path.insert(0, "../profiles/")
 
 import acme
 import mycompany
+import mycompany_dots
 import mycompany_with_underscore
 import example
 import esm

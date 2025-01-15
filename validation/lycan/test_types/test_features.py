@@ -22,7 +22,9 @@ def test_feature_type_ok(feature):
 
 @pytest.mark.parametrize("feature", [f for f in Feature])
 def test_feature_type_num(feature):
-	assert type(Features([feature]*10) ) == Features
+	with pytest.raises(Exception):
+		Features([feature]*10)
+#	assert type(Features([feature]*10) ) == Features
 
 @pytest.mark.parametrize("feature", [f for f in Feature])
 def test_feature_type_max(feature):
