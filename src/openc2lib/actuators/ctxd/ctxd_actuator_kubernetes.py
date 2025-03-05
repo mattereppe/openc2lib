@@ -13,7 +13,7 @@ import requests
 from kubernetes import config, client
 from kubernetes.client.rest import ApiException
 
-from openc2lib.actuators.ctxd_actuator import CTXDActuator
+from openc2lib.actuators.ctxd.ctxd_actuator import CTXDActuator
 from openc2lib.profiles.ctxd.data.cloud import Cloud
 from openc2lib.profiles.ctxd.data.consumer import Consumer
 from openc2lib.profiles.ctxd.data.container import Container

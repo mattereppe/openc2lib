@@ -8,9 +8,9 @@ import openc2lib as oc2
 
 from openc2lib.encoders.json import JSONEncoder
 from openc2lib.transfers.http import HTTPTransfer
-from openc2lib.actuators.ctxd_actuator import CTXDActuator
-from openc2lib.actuators.ctxd_actuator_openstack import CTXDActuator_openstack
-from openc2lib.actuators.ctxd_actuator_kubernetes import CTXDActuator_kubernetes
+from openc2lib.actuators.ctxd.ctxd_actuator import CTXDActuator
+from openc2lib.actuators.ctxd.ctxd_actuator_openstack import CTXDActuator_openstack
+from openc2lib.actuators.ctxd.ctxd_actuator_kubernetes import CTXDActuator_kubernetes
 import openc2lib.profiles.ctxd as ctxd
 
 # Declare the logger name
