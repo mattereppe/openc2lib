@@ -21,7 +21,7 @@ import openc2lib as oc2
 
 from openc2lib.encoders.json import JSONEncoder
 from openc2lib.transfers.http import HTTPTransfer
-from openc2lib.actuators.ctxd_actuator import CTXDActuator
+from openc2lib.actuators.ctxd.ctxd_actuator import CTXDActuator
 import openc2lib.profiles.ctxd as ctxd
 from openc2lib.actuators.iptables_actuator import IptablesActuator
 from openc2lib.profiles import slpf
