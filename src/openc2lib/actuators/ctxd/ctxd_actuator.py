@@ -8,8 +8,6 @@ import logging
 import sys
 
 
-sys.path.insert(0,'/home/silvio/Desktop/openc2lib/src')
-
 from openc2lib import ArrayOf, Nsid, Version,Actions, Response, StatusCode, StatusCodeDescription, Features, ResponseType, Feature
 import openc2lib.profiles.ctxd as ctxd
 
