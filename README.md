@@ -150,6 +150,11 @@ pdoc src/openc2lib/ -o docs/code/
 To view the documentation, open the `docs/code/index.html` in your browser.
 
 
+## Extensions
+
+openc2lib comes with several extensions and use cases:
+- The Context Discovery profile and its actuators for OpenStack and Kubernetes. To view the documentation, open the `docs/CTXD documentation.md` in your browser.
+
 
 ## Support
 TODO
@@ -171,7 +176,7 @@ Contributions are wellcome for the implementation of the following extensions:
   
 ## Authors and acknowledgment
 
-TODO
+- The Context Discovery profile, its actuators and use cases have been developed by Silvio Tanzarella.
 
 ## License
 
