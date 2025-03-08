@@ -1,0 +1,10 @@
+{
+    "action": "query",
+    "target": {
+        "features": [
+            "versions",
+            "profiles",
+            "pairs"
+        ]
+    }
+}
