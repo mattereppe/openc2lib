@@ -31,30 +31,30 @@ Home-page: https://github.com/kubernetes-client/python
 
 ### 3.1 Configuration file
 
-1. In the file ```openc2lib/examples/ctxd/configuration.json``` at the position ```consumer["ip"], consumer["port"], consumer["endpoint"]``` are specified all the useful parameters to run the consumer. The default encoder format is JSON while the transfer protocol is HTTP.
+1. In the file ```openc2lib/applications/ctxd/configuration.json``` at the position ```consumer["ip"], consumer["port"], consumer["endpoint"]``` are specified all the useful parameters to run the consumer. The default encoder format is JSON while the transfer protocol is HTTP.
 
 ### 3.2 Setting up the consumer
 
-1. The consumer, in order to connect to openstack, is able to retrieve the enviroment variables of the running system or it is possible to insert the full path of the configuration file into the file ```openc2lib/examples/ctxd/configuration.json``` in the field ```["clusters"][]["file_enviroment_variables"]```.
+1. The consumer, in order to connect to openstack, is able to retrieve the enviroment variables of the running system or it is possible to insert the full path of the configuration file into the file ```openc2lib/applications/ctxd/configuration.json``` in the field ```["clusters"][]["file_enviroment_variables"]```.
 
-2. Specify the namespaces of interest in the file ```openc2lib/examples/ctxd/configuration.json``` and the field is ```["clusters"][]["namespace"]```. If no namespaces are specified, all namespaces will be displayed.
+2. Specify the namespaces of interest in the file ```openc2lib/applications/ctxd/configuration.json``` and the field is ```["clusters"][]["namespace"]```. If no namespaces are specified, all namespaces will be displayed.
 
 
-3. The consumer, in order to connect to kubernetes, will use by default the configuration file contained in ```~/.kube/config```. It is also possible to specifify the configuration file into ```openc2lib/examples/ctxd/configuration.json``` in the field ```["clusters"][]["config_file"]```.
+3. The consumer, in order to connect to kubernetes, will use by default the configuration file contained in ```~/.kube/config```. It is also possible to specifify the configuration file into ```openc2lib/applications/ctxd/configuration.json``` in the field ```["clusters"][]["config_file"]```.
 
-4. Specify the kubernetes context into the file ```openc2lib/examples/ctxd/configuration.json``` in the field ```["clusters"][]["kube_context"]```. If not specified, the function uses the current context in the kubeconfig file.
+4. Specify the kubernetes context into the file ```openc2lib/applications/ctxd/configuration.json``` in the field ```["clusters"][]["kube_context"]```. If not specified, the function uses the current context in the kubeconfig file.
 
 5. It is possible to add kubernetes and openstack element to ```["clusters"][]``` but the ```type``` field must be equal to "kubernetes" or "openstack"
 
-6. The other parameters (asset_id, hostname, ip, port, protocol, endpoint, transfer, encoding) in the file ```openc2lib/examples/ctxd/configuration.json``` in the field ```["clusters"][]``` allow to specify how to connect to the consumer that is running kubernetes or openstack. Transfer and encoding must be in numeric format. To know which integer to use, see ```/openc2lib/CTXD documentation/CTXD documentation.md``` file, specifically paragraphs 5.19 and 5.20
+6. The other parameters (asset_id, hostname, ip, port, protocol, endpoint, transfer, encoding) in the file ```openc2lib/applications/ctxd/configuration.json``` in the field ```["clusters"][]``` allow to specify how to connect to the consumer that is running kubernetes or openstack. Transfer and encoding must be in numeric format. To know which integer to use, see ```/openc2lib/docs/CTXD documentation.md``` file, specifically paragraphs 5.19 and 5.20
 
-7. Run the consumer python openc2lib/examples/ctxd/ctxd_consumers.py
+7. Run the consumer python ```openc2lib/applications/ctxd/ctxd_consumers.py```
 
 ## 4 Running the producer
 
 ### 4.1 Setting up the Producer
 
-1. Run the producer ```python openc2lib/examples/ctxd/ctxd_producer.py```. No configuration file are associated with the producer.
+1. Run the producer ```python openc2lib/applications/ctxd/ctxd_producer.py```. No configuration file are associated with the producer.
 
 ### 4.2 Collecting the output
 
