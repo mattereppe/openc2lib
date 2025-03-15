@@ -10,3 +10,4 @@ class LinkType(Enumerated):
     hosting = 2
     packet_flow = 3
     control = 4
+    protect = 5 #not in the specification yet

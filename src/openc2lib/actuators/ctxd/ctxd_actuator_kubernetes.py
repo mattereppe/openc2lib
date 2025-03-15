@@ -9,6 +9,10 @@ import json
 import os
 import logging
 import sys
+from openc2lib.profiles import slpf
+from openc2lib.profiles.ctxd.data.application import Application
+from openc2lib.profiles.ctxd.data.openc2_endpoint import OpenC2Endpoint
+from openc2lib.types.data.ipv4_addr import IPv4Addr
 import requests
 from kubernetes import config, client
 from kubernetes.client.rest import ApiException
@@ -191,9 +195,16 @@ class CTXDActuator_kubernetes(CTXDActuator):
                             		       security_functions=None))
 		except Exception as e:
 			print(f"An error occurred: {e}")
+
+
 		return links
 
 	def get_connected_actuators(self, actuators):
+		#create dumb slpf actuators
+		actuators[(slpf.Profile.nsid,str('os-fw'))] = self.getDumbSLPF(name='os-fw')
+		actuators[(slpf.Profile.nsid,str('kube-fw'))] = self.getDumbSLPF(name='kube-fw')
+		#end creation of dumb slpf actuators
+
 		for link in self.my_links: #explore link between kubernetes and vm
 			if(link.description == "namespace" ): #but if the description = namespace -> find namespace and not vm
 				actuators[(ctxd.Profile.nsid,str(link.name.obj))] = CTXDActuator(services= self.get_namespace_service(str(link.name.obj)),
@@ -208,13 +219,13 @@ class CTXDActuator_kubernetes(CTXDActuator):
                                                                                                         asset_id=str(vm.consumer.server.obj._hostname))
                     
 					for vm_link in actuators[(ctxd.Profile.nsid,str(vm.consumer.server.obj._hostname))].my_links: #explore link between vm and container
-						if(vm_link.description != "kubernetes" ):
+						if(vm_link.description != "kubernetes" and vm_link.description != "slpf"):
 							for container in vm_link.peers: #explore containers connect to a vm
 								actuators[(ctxd.Profile.nsid,str(container.consumer.server.obj._hostname))] = CTXDActuator(services= self.get_container_service(container.consumer.server.obj._hostname),
 																														links=self.get_container_links(str(container.consumer.server.obj._hostname)),
 																														domain=None,
 																														asset_id=str(container.consumer.server.obj._hostname))
-	
+
 	def get_vm_service(self, asset_id):
 		#process = subprocess.Popen('kubectl get nodes '+ str(asset_id) +' -o json', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 		#stdout, stderr = process.communicate()
@@ -289,6 +300,18 @@ class CTXDActuator_kubernetes(CTXDActuator):
                             link_type=LinkType(2),
                             peers=ArrayOf(Peer)([tmp_peer_kubernetes])))
 
+		#create a dumb slpf peer
+		slpf_peer = Peer(service_name= Name('slpf'), 
+						role= PeerRole(8), #The slpf controls the vm
+						consumer=Consumer(server=Server(Hostname('os-fw')),
+											port=self.port,
+											protocol= L4Protocol(self.protocol),
+											endpoint= self.endpoint,
+											transfer=Transfer(self.transfer),
+											encoding=Encoding(self.encoding)))
+				
+		links.append(Link(name = Name('os-fw'), description="slpf", link_type=LinkType(5), peers=ArrayOf(Peer)([slpf_peer])))
+		#end creation of dumb slpf
 
 		return links
 	
@@ -351,6 +374,20 @@ class CTXDActuator_kubernetes(CTXDActuator):
                             		       security_functions=None))
 			except Exception as e:
 				continue
+		
+		#create a dumb slpf peer
+		slpf_peer = Peer(service_name= Name('slpf'), 
+						role= PeerRole(8), #The slpf controls the vm
+						consumer=Consumer(server=Server(Hostname('kube-fw')),
+											port=self.port,
+											protocol= L4Protocol(self.protocol),
+											endpoint= self.endpoint,
+											transfer=Transfer(self.transfer),
+											encoding=Encoding(self.encoding)))
+				
+		links.append(Link(name = Name('kube-fw'), description="slpf", link_type=LinkType(5), peers=ArrayOf(Peer)([slpf_peer])))
+		#end creation of dumb slpf
+
 		return links
 
 	def get_namespace_service(self, namespace_name):
@@ -392,3 +429,31 @@ class CTXDActuator_kubernetes(CTXDActuator):
 		except Exception as e:
 			print(f"Failed to connect to kubernetes: {e}")
 			return Exception("Failed to connect to kubernetes")
+		
+	def getDumbSLPF(self, name):
+		ex_application = Application(description="slpf", name=name, app_type="Packet Filtering")
+		array_security_functions = ArrayOf(OpenC2Endpoint)()
+		array_security_functions.append(OpenC2Endpoint(actuator=Nsid(slpf.Profile.nsid),
+												consumer = Consumer(server=Server(Hostname(name)),
+                    			                			            port=self.port,
+																		protocol= L4Protocol(self.protocol),
+														    			endpoint=self.endpoint,
+																		transfer=Transfer(self.transfer),
+																		encoding=Encoding(self.encoding))))
+		ex_consumer = Consumer(server=Server(Hostname(name)),
+                    			port=self.port,
+								protocol= L4Protocol(self.protocol),
+								endpoint=self.endpoint,
+								transfer=Transfer(self.transfer),
+								encoding=Encoding(self.encoding))
+			
+		slpf_service = Service(name = Name('slpf'), 
+						 type = ServiceType(ex_application),
+						 links=None, 
+						 security_functions=array_security_functions,
+						 actuator= ex_consumer)
+		
+		return CTXDActuator(services= slpf_service,
+                            links= None,
+                            domain=None,
+                        	asset_id=str(name))

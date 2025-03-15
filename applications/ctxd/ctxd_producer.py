@@ -77,6 +77,8 @@ def recursive_process_links(links, cmd, pf, p, dot, parent_node):
                     add_edge(dot, parent_node, peer_hostname, str(it_link.link_type.name), dir_type='both')
                 elif str(it_link.link_type.name) == 'hosting' and it_peer.role.name == 'host':
                     add_edge(dot, parent_node, peer_hostname, str(it_link.link_type.name), dir_type='back')
+                elif str(it_link.link_type.name) == 'protect' and it_peer.role.name == 'control':
+                    add_edge(dot, parent_node, peer_hostname, str(it_link.link_type.name), dir_type='back')
                 else:
                     add_edge(dot, parent_node, peer_hostname, str(it_link.link_type.name))
 
@@ -120,7 +122,6 @@ def main(openstack_parameters):
         with dot.subgraph() as s:
             s.attr(rank='min')  # "kubernetes" will be ranked at the top
             s.node('kubernetes', label='kubernetes')
-
 
         dot.render(os.path.dirname(os.path.abspath(__file__))+'/example_graph' , view=False)
         dot.save(os.path.dirname(os.path.abspath(__file__))+'/example_graph.gv')

@@ -136,6 +136,19 @@ class CTXDActuator_openstack(CTXDActuator):
 												encoding=Encoding(self.encoding)))
 
 			links.append(Link(name = Name(vm['id']), link_type=LinkType(4), peers=ArrayOf(Peer)([tmp_peer])))
+
+		#create a dumb slpf peer
+		slpf_peer = Peer(service_name= Name('slpf'),
+						role= PeerRole(3), #The slpf is hosted by Openstack
+						consumer=Consumer(server=Server(Hostname('os-fw')),
+											port=self.port,
+											protocol= L4Protocol(self.protocol),
+											endpoint= self.endpoint,
+											transfer=Transfer(self.transfer),
+											encoding=Encoding(self.encoding)))
+				
+		links.append(Link(name = Name('os-fw'), link_type=LinkType(2), peers=ArrayOf(Peer)([slpf_peer])))
+		#end creation of dumb slpf
 		
 		return links
 	
