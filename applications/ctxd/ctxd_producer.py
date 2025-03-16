@@ -29,10 +29,10 @@ logger.addHandler(stdout_handler)
 edges_set = set()  # Track visited edges
 processed_links_set = set()  # Track processed links to avoid recursion on the same links
 
-def add_edge(graph, source, target, relationship_type="", dir_type="forward"):
+def add_edge(graph, source, target, relationship_type="", dir_type="forward", color="black", fontcolor="black"):
     edge = (source, target, relationship_type, dir_type)
     if edge not in edges_set:
-        graph.edge(source, target, label=relationship_type, dir=dir_type)
+        graph.edge(source, target, label=relationship_type, dir=dir_type, color = color, fontcolor = fontcolor)
         edges_set.add(edge)
 
 def edge_exists(source, target, relationship_type="", dir_type="forward"):
@@ -64,23 +64,36 @@ def recursive_process_links(links, cmd, pf, p, dot, parent_node):
             peer_hostname = str(it_peer.consumer.server.obj._hostname)
             peer_service_name = str(it_peer.service_name.obj)
 
+            #set the style of nodes and edges
+            edge_color = "black"
+            edge_font_color = "black"
+            if(peer_service_name == "slpf"): #all edges for slpf must be red
+                edge_color = "red" 
+                edge_font_color = "red"
+
+            text_color= None
+            font_color = "black"
+            if(peer_service_name == "slpf"):
+                text_color = "red"
+                font_color = "red"
+
             # Add the node if it doesn't exist
             pf['asset_id'] = peer_hostname
             pf.fieldtypes['asset_id'] = peer_hostname
             if(peer_hostname != peer_service_name):
-                dot.node(peer_hostname, peer_hostname + "\n"+peer_service_name)
+                dot.node(peer_hostname, peer_hostname + "\n"+peer_service_name, color= text_color, fontcolor=font_color)
             else:
-                dot.node(peer_hostname, peer_hostname)
+                dot.node(peer_hostname, peer_hostname, color= text_color, fontcolor=font_color)
             # Only process if the edge has not been visited
             if not edge_exists(parent_node, peer_hostname):
                 if str(it_link.link_type.name) == 'packet_flow':
-                    add_edge(dot, parent_node, peer_hostname, str(it_link.link_type.name), dir_type='both')
+                    add_edge(dot, parent_node, peer_hostname, str(it_link.link_type.name), dir_type='both',color=edge_color, fontcolor=edge_font_color)
                 elif str(it_link.link_type.name) == 'hosting' and it_peer.role.name == 'host':
-                    add_edge(dot, parent_node, peer_hostname, str(it_link.link_type.name), dir_type='back')
+                    add_edge(dot, parent_node, peer_hostname, str(it_link.link_type.name), dir_type='back',color=edge_color, fontcolor=edge_font_color)
                 elif str(it_link.link_type.name) == 'protect' and it_peer.role.name == 'control':
-                    add_edge(dot, parent_node, peer_hostname, str(it_link.link_type.name), dir_type='back')
+                    add_edge(dot, parent_node, peer_hostname, str(it_link.link_type.name), dir_type='back', color=edge_color, fontcolor=edge_font_color)
                 else:
-                    add_edge(dot, parent_node, peer_hostname, str(it_link.link_type.name))
+                    add_edge(dot, parent_node, peer_hostname, str(it_link.link_type.name), color=edge_color, fontcolor=edge_font_color)
 
                 # Send command and log response
                 tmp_resp = p.sendcmd(cmd)
@@ -118,10 +131,13 @@ def main(openstack_parameters):
         dot.node('openstack', 'OpenStack')
         recursive_process_links(resp_openstack.content['results']['links'], cmd, pf, p, dot, 'openstack')
 
-        # Add "kubernetes" node at the top (rank=min ensures it's the highest ranked node)
         with dot.subgraph() as s:
-            s.attr(rank='min')  # "kubernetes" will be ranked at the top
-            s.node('kubernetes', label='kubernetes')
+            s.attr(rank='min')
+            s.node('os-fw')
+            s.node('kubernetes')
+            s.node('openstack')
+            s.node('kube-fw')
+
 
         dot.render(os.path.dirname(os.path.abspath(__file__))+'/example_graph' , view=False)
         dot.save(os.path.dirname(os.path.abspath(__file__))+'/example_graph.gv')

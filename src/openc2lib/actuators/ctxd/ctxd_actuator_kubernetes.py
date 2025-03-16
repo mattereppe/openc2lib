@@ -196,6 +196,18 @@ class CTXDActuator_kubernetes(CTXDActuator):
 		except Exception as e:
 			print(f"An error occurred: {e}")
 
+		#create a dumb slpf peer
+		slpf_peer = Peer(service_name= Name('slpf'), 
+						role= PeerRole(3), #The slpf controls the vm
+						consumer=Consumer(server=Server(Hostname('kube-fw')),
+											port=self.port,
+											protocol= L4Protocol(self.protocol),
+											endpoint= self.endpoint,
+											transfer=Transfer(self.transfer),
+											encoding=Encoding(self.encoding)))
+				
+		links.append(Link(name = Name('kube-fw'), description="slpf", link_type=LinkType(2), peers=ArrayOf(Peer)([slpf_peer])))
+		#end creation of dumb slpf
 
 		return links
 
@@ -211,7 +223,7 @@ class CTXDActuator_kubernetes(CTXDActuator):
                                                                             	links= ArrayOf(Link)(),
                                                                                 domain=None,
                                                                                 asset_id=str(link.name.obj))
-			else:
+			elif(link.description != "slpf"):
 				for vm in link.peers: #explore vm (kube0, kube1, kube2)
 					actuators[(ctxd.Profile.nsid,str(vm.consumer.server.obj._hostname))] = CTXDActuator(services= self.get_vm_service(vm.consumer.server.obj._hostname),
                                                                                                         links= self.get_vm_links(vm.consumer.server.obj._hostname),
