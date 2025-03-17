@@ -475,8 +475,9 @@ Type: Link-Type (Enumerated)
 | 2   | hosting      | Hosting     | 1  | The service is hosted in an infrastructure  |
 | 3   | packet_flow  | Packet-Flow | 1  | Network flow                                |
 | 4   | control      | Control     | 1  | The service controls another resource       |
+| 5   | protect      | Protect     | 1  | The service protects another resource       |
 
-The types of API, Hosting, Packet-Flow, and Control are not defined in this document.
+The types of API, Hosting, Packet-Flow, Control and Protect are not defined in this document.
 
 ### 5.16 Peer-Role
 
