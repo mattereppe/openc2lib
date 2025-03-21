@@ -3,20 +3,22 @@
   "$id": "https://oasis-open.org/openc2/v1.0/response.json",
   "title": "The OASIS OpenC2 1.0 Language Spec Response Schema",
   "type": "object",
-
   "required": [
     "status"
   ],
-
   "properties": {
-    "status": { "$ref": "#/definitions/status" },
-    "status_text": { "$ref": "#/definitions/status_text" },
-    "results": { "$ref": "#/definitions/results" }
+    "status": {
+      "$ref": "#/definitions/status"
+    },
+    "status_text": {
+      "$ref": "#/definitions/status_text"
+    },
+    "results": {
+      "$ref": "#/definitions/results"
+    }
   },
   "additionalProperties": false,
-
   "definitions": {
-
     "pairs": {
       "title": "List of targets applicable to each supported Action",
       "type": "object",
@@ -28,33 +30,39 @@
           "items": {
             "title": "OpenC2 pairs target items",
             "type": "string",
-            "enum": [
-              "artifact",
-              "command",
-              "device",
-              "domain_name",
-              "email_addr",
-              "idn_domain_name",
-              "idn_email_addr",
-              "features",
-              "file",
-              "ipv4_connection",
-              "ipv6_connection",
-              "ipv4_net",
-              "ipv6_net",
-              "iri",
-              "mac_addr",
-              "process",
-              "properties",
-              "uri",
-              "slpf:rule_number"
+            "anyOf": [
+              {
+                "enum": [
+                  "artifact",
+                  "command",
+                  "device",
+                  "domain_name",
+                  "email_addr",
+                  "idn_domain_name",
+                  "idn_email_addr",
+                  "features",
+                  "file",
+                  "ipv4_connection",
+                  "ipv6_connection",
+                  "ipv4_net",
+                  "ipv6_net",
+                  "iri",
+                  "mac_addr",
+                  "process",
+                  "properties",
+                  "uri",
+                  "slpf:rule_number"
+                ]
+              },
+              {
+                "pattern": "^x-[A-Za-z0-9][A-Za-z0-9_]*:[A-Za-z0-9][A-Za-z0-9_]*$"
+              }
             ]
           }
         }
       },
       "additionalProperties": false
     },
-
     "results": {
       "title": "Map of key:value pairs that contain additional results based on the invoking Command.",
       "type": "object",
@@ -76,8 +84,12 @@
             "pattern": "^slpf$|^x-[A-Za-z0-9_]*$"
           }
         },
-        "schema": { "$ref": "#/definitions/schema" },
-        "pairs": { "$ref": "#/definitions/pairs" },
+        "schema": {
+          "$ref": "#/definitions/schema"
+        },
+        "pairs": {
+          "$ref": "#/definitions/pairs"
+        },
         "rate_limit": {
           "title": "Maximum number of requests per minute supported by design or policy",
           "type": "number",
@@ -96,7 +108,6 @@
       },
       "additionalProperties": false
     },
-
     "schema": {
       "title": "JSON-Schema for the supported OpenC2 Command and Response messages",
       "type": "object",
@@ -114,7 +125,6 @@
       },
       "additionalProperties": false
     },
-
     "slpf_response": {
       "title": "The OpenC2 Response defined for the slpf profile.",
       "type": "object",
@@ -126,23 +136,19 @@
       },
       "additionalProperties": false
     },
-
     "slpf_rule_id": {
       "title": "Access rule identifier",
       "type": "integer"
     },
-
     "status": {
       "title": "An integer status code",
       "type": "integer",
       "minimum": 100,
       "maximum": 599
     },
-
     "status_text": {
       "title": "A free-form human-readable description of the Response status",
       "type": "string"
     }
   }
-
 }

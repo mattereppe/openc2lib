@@ -1,0 +1,37 @@
+{
+    "clusters": [
+        {
+            "type": "openstack",
+            "hostname": "abete.tnt-lab.unige.it",
+            "ip": "127.0.0.1",
+            "port": 8080,
+            "protocol": 6,
+            "endpoint": "/.well-known/openc2",
+            "transfer": 1,
+            "encoding": 1,
+            "asset_id": "openstack",
+            "file_enviroment_variables": "./matteo-astrid.rc"
+        },
+        {
+            "type": "kubernetes",
+            "hostname": "abete.tnt-lab.unige.it",
+            "ip": "127.0.0.1",
+            "port": 8080,
+            "protocol": 6,
+            "endpoint": "/.well-known/openc2",
+            "transfer": 1,
+            "encoding": 1,
+            "asset_id": "kubernetes",
+            "namespace": [
+                "my5gtestbed"
+            ],
+            "config_file": "/home/tanzarella/.kube/config",
+            "kube_context": "kubernetes-super-admin@kubernetes"
+        }
+    ],
+    "consumer": {
+        "ip": "127.0.0.1",
+        "port": 8080,
+        "endpoint": "/.well-known/openc2"
+    }
+}

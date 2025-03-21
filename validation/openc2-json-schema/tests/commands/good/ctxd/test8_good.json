@@ -1,0 +1,15 @@
+{
+    "action": "query",
+    "target": {
+        "features": [
+            "versions",
+            "profiles",
+            "pairs"
+        ]
+    },
+    "actuator": {
+        "x-ctxd": {
+            "asset_id": "x-ctxd"
+        }
+    }
+}

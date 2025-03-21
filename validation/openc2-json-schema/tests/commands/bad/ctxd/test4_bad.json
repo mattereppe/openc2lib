@@ -1,0 +1,18 @@
+{
+    "action": "query",
+    "target": {
+        "x-ctxd:context": {
+            "OTHER": []
+        }
+    },
+    "args": {
+        "x-ctxd": {
+            "name_only": false
+        }
+    },
+    "actuator": {
+        "x-ctxd": {
+            "asset_id": "x-ctxd"
+        }
+    }
+}

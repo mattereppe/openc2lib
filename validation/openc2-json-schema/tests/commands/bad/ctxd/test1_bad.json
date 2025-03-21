@@ -1,0 +1,19 @@
+{
+    "action": "query",
+    "target": {
+        "context": {
+            "services": [],
+            "links": []
+        }
+    },
+    "args": {
+        "ctxd": {
+            "name_only": false
+        }
+    },
+    "actuator": {
+        "ctxd": {
+            "asset_id": "x-ctxd"
+        }
+    }
+}

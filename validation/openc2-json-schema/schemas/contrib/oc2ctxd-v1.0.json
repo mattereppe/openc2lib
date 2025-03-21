@@ -1,0 +1,1061 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://oasis-open.org/openc2/oc2ls/v1.0/schema.json",
+  "title": "oc2ctxd version 1.0 json schema",
+  "description": "This schema is intended to validate all possible derived content for the OpenC2 Context Discovery",
+  "type": "object",
+  "oneOf": [
+    {
+      "$ref": "#/definitions/OpenC2_Command",
+      "description": "A message defined by an Action-Target pair that is sent from a Producer and received by a Consumer"
+    },
+    {
+      "$ref": "#/definitions/OpenC2_Response",
+      "description": "A message from a Consumer to a Producer acknowledging a Command or returning the requested resources or status to a previously received Command"
+    }
+  ],
+  "definitions": {
+    "OpenC2_Command": {
+      "title": "OpenC2 Command",
+      "type": "object",
+      "description": "The Command defines an Action to be performed on a Target",
+      "additionalProperties": false,
+      "required": [
+        "action",
+        "target"
+      ],
+      "properties": {
+        "action": {
+          "$ref": "#/definitions/Action",
+          "description": "The task or activity to be performed (i.e., the 'verb')"
+        },
+        "target": {
+          "$ref": "#/definitions/Target",
+          "description": "The object of the Action. The Action is performed on the Target"
+        },
+        "args": {
+          "$ref": "#/definitions/Args",
+          "description": "Additional information that applies to the Command"
+        },
+        "actuator": {
+          "$ref": "#/definitions/Actuator",
+          "description": "The subject of the Action. The Actuator executes the Action on the Target"
+        },
+        "command_id": {
+          "$ref": "#/definitions/Command_ID",
+          "description": "An identifier of this Command"
+        }
+      }
+    },
+    "OpenC2_Response": {
+      "title": "OpenC2 Response",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status"
+      ],
+      "properties": {
+        "status": {
+          "$ref": "#/definitions/Status_Code",
+          "description": "An integer status code"
+        },
+        "status_text": {
+          "type": "string",
+          "description": "A free-form human-readable description of the response status"
+        },
+        "results": {
+          "$ref": "#/definitions/Results",
+          "description": "Map of key:value pairs that contain additional results based on the invoking Command"
+        }
+      }
+    },
+    "Action": {
+      "title": "OpenC2 Action",
+      "type": "string",
+      "oneOf": [
+        {
+          "const": "query",
+          "description": "Initiate a request for information"
+        }
+      ]
+    },
+    "Target": {
+      "title": "OpenC2 Target",
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "maxProperties": 1,
+      "properties": {
+        "features": {
+          "$ref": "#/definitions/Features",
+          "description": "A set of items used with the query Action to determine an Actuator's capabilities"
+        },
+        "ctxd": {
+          "$ref": "#/definitions/ctxd:Target",
+          "description": "Target defined in the CTXD profile"
+        }
+      },
+      "patternProperties": {
+        "^(x-)?\\w+:\\w+$": {
+          "type": [
+            "array",
+            "boolean",
+            "integer",
+            "number",
+            "object",
+            "string"
+          ],
+          "description": "Language specification validator for committee approved and custom target extensions. in practice target extension should be a static property and this catch all should be removed"
+        }
+      }
+    },
+    "Actuator": {
+      "title": "OpenC2 Actuator",
+      "type": "object",
+      "properties": {
+        "ctxd": {
+          "$ref": "#/definitions/ctxd:Actuator",
+          "description": "Actuator specifiers defined in the CTXD profile"
+        }
+      },
+      "additionalProperties": true
+    },
+    "Args": {
+      "title": "OpenC2 Args",
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "response_requested": {
+          "$ref": "#/definitions/Response_Type",
+          "description": "The type of Response required for the Command: none, ack, status, complete"
+        },
+        "ctxd": {
+          "$ref": "#/definitions/ctxd:Args",
+          "description": "Command Arguments defined in the CTXD profile"
+        }
+      },
+      "patternProperties": {
+        "^(x-)?\\w+$": {
+          "type": [
+            "array",
+            "boolean",
+            "integer",
+            "number",
+            "object",
+            "string"
+          ],
+          "description": "Language specification validator for committee approved and custom args extensions. in practice args extension should be a static property and this catch all should be removed"
+        }
+      }
+    },
+    "Status_Code": {
+      "title": "OpenC2 Status Code",
+      "type": "integer",
+      "oneOf": [
+        {
+          "const": 102,
+          "description": "Processing -an interim response used to inform the Producer that the Consumer has accepted the Command but has not yet completed it"
+        },
+        {
+          "const": 200,
+          "description": "OK - the Command has succeeded"
+        },
+        {
+          "const": 400,
+          "description": "Bad Request - the Consumer cannot process the Command due to something that is perceived to be a Producer error (e.g., malformed Command syntax)"
+        },
+        {
+          "const": 401,
+          "description": "Unauthorized - the Command message lacks valid authentication credentials for the Target resource or authorization has been refused for the submitted credentials"
+        },
+        {
+          "const": 403,
+          "description": "Forbidden - the Consumer understood the Command but refuses to authorize it"
+        },
+        {
+          "const": 404,
+          "description": "Not Found - the Consumer has not found anything matching the Command"
+        },
+        {
+          "const": 500,
+          "description": "Internal Error - the Consumer encountered an unexpected condition that prevented it from performing the Command"
+        },
+        {
+          "const": 501,
+          "description": "Not Implemented - the Consumer does not support the functionality required to perform the Command"
+        },
+        {
+          "const": 503,
+          "description": "Service Unavailable - the Consumer is currently unable to perform the Command due to a temporary overloading or maintenance of the Consumer"
+        }
+      ]
+    },
+    "Results": {
+      "title": "OpenC2 Response Results",
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "versions": {
+          "type": "array",
+          "description": "List of OpenC2 language versions supported by this Actuator",
+          "uniqueItems": true,
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/Version"
+          }
+        },
+        "profiles": {
+          "type": "array",
+          "description": "List of profiles supported by this Actuator",
+          "uniqueItems": true,
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/Nsid"
+          }
+        },
+        "pairs": {
+          "$ref": "#/definitions/Action_Targets",
+          "description": "List of Targets applicable to each supported Action"
+        },
+        "rate_limit": {
+          "type": "number",
+          "description": "Maximum number of requests per minute supported by design or policy",
+          "minimum": 0
+        },
+        "ctxd": {
+          "$ref": "#/definitions/ctxd:Response",
+          "description": "Response types defined in the CTXD profile"
+        }
+      },
+      "patternProperties": {
+        "^(x-)?\\w+$": {
+          "type": [
+            "array",
+            "boolean",
+            "integer",
+            "number",
+            "object",
+            "string"
+          ],
+          "description": "Language specification validator for committee approved and custom results extensions. in practice results extension should be a static property and this catch all should be removed"
+        }
+      }
+    },
+    "Domain_Name": {
+      "title": "OpenC2 Domain Name",
+      "type": "string",
+      "description": "[RFC1034], Section 3.5",
+      "format": "hostname"
+    },
+    "Features": {
+      "title": "OpenC2 Features Items",
+      "type": "array",
+      "description": "An array of zero to ten names used to query an Actuator for its supported capabilities",
+      "uniqueItems": true,
+      "minItems": 0,
+      "maxItems": 10,
+      "items": {
+        "$ref": "#/definitions/Feature"
+      }
+    },
+    "IDN_Domain_Name": {
+      "title": "OpenC2 Internationalized Domain Name",
+      "type": "string",
+      "description": "Internationalized Domain Name - [RFC5890], Section 2.3.2.3",
+      "format": "idn-hostname"
+    },
+    "IPv4_Net": {
+      "title": "OpenC2 IPv4 Net",
+      "type": "string",
+      "description": "IPv4 address as defined in [RFC0791] - CIDR prefix-length. If omitted, refers to a single host address",
+      "pattern": "^((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])(\\/(3[0-2]|[0-2]?[0-9]))?"
+    },
+    "IPv6_Net": {
+      "title": "OpenC2 IPv6 Net",
+      "type": "string",
+      "description": "IPv6 address as defined in [RFC8200] - CIDR prefix-length. If omitted, refers to a single host address",
+      "pattern": "^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))(%.+)?s*(\\/([0-9]|[1-9][0-9]|1[0-1][0-9]|12[0-8]))?$"
+    },
+    "IRI": {
+      "title": "OpenC2 IRI",
+      "description": "Internationalized Resource Identifier - [RFC3987]",
+      "type": "string",
+      "format": "iri"
+    },
+    "URI": {
+      "title": "OpenC2 URI",
+      "type": "string",
+      "description": "Uniform Resource Identifier - [RFC3986]",
+      "format": "uri"
+    },
+    "Action_Targets": {
+      "title": "OpenC2 Action Target Pairs",
+      "type": "object",
+      "description": "Map of each action supported by this Actuator to the list of Targets applicable to the specific Action",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "patternProperties": {
+        "^(query)$": {
+          "type": "array",
+          "description": "List of Target fields, should be narrowed in practice",
+          "uniqueItems": true,
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "pattern": "^(features|(x-)?\\w+:\\w+)$"
+          }
+        }
+      }
+    },
+    "Feature": {
+      "title": "OpenC2 Feature",
+      "type": "string",
+      "oneOf": [
+        {
+          "const": "versions",
+          "description": "List of OpenC2 Language versions supported by this Actuator"
+        },
+        {
+          "const": "profiles",
+          "description": "List of profiles supported by this Actuator"
+        },
+        {
+          "const": "pairs",
+          "description": "List of supported Actions and applicable Targets"
+        },
+        {
+          "const": "rate_limit",
+          "description": "Maximum number of Commands per minute supported by design or policy"
+        }
+      ]
+    },
+    "Hostname": {
+      "title": "OpenC2 Hostname",
+      "type": "string",
+      "description": "Internet host name as specified in [RFC1123]",
+      "format": "hostname"
+    },
+    "IDN_Hostname": {
+      "title": "OpenC2 Internationalized Hostname",
+      "type": "string",
+      "description": "Internationalized Internet host name as specified in [RFC5890], Section 2.3.2.3",
+      "format": "idn-hostname"
+    },
+    "L4_Protocol": {
+      "title": "OpenC2 layer four protocol",
+      "type": "string",
+      "description": "Value of the protocol (IPv4) or next header (IPv6) field in an IP packet. Any IANA value - [RFC5237]",
+      "oneOf": [
+        {
+          "const": "icmp",
+          "description": "Internet Control Message Protocol - [RFC0792]"
+        },
+        {
+          "const": "tcp",
+          "description": "Transmission Control Protocol - [RFC0793]"
+        },
+        {
+          "const": "udp",
+          "description": "User Datagram Protocol - [RFC0768]"
+        },
+        {
+          "const": "sctp",
+          "description": "Stream Control Transmission Protocol - [RFC4960]"
+        }
+      ]
+    },
+    "Nsid": {
+      "title": "Namespace Identifier",
+      "type": "string",
+      "description": "A short identifier that refers to a namespace",
+      "minLength": 1,
+      "maxLength": 16
+    },
+    "Port": {
+      "title": "OpenC2 Port",
+      "type": "integer",
+      "description": "Transport Protocol Port Number - [RFC6335]",
+      "minimum": 0,
+      "maximum": 65535
+    },
+    "Response_Type": {
+      "title": "OpenC2 Response Type",
+      "type": "string",
+      "oneOf": [
+        {
+          "const": "none",
+          "description": "No response"
+        },
+        {
+          "const": "ack",
+          "description": "Respond when Command received"
+        },
+        {
+          "const": "status",
+          "description": "Respond with progress toward Command completion"
+        },
+        {
+          "const": "complete",
+          "description": "Respond when all aspects of Command completed"
+        }
+      ]
+    },
+    "Version": {
+      "title": "OpenC2 Version",
+      "type": "string",
+      "description": "Major.Minor version number",
+      "pattern": "^\\d+\\.\\d+$"
+    },
+    "Binary": {
+      "title": "OpenC2 Binary",
+      "type": "string",
+      "contentEncoding": "base64"
+    },
+    "Command_ID": {
+      "title": "OpenC2 Command Identifier",
+      "type": "string"
+    },
+    "ctxd:Target": {
+      "title": "CTXD Target",
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 0,
+      "properties": {
+        "context": {
+          "$ref": "#/definitions/ctxd:Context",
+          "description": "It describes the service enviroment, its connections and security capabilities"
+        }
+      }
+    },
+    "ctxd:Context": {
+      "type": "object",
+      "description": "It describes the service enviroment, its connections and security capabilities",
+      "properties": {
+        "services": {
+          "title": "services",
+          "type": "array",
+          "description": "list the service names that the command refers to",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/definitions/ctxd:Name"
+          }
+        },
+        "links": {
+          "title": "services",
+          "type": "array",
+          "description": "list the link names that the command refers to",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/definitions/ctxd:Name"
+          }
+        }
+      }
+    },
+    "ctxd:Name":{
+      "title": "Name",
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "maxProperties": 1,
+      "properties": {
+        "uri": {
+          "$ref": "#/definitions/URI",
+          "description": "Uniform Resource Identifier of the service"
+        },
+        "reverse_dns": {
+          "$ref": "#/definitions/Hostname",
+          "description": "Reverse domain name notation"
+        },
+        "uuid": {
+          "title": "UUID",
+          "description": "Universally unique identifier of the service",
+          "type": "string",
+          "format": "uuid"
+        },
+        "local": {
+          "title": "local",
+          "description": "Name without guarantee of uniqueness",
+          "type": "string"
+        }
+      }
+    },
+    "ctxd:Args": {
+      "title": "CTXD Args Specifiers",
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "name_only": {
+          "type": "boolean",
+          "description": "The response includes either only the name or all the details about the service and the links"
+        }
+      }
+    },
+    "ctxd:Actuator":{
+      "title": "CTXD Actuator specifiers",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "domain":{
+          "type":"string",
+          "description": "Domain under the responsability of the actuator"
+        },
+        "asset_id":{
+          "type":"string",
+          "description": "identifier of the actuator"
+        }
+      }
+    },
+    "ctxd:Response": {
+      "title": "CTXD response types",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "services": {
+          "title": "services",
+          "type": "array",
+          "description": "list all the services",
+          "items": {
+            "$ref": "#/definitions/ctxd:Service"
+          }
+        },
+        "links": {
+          "title": "links",
+          "type": "array",
+          "description": "list all the links of the services",
+          "items": {
+            "$ref": "#/definitions/ctxd:Link"
+          }
+        },
+        "service_names": {
+          "title": "service names",
+          "type": "array",
+          "description": "list the name of all services",
+          "items": {
+            "$ref": "#/definitions/ctxd:Name"
+          }
+        },
+        "link_names": {
+          "title": "link names",
+          "type": "array",
+          "description": "list the name of all links",
+          "items": {
+            "$ref": "#/definitions/ctxd:Name"
+          }
+        }
+      }
+    },
+    "ctxd:Service":{
+      "title": "Service",
+      "description": "service",
+      "properties": {
+        "name":{
+          "$ref": "#/definitions/ctxd:Name",
+          "description": "id of the service"
+        },
+        "type":{
+          "$ref": "#/definitions/ctxd:ServiceType",
+          "description": "it identifeis the type of the service"
+        },
+        "links": {
+          "type": "array",
+          "description": "links associated with the service",
+          "items": {
+            "$ref": "#/definitions/ctxd:Name"
+          }
+        },
+        "subservices": {
+          "type": "array",
+          "description": "subservices of the main service",
+          "items": {
+            "$ref": "#/definitions/ctxd:Name"
+          }
+        },
+        "owner":{
+          "type": "string",
+          "description": "owner of the service"
+        },
+        "release":{
+          "type": "string",
+          "description": "release version of the service"
+        },
+        "security_functions":{
+          "type": "array",
+          "description": "Actuator Profiles associated with the service",
+          "items": {
+            "$ref": "#/definitions/ctxd:OpenC2Endpoint"
+          }
+        },
+        "actuator": {
+          "$ref": "#/definitions/ctxd:Consumer",
+          "description": "it identifies who is carrying out the service"
+        }
+      }
+    },
+    "ctxd:ServiceType":{
+      "title": "service type",
+      "description": "servic type",
+      "minProperties": 1,
+      "maxProperties": 1,
+      "properties": {
+        "application": {
+          "$ref": "#/definitions/ctxd:Application",
+          "description": "software application"
+        },
+        "vm": {
+          "$ref": "#/definitions/ctxd:VM",
+          "description": "virtual machine"
+        },
+        "container": {
+          "$ref": "#/definitions/ctxd:Container",
+          "description": "container"
+        },
+        "web_service": {
+          "$ref": "#/definitions/ctxd:WebService",
+          "description": "web service"
+        },
+        "cloud": {
+          "$ref": "#/definitions/ctxd:cloud",
+          "description": "cloud"
+        },
+        "network": {
+          "$ref": "#/definitions/ctxd:Network",
+          "description": "connectivity service"
+        },
+        "iot": {
+          "$ref": "#/definitions/ctxd:IOT",
+          "description": "IOT device"
+        }
+      }
+    },
+    "ctxd:Application":{
+      "title": "applcation",
+      "description": "software application",
+      "properties": {
+        "description":{
+          "type": "string",
+          "description": "generic description of the application"
+        },
+        "name":{
+          "type": "string",
+          "description": "name of the application"
+        },
+        "version":{
+          "type": "string",
+          "description": "version od the application"
+        },
+        "owner":{
+          "type": "string",
+          "description": "owner of the application"
+        },
+        "type":{
+          "type": "string",
+          "description": "type of the applcation"
+        }
+      }
+    },
+    "ctxd:VM":{
+      "title": "VM",
+      "description": "virtual machine",
+      "properties": {
+        "description":{
+          "type": "string",
+          "description": "generic description of the VM"
+        },
+        "id":{
+          "type": "string",
+          "description": "id of the VM"
+        },
+        "hostname":{
+          "$ref": "#/definitions/Hostname",
+          "description": "hostname of the VM"
+        },
+        "os": {
+          "$ref": "#/definitions/ctxd:OS",
+          "description": "Operating System of the VM"
+        }
+      }
+    },
+    "ctxd:Container":{
+      "title": "Container",
+      "description": "container",
+      "properties": {
+        "description":{
+          "type": "string",
+          "description": "generic description of the container"
+        },
+        "id":{
+          "type": "string",
+          "description": "id of the container"
+        },
+        "hostname":{
+          "$ref": "#/definitions/Hostname",
+          "description": "hostname of the container"
+        },
+        "runtime":{
+          "type": "string",
+          "description": "Runtime managing the container"
+        },
+        "os": {
+          "$ref": "#/definitions/ctxd:OS",
+          "description": "Operating System of the container"
+        }
+      }
+    },
+    "ctxd:WebService":{
+      "title": "web service",
+      "description": "web service",
+      "properties": {
+        "description":{
+          "type": "string",
+          "description": "generic description of the web service"
+        },
+        "server":{
+          "$ref": "#/definitions/ctxd:Server",
+          "description": "Hostname or IP address of the server"
+        },
+        "port":{
+          "type": "integer",
+          "description": "the port used to connect to the web service"
+        },
+        "endpoint":{
+          "type": "string",
+          "description": "the endpoint used to connect to the web service"
+        },
+        "owner":{
+          "type": "string",
+          "description": "owner of the web service"
+        }
+      }
+    },
+    "ctxd:Cloud":{
+      "title": "cloud",
+      "description": "cloud",
+      "properties": {
+        "description":{
+          "type": "string",
+          "description": "generic description of the cloud service"
+        },
+        "id":{
+          "type": "string",
+          "description": "id of the cloud provider"
+        },
+        "name":{
+          "type": "string",
+          "description": "name of the cloud provider"
+        },
+        "type":{
+          "type": "string",
+          "description": "type of the cloud service"
+        }
+      }
+    },
+    "ctxd:Network":{
+      "title": "network",
+      "description": "network",
+      "properties": {
+        "description":{
+          "type": "string",
+          "description": "generic description of the network"
+        },
+        "name":{
+          "type": "string",
+          "description": "name of the network provider"
+        },
+        "type":{
+          "$ref": "#/definitions/ctxd:NetworkType",
+          "description": "Type of the network service"
+        }
+      }
+    },
+    "ctxd:IOT":{
+      "title": "IOT",
+      "description": "IOT",
+      "properties": {
+        "description":{
+          "type": "string",
+          "description": "identifier of the IOT function"
+        },
+        "name":{
+          "type": "string",
+          "description": "name of the IOT service provider"
+        },
+        "type":{
+          "type": "string",
+          "description": "type of the IOT device"
+        }
+      }
+    },
+    "ctxd:NetworkType":{
+      "title": "network type",
+      "description": "network type",
+      "minProperties": 1,
+      "maxProperties": 1,
+      "properties": {
+        "ethernet":{
+          "type": "string",
+          "description": "the network type is ethernet"
+        },
+        "802.11":{
+          "type": "string",
+          "description": "the network type is 802.11"
+        },
+        "802.15":{
+          "type": "string",
+          "description": "the network type is 802.150"
+        },
+        "zigbee":{
+          "type": "string",
+          "description": "zigbee"
+        },
+        "vlan":{
+          "type": "string",
+          "description": "the network type is vlan"
+        },
+        "vpn":{
+          "type": "string",
+          "description": "the network type is vpn"
+        },
+        "lorawan":{
+          "type": "string",
+          "description": "the network type is lorawan"
+        },
+        "wan":{
+          "type": "string",
+          "description": "the network type is wan"
+        }
+      }
+    },
+    "ctxd:OS":{
+      "title": "OPerating System",
+      "description": "Operating System",
+      "properties": {
+        "name":{
+          "type": "string",
+          "description": "name of the OS"
+        },
+        "version":{
+          "type": "string",
+          "description": "version of the OS"
+        },
+        "family":{
+          "type": "string",
+          "description": "family of the OS"
+        },
+        "type":{
+          "type": "string",
+          "description": "type of the OS"
+        }
+      }
+    },
+    "ctxd:Link":{
+      "title": "link",
+      "description": "link",
+      "properties": {
+        "name":{
+          "$ref": "#/definitions/ctxd:Name",
+          "description": "id of the link"
+        },
+        "description":{
+          "$type": "string",
+          "description": "generic description of the relationship"
+        },
+        "versions": {
+          "type": "array",
+          "description": "subset of service features used in this relationship (where applicable). E.g.: the version of an API, or of an Network protocol",
+          "items": {
+            "$ref": "#/definitions/Version"
+          }
+        },
+        "link_type": {
+          "$ref": "#/definitions/ctxd:LinkType",
+          "description": "type of the link"
+        },
+        "peers":{
+          "type": "array",
+          "description": "services connected on the link",
+          "items": {
+            "$ref": "#/definitions/ctxd:Peer"
+          }
+        },
+        "security_functions":{
+          "type": "array",
+          "description": "security functions applied on the link",
+          "items": {
+            "$ref": "#/definitions/ctxd:OpenC2Endpoint"
+          }
+        }
+      }
+    },
+    "ctxd:Peer":{
+      "title": "peer",
+      "description": "peer",
+      "properties": {
+        "service_name":{
+          "$ref": "#/definitions/ctxd:Name",
+          "description": "id of the service"
+        },
+        "role_name":{
+          "$ref": "#/definitions/ctxd:PeerRole",
+          "description": "role of this peer in the link"
+        },
+        "consumer":{
+          "$ref": "#/definitions/ctxd:Consumer",
+          "description": "Consumer connected on the other side of the link"
+        }
+      }
+    },
+    "ctxd:LinkType":{
+      "title": "link type",
+      "description": "link type",
+      "properties": {
+        "api":{
+          "type": "string",
+          "description": "the connection is an API"
+        },
+        "hosting":{
+          "type": "string",
+          "description": "the service is hosted in an infrastructure"
+        },
+        "packet_flow":{
+          "type": "string",
+          "description": "network flow"
+        },
+        "control":{
+          "type": "string",
+          "description": "the service controls another resource"
+        }
+      }
+    },
+    "ctxd:PeerRole":{
+      "title": "peer role",
+      "description": "peer role",
+      "properties": {
+        "client":{
+          "type": "string",
+          "description": "the consumer operates as a client in the client-server model in this link"
+        },
+        "server":{
+          "type": "string",
+          "description": "the consumer operates as a server in the client-server model in this link"
+        },
+        "guest":{
+          "type": "string",
+          "description": "the service is hosted within another service"
+        },
+        "host":{
+          "type": "string",
+          "description": "the service hosts another service"
+        },
+        "ingress":{
+          "type": "string",
+          "description": "ingress communication"
+        },
+        "egress":{
+          "type": "string",
+          "description": "egress communication"
+        },
+        "bidirectional":{
+          "type": "string",
+          "description": "both ingress and egress communication"
+        },
+        "control":{
+          "type": "string",
+          "description": "the service controls another service"
+        },
+        "controlled":{
+          "type": "string",
+          "description": "the service is controlled by another service"
+        }
+      }
+    },
+    "ctxd:Consumer":{
+      "title": "consumer",
+      "description": "consumer",
+      "properties": {
+        "server":{
+          "$ref": "#/definitions/ctxd:Server",
+          "description": "Hostname or IP address of the server"
+        },
+        "port":{
+          "type": "integer",
+          "description": "port used to connect to the actuator"
+        },
+        "protocol":{
+          "$ref": "#/definitions/L4_Protocol",
+          "description": "protocol used to connect to the actuator"
+        },
+        "endpoint":{
+          "type": "string",
+          "description": "path to the endpoint (.../.well-known/openc2)"
+        },
+        "transfer":{
+          "$ref": "#/definitions/ctxd:Transfer",
+          "description": "transfer protocol used to connect to the actuator"
+        },
+        "encoding":{
+          "$ref": "#/definitions/ctxd:Encoding",
+          "description": "encoding format used to connect to the actuator"
+        }
+      }
+    },
+    "ctxd:Server":{
+      "title": "server",
+      "description": "server",
+      "properties": {
+        "hostname":{
+          "$ref": "#/definitions/Hostname",
+          "description": "Hostname of the server"
+        },
+        "ipv4-addr":{
+          "$ref": "#/definitions/IPv4_Net",
+          "description": "32 bit IPv4 address as defined in RFC0791"
+        }
+      }
+    },
+    "ctxd:Transfer":{
+      "title": "transfer",
+      "description": "transfer",
+      "properties": {
+        "http":{
+          "type": "string",
+          "description": "HTTP protocol"
+        },
+        "https":{
+          "type": "string",
+          "description": "HTTPS protocol"
+        },
+        "mqtt":{
+          "type": "string",
+          "description": "MQTT protocol"
+        }
+      }
+    },
+    "ctxd:Encoding":{
+      "title": "encoding",
+      "description": "encoding",
+      "properties": {
+        "json":{
+          "type": "string",
+          "description": "JSON encoding"
+        }
+      }
+    },
+    "ctxd:OpenC2Endpoint":{
+      "title": "OpenC2Endpoint",
+      "description": "OpenC2Endpoint",
+      "properties": {
+        "actuaor":{
+          "$ref": "#/definitions/Actuator",
+          "description": "it specifies the Actuator Profile"
+        },
+        "consumer":{
+          "$ref": "#/definitions/ctxd:Consumer",
+          "description": "it specifies the Consumer that implements the security functions"
+        }
+      }
+    }
+  }
+}
