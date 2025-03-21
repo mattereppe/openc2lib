@@ -24,6 +24,11 @@ class Choice(Openc2Type):
 
 			:arg obj: An object among those defined in the `register`.
 		"""
+		
+		""" Copy constructor-like semantics """
+		if( type(self) == type(obj) ):
+			obj=obj.obj
+		
 		self.choice: str = self.register.getName(obj.__class__)
 		""" Selected name for the `Choice` """
 		self.obj = obj
