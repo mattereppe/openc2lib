@@ -153,7 +153,7 @@ To view the documentation, open the `docs/code/index.html` in your browser.
 ## Extensions
 
 openc2lib comes with several extensions and use cases:
-- The Context Discovery profile and its actuators for OpenStack and Kubernetes. To view the documentation, open the `docs/CTXD documentation.md` in your browser.
+- The Context Discovery profile and its actuators for OpenStack and Kubernetes (documentation [here](https://github.com/mattereppe/openc2lib/blob/main/docs/CTXD%20documentation.md))
 
 
 ## Support
