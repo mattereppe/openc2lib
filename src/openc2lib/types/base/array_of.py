@@ -83,29 +83,32 @@ class ArrayOf:
 			
 			# This is the code if I would like to do type checking
 			# when inserting data
+			def __to_fldtype(self, item):
+				return item if type(item)==self.fieldtype else self.fieldtype(item)
+
 			def __init__(self, args=[]):
 
 				super().__init__(args)
 
 				converted_items = []
 				for idx, val in enumerate(self):
-					self[idx] = (self.fieldtype(val))
+					self[idx] = (self.__to_fldtype(val))
 
 				
 			def append(self, item):
-				item = self.fieldtype(item)
+				item = self.__to_fldtype(item)
 				super().append(item)
 			
 			def insert(self, index, item):
-				item = self.fieldtype(item)
+				item = self.__to_fldtype(item)
 				super().insert(index, item)
 			
 			def __add__(self, item):
-				item = self.fieldtype(item)
+				item = self.__to_fldtype(item)
 				super().__add__(item)
 			
 			def __iadd__(self, item):
-				item = self.fieldtype(item)
+				item = self.__to_fldtype(item)
 				super().__iadd__(item)
 
 		return ArrayOf
