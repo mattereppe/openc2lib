@@ -99,7 +99,7 @@ class CTXDActuator_openstack(CTXDActuator):
 			if(service['name'] == 'nova'):
 				array_cloud_services.append(Cloud(description='cloud', id=service['id'], name=service['id'], type=service['type']))
 
-		openstack_service = Service(name= Name(array_cloud_services[0].name), type=ServiceType(array_cloud_services[0]), links=self.get_name_links(self.my_links),
+		openstack_service = Service(name= Name('openstack'), type=ServiceType(array_cloud_services[0]), links=self.get_name_links(self.my_links),
 									 subservices=None, owner= self.asset_id, release=None, security_functions=None,
 									 actuator=Consumer(server=Server(Hostname(self.hostname)), 
 													   port=self.port,

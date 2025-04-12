@@ -33,5 +33,13 @@
         "ip": "127.0.0.1",
         "port": 8080,
         "endpoint": "/.well-known/openc2"
+    },
+    "mongodb":{
+        "username": "",
+        "password": "",
+        "ip": "127.0.0.1",
+        "port": 27017,
+        "database_name": "my_cluster_db",
+        "collection_name": "my_collection"
     }
 }

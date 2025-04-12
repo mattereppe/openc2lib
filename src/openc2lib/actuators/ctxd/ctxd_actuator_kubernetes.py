@@ -213,8 +213,8 @@ class CTXDActuator_kubernetes(CTXDActuator):
 
 	def get_connected_actuators(self, actuators):
 		#create dumb slpf actuators
-		actuators[(slpf.Profile.nsid,str('os-fw'))] = self.getDumbSLPF(name='os-fw')
-		actuators[(slpf.Profile.nsid,str('kube-fw'))] = self.getDumbSLPF(name='kube-fw')
+		actuators[(ctxd.Profile.nsid,str('os-fw'))] = self.getDumbSLPF(name='os-fw')
+		actuators[(ctxd.Profile.nsid,str('kube-fw'))] = self.getDumbSLPF(name='kube-fw')
 		#end creation of dumb slpf actuators
 
 		for link in self.my_links: #explore link between kubernetes and vm
@@ -249,7 +249,7 @@ class CTXDActuator_kubernetes(CTXDActuator):
                         hostname= Hostname(vm.metadata.name), 
                         os= OS(family=vm.status.node_info.operating_system, name=vm.status.node_info.os_image))
 		
-		vm_service = Service(name= Name('vm'), type=ServiceType(tmp_vm), links= self.get_name_links(self.get_vm_links(asset_id)),
+		vm_service = Service(name= Name(node_name), type=ServiceType(tmp_vm), links= self.get_name_links(self.get_vm_links(asset_id)),
                                          subservices=None, owner='openstack', release=None, security_functions=None,
                                          actuator=Consumer(server=Server(Hostname(vm.metadata.name)),
                                                             port=self.port,
@@ -342,7 +342,7 @@ class CTXDActuator_kubernetes(CTXDActuator):
                         	      runtime = None,
                             	  os=None)
 
-				service_container = Service(name= Name('container'), type=ServiceType(tmp_container), links= ArrayOf(Name)([]),
+				service_container = Service(name= Name(container.metadata.name), type=ServiceType(tmp_container), links= ArrayOf(Name)([]),
             		                             subservices=None, owner='openstack', release=None, security_functions=None,
                 		                         actuator=Consumer(server=Server(Hostname(container.metadata.name)),
                     		                                        port=self.port,
@@ -459,13 +459,13 @@ class CTXDActuator_kubernetes(CTXDActuator):
 								transfer=Transfer(self.transfer),
 								encoding=Encoding(self.encoding))
 			
-		slpf_service = Service(name = Name('slpf'), 
+		slpf_service = Service(name = Name(name), 
 						 type = ServiceType(ex_application),
 						 links=None, 
 						 security_functions=array_security_functions,
 						 actuator= ex_consumer)
 		
-		return CTXDActuator(services= slpf_service,
-                            links= None,
+		return CTXDActuator(services= ArrayOf(Service)([slpf_service]),
+                            links= ArrayOf(Link)([]),
                             domain=None,
                         	asset_id=str(name))
