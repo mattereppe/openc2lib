@@ -1,9 +1,9 @@
 import pytest
 from unittest.mock import patch
-from openc2lib import *
-from openc2lib.transfers.http import HTTPTransfer
-from openc2lib.encoders.json import  JSONEncoder
-import openc2lib.profiles.slpf as slpf
+from otupy import *
+from otupy.transfers.http import HTTPTransfer
+from otupy.encoders.json import  JSONEncoder
+import otupy.profiles.slpf as slpf
 
 @pytest.fixture
 def create_new_command():

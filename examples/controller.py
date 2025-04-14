@@ -1,17 +1,17 @@
-#!../.oc2-env/bin/python3
+#!../.venv/bin/python3
 # Example to use the OpenC2 library
 #
 
 import logging
 import sys
 
-import openc2lib as oc2
+import otupy as oc2
 
-from openc2lib.encoders.json import JSONEncoder
-from openc2lib.transfers.http import HTTPTransfer
+from otupy.encoders.json import JSONEncoder
+from otupy.transfers.http import HTTPTransfer
 
-import openc2lib.profiles.slpf as slpf
-import openc2lib.profiles.dumb as dumb
+import otupy.profiles.slpf as slpf
+import otupy.profiles.dumb as dumb
 
 
 #logging.basicConfig(filename='openc2.log',level=logging.DEBUG)

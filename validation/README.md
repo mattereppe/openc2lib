@@ -1,6 +1,6 @@
 # Runnig the validation test suites
 
-There are multiple tests available to check the compliance of openc2lib with the Language Specification, concerning data types, serialization, and message exchange. The same tests are available for both ```openc2lib``` and ```lycam```, with the necessary profiles definitions for each tool. Test concerning the exchange of messages over the network are not available for ```lycam```, since this library does not include a transfer protocol.
+There are multiple tests available to check the compliance of otupy with the Language Specification, concerning data types, serialization, and message exchange. The same tests are available for both ```otupy``` and ```lycam```, with the necessary profiles definitions for each tool. Test concerning the exchange of messages over the network are not available for ```lycam```, since this library does not include a transfer protocol.
 
 ## Data types
 A first set of tests concerns the correct instantiation of data, including both data, targets, args, artifacts, and commands.
@@ -59,7 +59,7 @@ For network traces:
 
   For serialization and deserialization measures only (both for ```oc2lib``` and ```Lycan```), run the following executables:
   ```
-  # ./controller-serialization-only.py > data.log        <-- openc2lib
+  # ./controller-serialization-only.py > data.log        <-- otupy
   # ./controller.py > data.log                           <-- Lycan
   ```
   and then collect data with:

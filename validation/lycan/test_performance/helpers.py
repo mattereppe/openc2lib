@@ -19,7 +19,7 @@ def load_files(cmd_path):
 	return cmds_files
 
 def load_json(path):
-	""" Load an openc2lib command/response from a json string or file. 
+	""" Load an otupy command/response from a json string or file. 
 		
 		It expects the command in a string; alternatively, the file containing the json can be given by
 		specifying its keyword. If both are given, the string is used. """

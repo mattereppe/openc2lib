@@ -6,10 +6,10 @@ import json
 import json_schema_validation
 
 from helpers import load_json, load_files
-from openc2lib import Encoder, Response, StatusCode, Command, Producer
-import openc2lib.profiles.slpf
-from openc2lib.transfers.http import HTTPTransfer
-from openc2lib.encoders.json import JSONEncoder
+from otupy import Encoder, Response, StatusCode, Command, Producer
+import otupy.profiles.slpf
+from otupy.transfers.http import HTTPTransfer
+from otupy.encoders.json import JSONEncoder
 
 import json_schema_validation
 

@@ -8,43 +8,43 @@ import sys
 import datetime
 import uuid
 
-from openc2lib.profiles.ctxd.data.application import Application
-from openc2lib.profiles.ctxd.data.cloud import Cloud
-from openc2lib.profiles.ctxd.data.container import Container
-from openc2lib.profiles.ctxd.data.iot import IOT
-from openc2lib.profiles.ctxd.data.network import Network
-from openc2lib.profiles.ctxd.data.network_type import NetworkType
-from openc2lib.profiles.ctxd.data.web_service import WebService
-from openc2lib.types.data.uri import URI
+from otupy.profiles.ctxd.data.application import Application
+from otupy.profiles.ctxd.data.cloud import Cloud
+from otupy.profiles.ctxd.data.container import Container
+from otupy.profiles.ctxd.data.iot import IOT
+from otupy.profiles.ctxd.data.network import Network
+from otupy.profiles.ctxd.data.network_type import NetworkType
+from otupy.profiles.ctxd.data.web_service import WebService
+from otupy.types.data.uri import URI
 
-import openc2lib as oc2
+import otupy as oc2
 
-from openc2lib.encoders.json import JSONEncoder
-from openc2lib.transfers.http import HTTPTransfer
-from openc2lib.actuators.ctxd.ctxd_actuator import CTXDActuator
-import openc2lib.profiles.ctxd as ctxd
-from openc2lib.actuators.iptables_actuator import IptablesActuator
-from openc2lib.profiles import slpf
-from openc2lib.profiles.ctxd.data.link import Link
-from openc2lib.profiles.ctxd.data.service import Service
-from openc2lib.types.base.array_of import ArrayOf
-from openc2lib.profiles.ctxd.data.consumer import Consumer
-from openc2lib.profiles.ctxd.data.transfer import Transfer
-from openc2lib.profiles.ctxd.data.encoding import Encoding
-from openc2lib.profiles.ctxd.data.link_type import LinkType
-from openc2lib.profiles.ctxd.data.name import Name
-from openc2lib.profiles.ctxd.data.openc2_endpoint import OpenC2Endpoint
-from openc2lib.profiles.ctxd.data.os import OS
-from openc2lib.profiles.ctxd.data.peer import Peer
-from openc2lib.profiles.ctxd.data.peer_role import PeerRole
-from openc2lib.profiles.ctxd.data.server import Server
-from openc2lib.profiles.ctxd.data.service_type import ServiceType
-from openc2lib.profiles.ctxd.data.vm import VM
-from openc2lib.types.data.hostname import Hostname
-from openc2lib.types.data.ipv4_addr import IPv4Addr
-from openc2lib.types.data.l4_protocol import L4Protocol
-from openc2lib.types.data.version import Version
-from openc2lib.types.data.nsid import Nsid
+from otupy.encoders.json import JSONEncoder
+from otupy.transfers.http import HTTPTransfer
+from otupy.actuators.ctxd.ctxd_actuator import CTXDActuator
+import otupy.profiles.ctxd as ctxd
+from otupy.actuators.iptables_actuator import IptablesActuator
+from otupy.profiles import slpf
+from otupy.profiles.ctxd.data.link import Link
+from otupy.profiles.ctxd.data.service import Service
+from otupy.types.base.array_of import ArrayOf
+from otupy.profiles.ctxd.data.consumer import Consumer
+from otupy.profiles.ctxd.data.transfer import Transfer
+from otupy.profiles.ctxd.data.encoding import Encoding
+from otupy.profiles.ctxd.data.link_type import LinkType
+from otupy.profiles.ctxd.data.name import Name
+from otupy.profiles.ctxd.data.openc2_endpoint import OpenC2Endpoint
+from otupy.profiles.ctxd.data.os import OS
+from otupy.profiles.ctxd.data.peer import Peer
+from otupy.profiles.ctxd.data.peer_role import PeerRole
+from otupy.profiles.ctxd.data.server import Server
+from otupy.profiles.ctxd.data.service_type import ServiceType
+from otupy.profiles.ctxd.data.vm import VM
+from otupy.types.data.hostname import Hostname
+from otupy.types.data.ipv4_addr import IPv4Addr
+from otupy.types.data.l4_protocol import L4Protocol
+from otupy.types.data.version import Version
+from otupy.types.data.nsid import Nsid
 
 
 

@@ -2,13 +2,13 @@ import logging
 import sys
 sys.path.insert(0,'/Users/matteo/Progetti/OpenC2/openc2/src')
 
-import openc2lib as oc2
+import otupy as oc2
 
-from openc2lib.encoders.json_encoder import JSONEncoder
-from openc2lib.transfers.http_transfer import HTTPTransfer
-from openc2lib.actuators.dumb_actuator import DumbActuator
-from openc2lib.actuators.iptables_actuator import IptablesActuator
-import openc2lib.profiles.slpf as slpf
+from otupy.encoders.json_encoder import JSONEncoder
+from otupy.transfers.http_transfer import HTTPTransfer
+from otupy.actuators.dumb_actuator import DumbActuator
+from otupy.actuators.iptables_actuator import IptablesActuator
+import otupy.profiles.slpf as slpf
 
 #logging.basicConfig(filename='consumer.log',level=logging.DEBUG)
 #logging.basicConfig(stream=sys.stdout,level=logging.DEBUG)

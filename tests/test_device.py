@@ -5,10 +5,10 @@ import hashlib
 import logging
 import sys
 
-import openc2lib as oc2
-from openc2lib.transfers.http import HTTPTransfer
-from openc2lib.encoders.json import  JSONEncoder
-import openc2lib.profiles.dumb as dumb
+import otupy as oc2
+from otupy.transfers.http import HTTPTransfer
+from otupy.encoders.json import  JSONEncoder
+import otupy.profiles.dumb as dumb
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 

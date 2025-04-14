@@ -1,6 +1,6 @@
 import uuid
 
-import openc2lib as oc2
+import otupy as oc2
 
 
 @oc2.target(name='conta$iner', nsid='x-_acme')
