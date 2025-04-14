@@ -33,76 +33,34 @@ The otupy currently provides:
 * the definition of the SLPF profile; 
 * a dumb implementation of an actuator for the SLPF profile.
 
+Compatibility
+-------------
+
+Python 3.9+ is required to run the openc2lib (Python 3.11 was used for development).
+
 Getting started
 ---------------
 
-Background
-~~~~~~~~~~
+.. toctree::
+   :maxdepth: 1
 
-Before using openc2lib you must be familiar with the `OpenC2 Language
-Specification <https://docs.oasis-open.org/openc2/oc2ls/v1.0/cs02/oc2ls-v1.0-cs02.pdf>`__.
-Even if not strictly required to getting started with the code, the
-`OpenC2 Architecture
-Specification <https://docs.oasis-open.org/openc2/oc2arch/v1.0/cs01/oc2arch-v1.0-cs01.pdf>`__
-provides a good introduction to OpenC2 architectural patterns and
-terminology. Other relevant documentation is listed in the `Related
-documents <docs/relateddocuments.md>`__ Section.
+   background
+   architecture
+   download
+   usage
 
-Architecture
-~~~~~~~~~~~~
+Advanced usage
+--------------
 
-The openc2lib provides the implementation of the *Producer* and
-*Consumer* roles, as defined by the `Language
-Specification <https://docs.oasis-open.org/openc2/oc2ls/v1.0/cs02/oc2ls-v1.0-cs02.pdf>`__.
-The *Producer* creates and sends *Messages* to the *Consumer*; the
-latter returns *Responses*. Within the *Consumer*, *Actuators* translate
-the *Commands* into the specific instructions to control local or remote
-*Security Functions*, and collect any feedback on their execution.
+.. toctree::
+   :maxdepth: 1
 
-.. figure:: docs/Pictures/architecture.svg
-   :alt: High-level architecture of the openc2lib and intended usage
+   extensions
 
-   High-level architecture of the openc2lib and intended usage
 
-The *Producer* and the *Consumer* usually run on different hosts
-separated by a network. While the *Producer* is expected to be used as
-Python library within existing code (for example, a controller), the
-*Consumer* is a server process that listens on a given port waiting for
-*Commands*.
 
-openc2lib provides the ``Provider`` and ``Consumer`` classes that
-implements the *Provider* and *Consumer* role, respectively. Each class
-creates its own execution environment made of its own identifier, a
-protocol stack, and the available *Actuators* (this last only for the
-``Consumer``). According to the `OpenC2
-Architecture <https://docs.oasis-open.org/openc2/oc2arch/v1.0/cs01/oc2arch-v1.0-cs01.pdf>`__,
-a protocol stack includes an encoding language and a transfer protocol.
-Note that in the openc2lib implementation, the security services and
-transport protocols are already embedded in each specific transfer
-protocol.
 
-.. figure:: docs/Pictures/classes.svg
-   :alt: Instantiation of the main openc2lib classes
 
-   Instantiation of the main openc2lib classes
-
-Building on the definitions in the OpenC2 Architecture and Language
-Specification, the openc2lib defines a *profile* as the language
-extension for a specific class of security functions, whereas an
-*actuator* is the concrete implementation for a specific security
-appliance. For instance, the `OpenC2 Profile for Stateless Packet
-Filtering <https://docs.oasis-open.org/openc2/oc2slpf/v1.0/cs01/oc2slpf-v1.0-cs01.pdf>`__
-is a *profile* that defines all grammar and syntax rules for adding and
-removing rules from a packet firewall. The corresponding *actuators*
-must translate this abstract interface to concrete commands (e.g., for
-iptables, pfsense). A more detailed discussion is present in the
-`Developing extensions <docs/developingextensions.md>`__ Section.
-
-Software requirements
-~~~~~~~~~~~~~~~~~~~~~
-
-Python 3.9+ is required to run the openc2lib (Python 3.11 was used for
-development).
 
 Download and setup
 ~~~~~~~~~~~~~~~~~~
