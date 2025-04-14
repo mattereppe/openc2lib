@@ -7,7 +7,7 @@ The *Producer* creates and sends *Messages* to the *Consumer*; the latter return
 Within the *Consumer*, *Actuators* translate the *Commands* into the specific instructions to control local or remote
 *Security Functions*, and collect any feedback on their execution.
 
-.. figure:: Pictures/architecture.svg
+.. figure:: Pictures/architecture.png
    :alt: High-level architecture of the openc2lib and intended usage
 
    High-level architecture of the openc2lib and intended usage
