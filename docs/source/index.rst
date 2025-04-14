@@ -11,6 +11,7 @@ otupy is explicitly designed with flexibility
 and extensibility in mind, meaning that additional profiles and
 actuators can be added without impacting the core library itself. For
 this reason, it is particullary suited for: 
+
 * developers that are looking for a common interface to control their remote cybersecurity
 functions; 
 * researchers that design new profiles for cybersecurity functions; 
@@ -26,6 +27,7 @@ introduce because they largely reflect the language specification, hence
 minimal comprehension of the otupy is required to getting started.
 
 The otupy currently provides: 
+
 * the implementation of the core functions
 that implement the OpenC2 Architecture and Language Specification; 
 * an implementation of the json encoder; 
