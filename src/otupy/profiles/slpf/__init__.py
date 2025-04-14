@@ -29,7 +29,7 @@
 """
 
 
-from otupy.profiles.slpf.profile import Profile
+from otupy.profiles.slpf.profile import Profile, nsid
 from otupy.profiles.slpf.actuator import *
 
 from otupy import TargetEnum
