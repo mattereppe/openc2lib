@@ -29,7 +29,7 @@ Note that in the openc2lib implementation, the security services and
 transport protocols are already embedded in each specific transfer
 protocol.
 
-.. figure:: docs/Pictures/classes.svg
+.. figure:: Pictures/classes.png
    :alt: Instantiation of the main openc2lib classes
 
    Instantiation of the main openc2lib classes
