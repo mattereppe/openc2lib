@@ -83,7 +83,7 @@ def insert_data_database(collection, response, peer_hostname =None):
             parsed_data = json.loads(data)
             #insert only the results into the database
             result = parsed_data['body']['openc2']['response']['results']['x-ctxd']
-            inserted_id = collection.insert_one(result).inserted_id
+            collection.insert_one(result).inserted_id
             nodes_visited.add(peer_hostname)
 
 

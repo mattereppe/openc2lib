@@ -145,17 +145,26 @@ class CTXDActuator_docker(CTXDActuator):
 		s.connect(("8.8.8.8", 80)) # Finta connessione a un IP pubblico per ottenere l'indirizzo IP 192.168.0.X
 		vm_ip = s.getsockname()[0]
 
+		#if the vm is already created, I don't create a link otherwise I create link, service and actuator
+		if(any(item[1] == vm_hostname for item in self.actuators) == False):
+			vm_hosting_peer = Peer(service_name= Name('vm\n' + vm_ip), 
+							role= PeerRole(4), #VM hosts docker
+							consumer=Consumer(server=Server(Hostname(vm_hostname)),
+												port=self.port,
+												protocol= L4Protocol(self.protocol),
+											    endpoint=self.endpoint,
+												transfer=Transfer(self.transfer),
+												encoding=Encoding(self.encoding)))
 
-		vm_hosting_peer = Peer(service_name= Name('vm\n' + vm_ip), 
-						role= PeerRole(4), #VM hosts docker
-						consumer=Consumer(server=Server(Hostname(vm_hostname)),
-											port=self.port,
-											protocol= L4Protocol(self.protocol),
-										    endpoint=self.endpoint,
-											transfer=Transfer(self.transfer),
-											encoding=Encoding(self.encoding)))
+			links.append(Link(name = Name(vm_hostname), link_type=LinkType(2), peers=ArrayOf(Peer)([vm_hosting_peer])))
 
-		links.append(Link(name = Name(vm_hostname), link_type=LinkType(2), peers=ArrayOf(Peer)([vm_hosting_peer])))
+			self.actuators[(ctxd.Profile.nsid,str(vm_hostname))] = CTXDActuator(services= self.get_services_hosting_vm(),
+																	   links= ArrayOf(Link)(),
+																	   domain=None,
+																	   asset_id=str(vm_hostname))
+
+
+
 		#-------------END CREATION LINK TO HOSTING VM------------------------------------
 
 		#now create a link for each active container
@@ -164,13 +173,13 @@ class CTXDActuator_docker(CTXDActuator):
 		for container in containers:
 			tmp_container = Peer(service_name=(Name('container\n' + container.attrs['NetworkSettings']['IPAddress'])),
 								role= PeerRole(9), #Docker controls the container
-								consumer=Consumer(server=Server(Hostname(vm_hostname)),
+								consumer=Consumer(server=Server(Hostname(container.attrs['Name'].lstrip('/'))), #remove / 
 								port=self.port,
 								protocol= L4Protocol(self.protocol),
 								endpoint=self.endpoint,
 								transfer=Transfer(self.transfer),
 								encoding=Encoding(self.encoding)))
-			links.append(Link(name = Name(container.attrs['Name']), link_type=LinkType(4), peers=ArrayOf(Peer)([tmp_container])))
+			links.append(Link(name = Name(container.attrs['Name'].lstrip('/')), link_type=LinkType(4), peers=ArrayOf(Peer)([tmp_container])))
 
 		return links
 	
@@ -181,13 +190,13 @@ class CTXDActuator_docker(CTXDActuator):
 
 		tmp_container = Container(description='container',
             		   	              id=container.attrs['Id'],
-                   			          hostname=Hostname(container.attrs['Name']),
+                   			          hostname=Hostname(container.attrs['Name'].lstrip('/')),
                         		      runtime = None,
                             		  os=None)
 
-		service_container = Service(name= Name(container.attrs['Name']), type=ServiceType(tmp_container), links= ArrayOf(Name)([]),
+		service_container = Service(name= Name(container.attrs['Name'].lstrip('/')), type=ServiceType(tmp_container), links= ArrayOf(Name)([]),
             		                             subservices=None, owner='Docker, Inc.', release=None, security_functions=None,
-                		                         actuator=Consumer(server=Server(Hostname(container.attrs['Name'])),
+                		                         actuator=Consumer(server=Server(Hostname(container.attrs['Name'].lstrip('/'))),
                     		                                        port=self.port,
 																	protocol= L4Protocol(self.protocol),
 													    			endpoint=self.endpoint,
@@ -199,11 +208,26 @@ class CTXDActuator_docker(CTXDActuator):
 	def get_connected_actuators(self):
 
 		for link in self.my_links: #explore link between docker and managed containers
-			if(link.link_type == 4): #only the link type = 4 (control)
+			if(link.link_type.name == "control"): #only the controlled containers
 				self.actuators[(ctxd.Profile.nsid,str(link.name.obj))] = CTXDActuator(services= self.get_container_service(str(link.name.obj)),
                                                                             	links= ArrayOf(Link)(),
                                                                                 domain=None,
                                                                                 asset_id=str(link.name.obj))
 
-
+	def get_services_hosting_vm(self):
+		docker = self.conn.info()
+		tmp_vm = VM(description='vm', 
+                        id= docker['ID'], 
+                        hostname= Hostname(docker['Name']), 
+                        os= OS(family=docker['Operating System'], name=docker['OSType']))
+		
+		vm_service = Service(name= Name(docker['Name']), type=ServiceType(tmp_vm), links= ArrayOf(Link)([]),
+                                         subservices=None, release=None, security_functions=None,
+                                         actuator=Consumer(server=Server(Hostname(docker['Name'])),
+                                                            port=self.port,
+															protocol= L4Protocol(self.protocol),
+											    			endpoint=self.endpoint,
+															transfer=Transfer(self.transfer),
+															encoding=Encoding(self.encoding)))
+		return ArrayOf(Service)([vm_service])
 

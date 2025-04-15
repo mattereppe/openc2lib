@@ -4,11 +4,14 @@
 	It only answers to the request for available features.
 """
 
+import socket
 import subprocess
 import json
 import os
 import logging
 import sys
+
+import docker
 from openc2lib.profiles import slpf
 from openc2lib.profiles.ctxd.data.application import Application
 from openc2lib.profiles.ctxd.data.openc2_endpoint import OpenC2Endpoint
@@ -325,6 +328,19 @@ class CTXDActuator_kubernetes(CTXDActuator):
 		links.append(Link(name = Name('os-fw'), description="slpf", link_type=LinkType(5), peers=ArrayOf(Peer)([slpf_peer])))
 		#end creation of dumb slpf
 
+		#create a link to docker service if it is active
+		if(str(asset_id) == self.get_hostname_if_docker_active()):
+			docker_peer = Peer(service_name= Name('docker'),
+					  			role= PeerRole(3), #docker is hosted on the vm
+								consumer=Consumer(server=Server(Hostname('docker')),
+								port=self.port,
+								protocol= L4Protocol(self.protocol),
+								endpoint=self.endpoint,
+								transfer=Transfer(self.transfer),
+								encoding=Encoding(self.encoding)))
+			links.append(Link(name = Name('docker'), description="docker", link_type=LinkType(2), peers=ArrayOf(Peer)([docker_peer])))
+		#end creation link to docker
+
 		return links
 	
 	def get_container_service(self, asset_id):
@@ -469,3 +485,12 @@ class CTXDActuator_kubernetes(CTXDActuator):
                             links= ArrayOf(Link)([]),
                             domain=None,
                         	asset_id=str(name))
+
+	def get_hostname_if_docker_active(self):
+		try:
+			client = docker.from_env()
+			client.ping()  # This will raise an exception if Docker isn't running
+			return socket.gethostname()
+		except Exception as e:
+			print(f"Docker is not running or not accessible: {e}")
+			return None
