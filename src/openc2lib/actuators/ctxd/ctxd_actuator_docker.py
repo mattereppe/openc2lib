@@ -68,7 +68,6 @@ class CTXDActuator_docker(CTXDActuator):
 	"""It identifies the type of the service"""
 	domain : str = None
 	asset_id : str = None
-	actuators: any = None
 	hostname: any = None
 	ip: any = None
 	port: any = None
@@ -76,14 +75,14 @@ class CTXDActuator_docker(CTXDActuator):
 	endpoint: any = None
 	transfer: any = None
 	encoding: any = None
+	actuators: any = None
 	conn : any = None #connection to docker
 
-	def __init__(self, domain, asset_id, actuators, hostname, ip, port, protocol, endpoint, transfer, encoding):
+	def __init__(self, domain, asset_id, hostname, ip, port, protocol, endpoint, transfer, encoding, actuators):
 		MY_IDS['domain'] = domain
 		MY_IDS['asset_id'] = asset_id
 		self.domain = domain
 		self.asset_id = asset_id
-		self.actuators = actuators
 		self.hostname = hostname
 		self.ip = ip
 		self.port = port
@@ -91,11 +90,13 @@ class CTXDActuator_docker(CTXDActuator):
 		self.endpoint = endpoint
 		self.transfer = transfer
 		self.encoding = encoding
+		self.actuators = actuators
 		
-		self.conn = self.connect_to_docker()
+		self.connect_to_docker()
+
 		self.my_links = self.get_links()
 		self.my_services = self.get_services()
-
+		self.get_connected_actuators()
 
 
 	def connect_to_docker(self):
@@ -173,19 +174,18 @@ class CTXDActuator_docker(CTXDActuator):
 
 		return links
 	
-	def get_container_service(self):
+	def get_container_service(self, name):
 		array_container = ArrayOf(Service)()
 		#now create a service for each active container
-		containers = self.conn.containers.list() #only active containers
+		container = self.conn.containers.get(name) #only active containers
 
-		for container in containers:
-			tmp_container = Container(description='container',
+		tmp_container = Container(description='container',
             		   	              id=container.attrs['Id'],
                    			          hostname=Hostname(container.attrs['Name']),
                         		      runtime = None,
                             		  os=None)
 
-			service_container = Service(name= Name(container.attrs['Name']), type=ServiceType(tmp_container), links= ArrayOf(Name)([]),
+		service_container = Service(name= Name(container.attrs['Name']), type=ServiceType(tmp_container), links= ArrayOf(Name)([]),
             		                             subservices=None, owner='Docker, Inc.', release=None, security_functions=None,
                 		                         actuator=Consumer(server=Server(Hostname(container.attrs['Name'])),
                     		                                        port=self.port,
@@ -193,8 +193,17 @@ class CTXDActuator_docker(CTXDActuator):
 													    			endpoint=self.endpoint,
 																	transfer=Transfer(self.transfer),
 																	encoding=Encoding(self.encoding)))
-			array_container.append(service_container)
+		array_container.append(service_container)
+		return array_container
 
+	def get_connected_actuators(self):
+
+		for link in self.my_links: #explore link between docker and managed containers
+			if(link.link_type == 4): #only the link type = 4 (control)
+				self.actuators[(ctxd.Profile.nsid,str(link.name.obj))] = CTXDActuator(services= self.get_container_service(str(link.name.obj)),
+                                                                            	links= ArrayOf(Link)(),
+                                                                                domain=None,
+                                                                                asset_id=str(link.name.obj))
 
 
 

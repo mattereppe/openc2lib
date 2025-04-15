@@ -6,6 +6,7 @@ import subprocess
 
 import openc2lib as oc2
 
+from openc2lib.actuators.ctxd.ctxd_actuator_docker import CTXDActuator_docker
 from openc2lib.encoders.json import JSONEncoder
 from openc2lib.transfers.http import HTTPTransfer
 from openc2lib.actuators.ctxd.ctxd_actuator import CTXDActuator
@@ -71,6 +72,20 @@ def main():
                                                                                                 namespace = element['namespace'],
                                                                                                 config_file = element['config_file'],
                                                                                                 kube_context = element['kube_context'])
+            
+            elif(element["type"] == "docker"):
+                #CTXDActuator_docker is able to find the hosting VM and managed containers
+                actuators[(ctxd.Profile.nsid, element['asset_id'])] = CTXDActuator_docker(domain= None,
+                                                                                                asset_id= element['asset_id'],
+                                                                                                hostname = element['hostname'],
+                                                                                                ip = element['ip'],
+                                                                                                port = element['port'],
+                                                                                                protocol = element['protocol'],
+                                                                                                endpoint = element['endpoint'],
+                                                                                                transfer = element['transfer'],
+                                                                                                encoding = element['encoding'],
+                                                                                                actuators = actuators)
+
             else:
                 raise Exception("type must be equal to openstack or kubernetes")
 
