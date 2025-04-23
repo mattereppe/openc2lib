@@ -4,7 +4,7 @@ Mapping
 The following table maps the OpenC2 elements and related Sections of the
 `OpenC2 Language
 Specification <https://docs.oasis-open.org/openc2/oc2ls/v1.0/cs02/oc2ls-v1.0-cs02.pdf>`__
-to the openc2lib modules where they are defined.
+to ``otupy`` modules where they are defined.
 
 =============== ======= ======== ================
 Name            Section Location Module
