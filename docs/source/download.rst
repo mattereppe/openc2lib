@@ -45,12 +45,14 @@ You can either:
 
 - add the library path to the ``PYTHONPATH`` environmental variable (this is not persistent when you close the shell):
 
-::
+.. code-block:: bash
+
    export PYTHONPATH=$PYTHONPATH':<_your_path_here_>'
 
 - add the library path to the venv (this is my preferred option):
 
-::
+.. code-block::
+
    echo '<_your_path_here_>/src' > .env/lib/python3.11/site-packages/otupy.pth
 
 A few scripts are available in the ``examples`` folder of the repository for sending a simple commmand to a remote actuator (see
