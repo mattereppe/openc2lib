@@ -14,37 +14,16 @@ communication (e.g., name of the producer). However, each message can be
 sent to a different endpoint from the same producer (hence, the
 corresponding attributes should be passed to the send method).
 
-TODO: add the function to receive the response (blocking/non-blocking?)
-
 Messages
 ~~~~~~~~
 
 This is another major change to my previous understanding. After
 re-considering the code in a more thorough manner, I came to these
-conclusions: 1) The correct terminology used by the language
-specification is Command and Response, so we will use these from now on.
-Indeed, the transfer specification for HTTP might seem ambiguous on this
-point, since it refers to Request/Response. However, this terminology is
-referred to HTTP, not OpenC2: an HTTP Request carries an OpenC2 Command,
-and an HTTP Response carries an OpenC2 Response (same term in the second
-case). 2) Command/Response are a type of content, so they are now
-derived from this base class. Indeed, the class Content is empty, but we
-use it to have a common reference to hold both a Command and a Response
-element (this is used in the Message class). 3) Message is indeed poorly
-defined in the standard, and I really realized that only recently. The
-language specification lists the fields of the Message element at the
-beginning of Sec. 3.2, but does not dictates its structure as for the
-other elements. I came to the conclusion that there is not explicit
-definition of a Message structure (this intuition is confirmed by the
-fact the all examples in the language specification only show
-Commands/Responses, but not full Messages). Only after reading carefully
-the text, I noticed that “transfer specifications define the on-the-wire
-format of a Message”, which means that only the concrete transfer
-specification defines the full Message structure (e.g., HTTP in Sec.
-3.3.2). The class Message is therefore now conceived to carry the
-metadata that will be used to create the Message, but their usage is
-left to the specific transfer protocols (see the current example for
-HTTP/HTTPS).
+conclusions: 
+
+1. The correct terminology used by the language specification is Command and Response, so we will use these from now on. Indeed, the transfer specification for HTTP might seem ambiguous on this point, since it refers to Request/Response. However, this terminology is referred to HTTP, not OpenC2: an HTTP Request carries an OpenC2 Command, and an HTTP Response carries an OpenC2 Response (same term in the second case). 
+2. Command/Response are a type of content, so they are now derived from this base class. Indeed, the class Content is empty, but we use it to have a common reference to hold both a Command and a Response element (this is used in the Message class). 
+3. Message is indeed poorly defined in the standard, and I really realized that only recently. The language specification lists the fields of the  Message element at the beginning of Sec. 3.2, but does not dictates its structure as for the other elements. I came to the conclusion that there is not explicit definition of a Message structure (this intuition is confirmed by the fact the all examples in the language specification only show Commands/Responses, but not full Messages). Only after reading carefully the text, I noticed that “transfer specifications define the on-the-wire format of a Message”, which means that only the concrete transfer specification defines the full Message structure (e.g., HTTP in Sec. 3.3.2). The class Message is therefore now conceived to carry the metadata that will be used to create the Message, but their usage is left to the specific transfer protocols (see the current example for HTTP/HTTPS).
 
 Actions
 ~~~~~~~
@@ -71,7 +50,9 @@ trivial with the json package. This suggested me the idea of using an
 intermediary representation of all messages as dictionary, and then
 translate this representation to json or any other format:
 
-Python objection → dictionary → json, xml, yaml, …
+::
+
+  Python objection → dictionary → json, xml, yaml, …
 
 So now a to_json method for each object is no more necessary, because
 the conversion to dictionary is standard and can be done in a general
@@ -106,10 +87,5 @@ additional rules must be added when the missing base types are added..
 Transfer
 ~~~~~~~~
 
-I partially implemented the HTTP transfer class to show how the whole
-payload could be created in a more elegant way from the Message
-metadata, and by exploiting the Encoding function.
-
-TODO: add specific code to send/receive HTTP messages.(Send message
-function is finish)
+TODO
 
