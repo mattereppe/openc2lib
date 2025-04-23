@@ -1,5 +1,5 @@
-Define language extensions
---------------------------
+Define new profiles (language extensions)
+-----------------------------------------
 
 Language extensions are typically defined as part of the definition of an Actuator profile. The following elements can be extended: 
 
