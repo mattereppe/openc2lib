@@ -38,7 +38,7 @@ You can either:
 
 - add the library path in your code (this must be done for every module):
 
-::
+.. code-block:: python3::
    import sys   
    sys.path.append('<_your_path_here_>') 
 
