@@ -1,7 +1,7 @@
 Background
 ==========
 
-Users of the openc2lib are expected to be familiar with the following relevant documents: 
+Users of the ``otupy`` are expected to be familiar with the following relevant documents: 
 
 * `OpenC2 Language Specification <https://docs.oasis-open.org/openc2/oc2ls/v1.0/cs02/oc2ls-v1.0-cs02.pdf>`__
 * `OpenC2 Architecture Specification <https://docs.oasis-open.org/openc2/oc2ls/v1.0/cs02/oc2ls-v1.0-cs02.pdf>`__
