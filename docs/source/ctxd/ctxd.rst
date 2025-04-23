@@ -1,8 +1,8 @@
 Context Discovery Actuator Profile
-==================================
+-----------------------------------
 
 1. Goals of Context Discovery
------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 To fill the gap left by the OpenC2 specifications, a new Actuator
 Profile has been introduced with the goal to abstract the services that
@@ -29,7 +29,7 @@ Command specifying that the Actuator to execute it is CTXD. If the
 Consumer implements CTXD, it will return a Response.
 
 2. Data model
--------------
+~~~~~~~~~~~~~~~~
 
 A data model is implemented to define which data the CTXD stores and the
 relationship between them. The most important data stored are:
@@ -61,7 +61,7 @@ relationship between them. The most important data stored are:
    Centered Image
 
 3. Command Components
----------------------
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 This section identifies the applicable components of an OpenC2 Command.
 The components of an OpenC2 Command include:
