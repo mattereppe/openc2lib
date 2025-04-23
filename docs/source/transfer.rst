@@ -3,7 +3,7 @@ Adding new transfer protocols
 
 A transfer protocol is derived from the ``Transfer`` class:
 
-::
+.. code-block:: python3
 
    class Transfer:
 
