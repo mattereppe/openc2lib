@@ -120,27 +120,3 @@ A new target, called “context” is inserted because the Target “features”
 refers only to the Actuator capabilities and not to the characteristics
 of the execution environment.
 
-3.3 Context
-~~~~~~~~~~~
-
-Type: Context (Record)
-
-+---+-----+------------+---+--------------------------------------------+
-| I | N   | Type       | # | Description                                |
-| D | ame |            |   |                                            |
-+===+=====+============+===+============================================+
-| 1 | se  | Arr        | 0 | List the service names that the command    |
-|   | rvi | ayOf(Name) | . | refers to.                                 |
-|   | ces |            | . |                                            |
-|   |     |            | 1 |                                            |
-+---+-----+------------+---+--------------------------------------------+
-| 2 | li  | Arr        | 0 | List the link names that the command       |
-|   | nks | ayOf(Name) | . | refers to.                                 |
-|   |     |            | . |                                            |
-|   |     |            | 1 |                                            |
-+---+-----+------------+---+--------------------------------------------+
-
-The Target Context is used when the Producer wants to know the
-information of all active services and links of the Consumer. The
-Producer can specify the names of the services and links it is
-interested in.
