@@ -8,8 +8,8 @@ Extensions include:
 .. toctree::
    :maxdepth: 1
 
-   encoders
-   transfers
+   encoding
+   transfer
    profiles
    actuators
 
