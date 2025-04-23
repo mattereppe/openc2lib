@@ -100,4 +100,20 @@ Target is a mandatory field in Command message, and it is possible to
 define new Targets that are not present in the specifications. Only one
 Target is allowed in a Command, and that’s why the cardinality of each
 one equals to 1.
+Type: Target (Choice)
+
++---+----+----+---+-------------------------------------------------------+
+| I | Na | Ty | # | Description                                           |
+| D | me | pe |   |                                                       |
++===+====+====+===+=======================================================+
+| 9 | fe | Fe | 1 | A set of items used with the query Action to          |
+|   | at | at |   | determine an Actuator’s capabilities.                 |
+|   | ur | ur |   |                                                       |
+|   | es | es |   |                                                       |
++---+----+----+---+-------------------------------------------------------+
+| 2 | c  | C  | 1 | It describes the service environment, its connections |
+| 0 | on | on |   | and security capabilities.                            |
+| 4 | te | te |   |                                                       |
+| 8 | xt | xt |   |                                                       |
++---+----+----+---+-------------------------------------------------------+
 
