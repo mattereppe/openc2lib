@@ -52,9 +52,15 @@ Getting started
 Advanced usage
 --------------
 
+Advanced usage of the openc2lib requires knowledge of its data
+structures and functions. Data structures are very straightforward to
+learn, because they strictly follow the definition and requirements in
+the common Language Specification and Profile extensions. 
+
 .. toctree::
    :maxdepth: 1
 
+   developerguide
    extensions
 
 
@@ -66,12 +72,8 @@ Advanced usage
 Advanced usage
 --------------
 
-Advanced usage of the openc2lib requires knowledge of its data
-structures and functions. Data structures are very straightforward to
-learn, because they strictly follow the definition and requirements in
-the common Language Specification and Profile extensions. See the
-`Developer guide <docs/developerguide.md>`__ for a comprehensive
-description of the library structure.
+
+
 
 [comment]: <> User documentation of the openc2lib is available
 `here <docs/code/index.html>`__. User documentation of the openc2lib
