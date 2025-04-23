@@ -116,7 +116,4 @@ Type: Target (Choice)
 | 4 | te | te |   |                                                       |
 | 8 | xt | xt |   |                                                       |
 +---+----+----+---+-------------------------------------------------------+
-A new target, called “context” is inserted because the Target “features”
-refers only to the Actuator capabilities and not to the characteristics
-of the execution environment.
 
