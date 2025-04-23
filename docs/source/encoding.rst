@@ -17,7 +17,7 @@ OpenC2 messages; - a class member ``encoder_type`` with the name of the
 Encoder; - registration of the new ``Encoder`` via the
 ``@register_encoder`` decorator.
 
-::
+.. code-block:: python3
 
    @register_encoder
    class MyEncoder(Encoder):
