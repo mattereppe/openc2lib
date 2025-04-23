@@ -117,3 +117,15 @@ Type: Target (Choice)
 | 8 | xt | xt |   |                                                       |
 +---+----+----+---+-------------------------------------------------------+
 
+Usage Requirements
+~~~~~~~~~~~~~~~~~~
+
+-  Producer may send a “query” Command with no fields to the Consumer,    which could return a heartbeat to this command.
+-  A Producer may send a “query” Command containing an empty list of    services. The Consumer should return all the services.
+-  A Producer may send a “query” Command containing an empty list of    links. The Consumer should return all the links.
+-  A Producer may send a “query” Command containing an empty list of    services and links. The Consumer should return all the services and
+   links.
+
+
+
+
