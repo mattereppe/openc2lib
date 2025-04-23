@@ -194,7 +194,8 @@ class CTXDActuator_docker(CTXDActuator):
                         		      runtime = None,
                             		  os=None)
 
-		service_container = Service(name= Name(container.attrs['Name'].lstrip('/')), type=ServiceType(tmp_container), links= ArrayOf(Name)([]),
+		service_container = Service(name= Name(container.attrs['Name'].lstrip('/')), type=ServiceType(tmp_container), 
+							  					links= self.get_name_links(self.get_container_links(container.attrs['Name'].lstrip('/'))),
             		                             subservices=None, owner='Docker, Inc.', release=None, security_functions=None,
                 		                         actuator=Consumer(server=Server(Hostname(container.attrs['Name'].lstrip('/'))),
                     		                                        port=self.port,
@@ -230,4 +231,26 @@ class CTXDActuator_docker(CTXDActuator):
 															transfer=Transfer(self.transfer),
 															encoding=Encoding(self.encoding)))
 		return ArrayOf(Service)([vm_service])
+	
+	def get_container_links(self, container_name):
+		links = ArrayOf(Link)()
+		
+		#create a link packet_flow between the container andthe docker network
+		container = self.conn.containers.get(container_name)
+		# Get connected network names (these match docker network ls)
+		network_names = container.attrs['NetworkSettings']['Networks'].keys()
+
+		print("Container is connected to the following networks:")
+		for network_name in network_names:
+			tmp_network = Peer(service_name=(Name(network_name)),
+								role= PeerRole(7), #Both -> the communication between different containers can be egress and/or ingress
+								consumer=Consumer(server=Server(Hostname(network_name)), #remove / 
+								port=self.port,
+								protocol= L4Protocol(self.protocol),
+								endpoint=self.endpoint,
+								transfer=Transfer(self.transfer),
+								encoding=Encoding(self.encoding)))
+		#create a packet flow link
+		links.append(Link(name = Name(network_name), link_type=LinkType(3), peers=ArrayOf(Peer)([tmp_network])))
+		return links
 

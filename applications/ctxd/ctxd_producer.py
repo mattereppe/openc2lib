@@ -180,7 +180,6 @@ def main(openstack_parameters, collection):
             s.node('os-fw')
             s.node('kubernetes')
             s.node('openstack')
-            s.node('kube-fw')
 
 
         dot.render(os.path.dirname(os.path.abspath(__file__))+'/example_graph' , view=False)
