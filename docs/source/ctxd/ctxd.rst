@@ -247,7 +247,7 @@ Type: OpenC2-Response (Map)
 .. _response-components-1:
 
 4 Response Components
----------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This section defines the Response Components relevant to the CTXD
 Actuator Profile. The table below outlines the fields that constitute an
@@ -400,7 +400,7 @@ Usage requirements:
    argument in the query.
 
 5 CTXD data types
------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 With the introduction of new data types that are not specified in the
 original specifications, it is necessary to define these types along
