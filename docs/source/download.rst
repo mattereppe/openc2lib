@@ -1,6 +1,27 @@
 Download and setup
 ~~~~~~~~~~~~~~~~~~
 
+`otupy` is currently available as Python package and source code.
+
+Install the package with `pip`:
+```
+pip install otupy
+```
+
+Alternatively, download it from github:
+```
+git clone https://github.com/mattereppe/openc2.git
+```
+(this creates an `openc2` folder).
+In this case, you have to manually install all dependencies:
+```
+pip install -r requirements.txt
+```
+
+
+
+
+
 The openc2lib is currently available as source code only. Dowload it
 from github:
 
