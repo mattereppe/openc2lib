@@ -5,21 +5,21 @@ Download and setup
 
 Install the package with `pip`:
 
-::
+.. code-block:: bash
 
    pip install otupy
 
 
 Alternatively, download it from ``github``:
 
-::
+.. code-block:: bash
 
    git clone https://github.com/mattereppe/otupy.git
 
 (this creates an ``otupy`` folder).
 In this case, you have to manually install all dependencies:
 
-::
+.. code-block:: bash
 
    pip install -r requirements.txt
 
@@ -27,7 +27,7 @@ If you installed from ``github``, you might want to create and run it in a virtu
 First, create a virtual environment and populate it with Python
 dependecies:
 
-::
+.. code-block:: bash
 
    python3 -m venv .env
    . .env/bin/activate
@@ -51,7 +51,7 @@ You can either:
 
 - add the library path to the venv (this is my preferred option):
 
-.. code-block::
+.. code-block:: bash
 
    echo '<_your_path_here_>/src' > .env/lib/python3.11/site-packages/otupy.pth
 
