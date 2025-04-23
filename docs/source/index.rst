@@ -61,7 +61,7 @@ the common Language Specification and Profile extensions.
    :maxdepth: 1
 
    developerguide
-   extensions
+   developingextensions
 
 
 
