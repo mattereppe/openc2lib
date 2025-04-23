@@ -1,5 +1,6 @@
 Context Discovery Actuator Profile
-==================================
+----------------------------------
+
 
 1. Goals of Context Discovery
 -----------------------------
