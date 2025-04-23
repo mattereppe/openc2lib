@@ -14,23 +14,27 @@ communication (e.g., name of the producer). However, each message can be
 sent to a different endpoint from the same producer (hence, the
 corresponding attributes should be passed to the send method).
 
-TODO: add the function to receive the response (blocking/non-blocking?)
-
 Messages
 ~~~~~~~~
 
 This is another major change to my previous understanding. After
 re-considering the code in a more thorough manner, I came to these
-conclusions: 1) The correct terminology used by the language
+conclusions: 
+
+1. The correct terminology used by the language
 specification is Command and Response, so we will use these from now on.
 Indeed, the transfer specification for HTTP might seem ambiguous on this
 point, since it refers to Request/Response. However, this terminology is
 referred to HTTP, not OpenC2: an HTTP Request carries an OpenC2 Command,
 and an HTTP Response carries an OpenC2 Response (same term in the second
-case). 2) Command/Response are a type of content, so they are now
+case). 
+
+2. Command/Response are a type of content, so they are now
 derived from this base class. Indeed, the class Content is empty, but we
 use it to have a common reference to hold both a Command and a Response
-element (this is used in the Message class). 3) Message is indeed poorly
+element (this is used in the Message class). 
+
+3. Message is indeed poorly
 defined in the standard, and I really realized that only recently. The
 language specification lists the fields of the Message element at the
 beginning of Sec. 3.2, but does not dictates its structure as for the
