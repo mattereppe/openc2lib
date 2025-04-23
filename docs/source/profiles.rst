@@ -94,8 +94,6 @@ actuator profile in log messages.
 Define new types
 ~~~~~~~~~~~~~~~~
 
-\**\* WARNING: need to better check and revise this Section \**\*
-
 Adding new types can be done within each new Profile. Beaware that new
 types usually needs to support the “copy-constructor”, i.e., they must
 support initialization from an object of the same type.
@@ -107,11 +105,10 @@ Targets are just specific OpenC2 data types that can be used as
 ``Target`` in ``Command``\ s. Any data type can be made a ``Target`` by
 decorating it with the ``@target(name, nsid)`` tag. This decorator
 automatically manages all the stuff to register new targets in
-``otupy``. It takes two arguments, namely: - ``name``: the name
-associated to each type (e.g., see Sec. 3.3.1.2 in the `Language
-Specification <https://docs.oasis-open.org/openc2/oc2ls/v1.0/cs02/oc2ls-v1.0-cs02.pdf>`__);
-- ``nsid``: the namespace identifier of the profile that defines the
-``Target`` (default to ``None``, which means a ``Target`` defined in the
+``otupy``. It takes two arguments, namely: 
+
+- ``name``: the name associated to each type (e.g., see Sec. 3.3.1.2 in the `Language Specification <https://docs.oasis-open.org/openc2/oc2ls/v1.0/cs02/oc2ls-v1.0-cs02.pdf>`__);
+- ``nsid``: the namespace identifier of the profile that defines the ``Target`` (default to ``None``, which means a ``Target`` defined in the
 core specification).
 
 This is an example for the SLPF profile:
@@ -194,24 +191,21 @@ decorator in front of the class definition.
 
 This is an example for the ``Process`` target:
 
-.. raw:: html
+.. code-block:: python3
 
-   <pre>
-     from typing import Self
-     ...
-     @Map.make_recursive
-     class Process(Map):
-       fieldtypes = {'pid': int, 'name': str, 'cwd': str, 'executable': File, 'parent': <b>Self</b>, 'command_line': str}
-   </pre>
+   from typing import Self
+   ...
+   @Map.make_recursive
+   class Process(Map):
+      fieldtypes = {'pid': int, 'name': str, 'cwd': str, 'executable': File, 'parent': <b>Self</b>, 'command_line': str}
 
 As a result, the ``Map`` class has the following ``fieldtypes``
 definition:
 
-.. raw:: html
+.. code-block:: python3
 
-   <pre>
    fieldtypes = {'pid': int, 'name': str, 'cwd': str, 'executable': File, 'parent': <b>Process</b>, 'command_line': str}
-   </pre>
+  
 
 The ``@make_recursive`` decorator is implemented for each base type
 (e.g., ``Map``). Check the code documentation to know what base types
@@ -222,7 +216,7 @@ Syntax validation
 
 Profiles are likely to restrict the possible combination of ``Actions``,
 ``Target``, and ``Args``. Since these restrictions are common to all
-``Actuator``\ s, they can be defined only once within the profile.
+``Actuator``s, they can be defined only once within the profile.
 Specific functions must be exported to perform the validation; the
 internal implementation does not need to follow any specific template.
 Note, however, that actuators are not expected to implement any possible
@@ -241,7 +235,7 @@ importing all data, classes, and functions to be exported in the
 very simple and natural way under their profile namespace (which is very
 similar to what expected by the specifications):
 
-::
+.. code-block:: python3
 
    import otupy.profiles.slpf as slpf
 
