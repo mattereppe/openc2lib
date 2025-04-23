@@ -62,6 +62,7 @@ the common Language Specification and Profile extensions.
 
    developerguide
    developingextensions
+	logging
 
 
 
