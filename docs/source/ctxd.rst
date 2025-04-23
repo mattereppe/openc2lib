@@ -180,28 +180,3 @@ Type: Args (Map)
 | 8 |         |       | 1 |                                             |
 +---+---------+-------+---+---------------------------------------------+
 
-Command Arguments are optional, and a new one called “name_only” has
-been defined, which is not present in the Language Specification.
-
-.. _usage-requirements-1:
-
-Usage requirements:
-~~~~~~~~~~~~~~~~~~~
-
--  The “response_requested”: “complete” argument can be present in the
-   “query features” Command. (Language specification 4.1)
--  The “query context” Command may include the “response_requested”:
-   “complete” Argument.
--  The “query context” command may include the “name_only” argument:
-
-   -  If TRUE, the Consumer must send a Response containing only the
-      names of the services and/or links.
-   -  If FALSE, the Consumer must send a Response containing all the
-      details of the services and/or links.
-
-3.5 Actuator Specifiers
-~~~~~~~~~~~~~~~~~~~~~~~
-
-List of Actuators Specifiers that are applicable to the Actuator. This
-is an optional field. These specifiers are not present in the Language
-Specification.
