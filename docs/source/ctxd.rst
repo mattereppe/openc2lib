@@ -158,25 +158,5 @@ Usage Requirements
    services and links. The Consumer should return all the services and
    links.
 
-3.4 Command Arguments
-~~~~~~~~~~~~~~~~~~~~~
-
-Type: Args (Map)
-
-+---+---------+-------+---+---------------------------------------------+
-| I | Name    | Type  | # | Description                                 |
-| D |         |       |   |                                             |
-+===+=========+=======+===+=============================================+
-| 4 | resp    | Res   | 0 | The type of Response required for the       |
-|   | onse_re | ponse | . | Command: none, ack, status, complete.       |
-|   | quested | -Type | . |                                             |
-|   |         |       | 1 |                                             |
-+---+---------+-------+---+---------------------------------------------+
-| 2 | na      | Bo    | 0 | The response includes either only the name  |
-| 0 | me_only | olean | . | or all the details about the services and   |
-| 4 |         |       | . | the links.                                  |
-| 8 |         |       | 1 |                                             |
-+---+---------+-------+---+---------------------------------------------+
-
 
 
