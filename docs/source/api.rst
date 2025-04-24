@@ -4,14 +4,14 @@ API Reference
 .. currentmodule:: otupy
 
 .. automodule:: otupy
-  :members: Binary
+  :members:
 
 .. autosummary::
    :toctree: _autosummary
    :template: custom-module-template.rst
    :recursive:
 
-   mytoolbox
+   otupy
 
 
 Indices and tables
