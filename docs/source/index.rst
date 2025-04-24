@@ -95,8 +95,8 @@ Additional notes
    :maxdepth: 1
 
    authors
-	contributing
-	changelog
-	license
+   contributing
+   changelog
+   license
 
 
