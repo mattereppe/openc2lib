@@ -6,6 +6,12 @@ API Reference
 .. automodule:: otupy
   :members: Binary
 
+.. autosummary::
+   :toctree: _autosummary
+   :template: custom-module-template.rst
+   :recursive:
+
+   mytoolbox
 
 
 Indices and tables
