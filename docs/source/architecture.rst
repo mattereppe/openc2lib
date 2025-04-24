@@ -44,6 +44,6 @@ is a *profile* that defines all grammar and syntax rules for adding and
 removing rules from a packet firewall. The corresponding *actuators*
 must translate this abstract interface to concrete commands (e.g., for
 iptables, pfsense). A more detailed discussion is present in the
-`Developing extensions <docs/developingextensions.md>`__ Section.
+:doc:`developingextensions` Section.
 
 
