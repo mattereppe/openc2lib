@@ -60,6 +60,7 @@ the common Language Specification and Profile extensions.
 .. toctree::
    :maxdepth: 1
 
+   api
    developerguide
    developingextensions
    logging
