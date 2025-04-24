@@ -3,7 +3,7 @@ API Reference
 
 .. currentmodule:: otupy
 
-.. automodule:: otupy.otupy
+.. automodule:: otupy.actuators
   :members:
 
 .. autosummary::
