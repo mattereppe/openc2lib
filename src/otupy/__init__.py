@@ -20,6 +20,7 @@ This documentation uses docstrings in the Python code. You can regenerate it by 
 	pdoc -o docs/code src/otupy
 
 or you can run your own websever with:
+
 .. code-block:: python3
 
 	pdoc src/otupy/
