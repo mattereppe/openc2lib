@@ -101,4 +101,10 @@ Additional notes
    changelog
    license
 
+Test
+----
 
+.. toctree::
+   :hidden:
+
+   API reference <_autosummary/src/otupy>
