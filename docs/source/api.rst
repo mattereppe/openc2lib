@@ -4,7 +4,7 @@ API reference
 
 .. autosummary::
    :toctree: _autosummary
-	:template: custom-module-template.rst
+   :template: custom-module-template.rst
    :recursive:
 
    otupy
