@@ -14,7 +14,7 @@ from otupy.transfers.http import HTTPTransfer
 from otupy.actuators.iptables_actuator import IptablesActuator
 import otupy.profiles.slpf as slpf
 import otupy.profiles.dumb as dumb
-from otupy.actuators.dumb_actuator import DumbActuator
+from otupy.actuators.slpf.dumb_actuator import DumbActuator
 
 #logging.basicConfig(filename='consumer.log',level=logging.DEBUG)
 #logging.basicConfig(stream=sys.stdout,level=logging.DEBUG)
