@@ -5,7 +5,7 @@ Types are the definition of data structures compliant with the
 requirements and naming in the `OpenC2 Language
 Specification <https://docs.oasis-open.org/openc2/oc2ls/v1.0/cs02/oc2ls-v1.0-cs02.pdf>`__.
 This includes both data types and target types, listed in Sec. 3.4 (see
-:doc:`mapping>`).
+:doc:`mapping`).
 
 Base Types
 ~~~~~~~~~~
