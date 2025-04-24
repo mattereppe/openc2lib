@@ -5,3 +5,9 @@ API Reference
 
 .. automodule:: otupy
   :members:
+
+.. autosummary::
+   :toctree: _autosummary
+   :recursive:
+
+   otupy
