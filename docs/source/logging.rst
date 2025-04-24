@@ -2,7 +2,7 @@ Logging for ``otupy``
 =====================
 
 Logging in ``otupy`` leverages the Python
-``logging`` <https://docs.python.org/3/library/logging.html>__
+` ``logging`` <https://docs.python.org/3/library/logging.html>`_
 framework. Applications that use ``otupy`` can trigger and configure
 logging for all ``otupy`` modules according to the usual hierarchical
 logging approach.
