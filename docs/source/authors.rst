@@ -1,5 +1,5 @@
 Authors and acknowledgment
 --------------------------
 
--  The Context Discovery profile, its actuators and use cases have been   developed by Silvio Tanzarella.
+-  Silvio Tanzarella developed and maintains the Context Discovery profile and its actuators (see :doc:`ctxd:ctxd`).
 
