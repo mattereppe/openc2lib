@@ -1,4 +1,4 @@
-"""OpenC2 library
+"""
 
 otupy provides an opensource implementation of the OpenC2 language and support for 
 integration of encoding formats and protocol syntax.
@@ -10,15 +10,20 @@ All the target and data types defined by the standard are available for creating
 commands.
 
 This is the code documentation for using and extending open2lib.
-Please read the [Getting started](https://github.com/mattereppe/otupy/blob/main/README.md#getting-started) 
-guide, the quick start [Usage](https://github.com/mattereppe/otupy/blob/main/README.md#usage)  and the 
-[Advanced usage](https://github.com/mattereppe/otupy/blob/main/README.md#advanced-usage) documentation for an overview of 
-otupy operation. 
+Please read the the quick start (:doc:`usage`)  and the advanced documentation (:doc:`developerguide`) 
+for an overview of otupy operation. 
 
 This documentation uses docstrings in the Python code. You can regenerate it by running 
-`pdoc -o docs/code src/otupy`
+
+.. code-block:: python3
+
+	pdoc -o docs/code src/otupy
+
 or you can run your own websever with:
-`pdoc src/otupy/`
+.. code-block:: python3
+
+	pdoc src/otupy/
+
 (TODO: fix errors with the pdoc webserver).
 
 """
