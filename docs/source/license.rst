@@ -1,12 +1,12 @@
 Licence
 =======
 
-`otupy` is licensed under the `EUPL v1.2 <https://eupl.eu/1.2/en/>`__.
+``otupy`` is licensed under the EUPL v1.2 <https://eupl.eu/1.2/en/>__.
 
-::
+EUROPEAN UNION PUBLIC LICENCE v. 1.2
+-------------------------------------
 
-                     EUROPEAN UNION PUBLIC LICENCE v. 1.2
-                     EUPL © the European Union 2007, 2016
+EUPL © the European Union 2007, 2016
 
 This European Union Public Licence (the ‘EUPL’) applies to the Work (as
 defined below) which is provided under the terms of this Licence. Any
