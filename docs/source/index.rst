@@ -88,31 +88,17 @@ Extensions
 
    ctxd/ctxd   
 
-Support
--------
+Additional notes
+----------------
 
-TODO
+.. toctree::
+   :maxdepth: 1
 
-Limitations, main issues, and known bugs
-----------------------------------------
+   authors
+	contributing
+	changelog
+	license
 
-Too many to be listed here! :-(
-
-Contributing
-------------
-
-Contributions are wellcome for the implementation of the following
-extensions: 
-
-- encoding format beyond json (no specification available);
-- transfer protocols (MQTT first); 
-- implementation of SLPF ``Actuator``s for different firewall technologies (both opensource and proprietary);
-- implementation of new and draft profiles.
-
-Authors and acknowledgment
---------------------------
-
--  The Context Discovery profile, its actuators and use cases have been   developed by Silvio Tanzarella.
 
 License
 -------
