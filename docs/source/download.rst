@@ -56,4 +56,4 @@ You can either:
    echo '<_your_path_here_>/src' > .env/lib/python3.11/site-packages/otupy.pth
 
 A few scripts are available in the ``examples`` folder of the repository for sending a simple commmand to a remote actuator (see
-`Usage <#usage>`__).
+:doc:`usage`).
