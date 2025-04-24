@@ -3,7 +3,7 @@ Usage
 
 Basic usage description covers the step to instantiate the ``Producer`` and the ``Consumer``, and to send messages. 
 This requires the availability of a minimal set of encoders, transfer protocols, profiles, and actuator implementations. 
-See the `Developing extensions <docs/developingextensions.md>`__ Section to learn how to add your custom extensions. 
+See the `Developing extensions :doc:`developingextensions` Section to learn how to add your custom extensions. 
   
 In the following we refer to the implementation of a ``Controller`` that sends *Commands* and a ``Server`` that controls
 local security functions. Simple implementation of these functions are provided in the ``examples`` folder.
@@ -60,7 +60,7 @@ Finally, start the server:
     consumer.run()
 
 The server code can indeed be improved by loading the configuration from
-file and setting up `Logging for otupy <docs/logging.md>`__.
+file and setting up logging (:doc:`logging`).
 
 Create the Controller
 ~~~~~~~~~~~~~~~~~~~~~
