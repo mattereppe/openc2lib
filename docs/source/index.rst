@@ -61,6 +61,7 @@ the common Language Specification and Profile extensions.
    :maxdepth: 1
 
    api
+   API reference <_autosummary/otupy>
    developerguide
    developingextensions
    logging
