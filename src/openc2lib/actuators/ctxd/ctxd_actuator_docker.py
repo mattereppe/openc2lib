@@ -173,7 +173,7 @@ class CTXDActuator_docker(CTXDActuator):
 		for container in containers:
 			tmp_container = Peer(service_name=(Name('container\n' + container.attrs['NetworkSettings']['IPAddress'])),
 								role= PeerRole(9), #Docker controls the container
-								consumer=Consumer(server=Server(Hostname(container.attrs['Name'].lstrip('/'))), #remove / 
+								consumer=Consumer(server=Server(Hostname(container.attrs['Name'].lstrip('/'))), #remove '/' 
 								port=self.port,
 								protocol= L4Protocol(self.protocol),
 								endpoint=self.endpoint,
@@ -211,7 +211,7 @@ class CTXDActuator_docker(CTXDActuator):
 		for link in self.my_links: #explore link between docker and managed containers
 			if(link.link_type.name == "control"): #only the controlled containers
 				self.actuators[(ctxd.Profile.nsid,str(link.name.obj))] = CTXDActuator(services= self.get_container_service(str(link.name.obj)),
-                                                                            	links= ArrayOf(Link)(),
+                                                                            	links= self.get_container_links(str(link.name.obj)),
                                                                                 domain=None,
                                                                                 asset_id=str(link.name.obj))
 
@@ -240,11 +240,18 @@ class CTXDActuator_docker(CTXDActuator):
 		# Get connected network names (these match docker network ls)
 		network_names = container.attrs['NetworkSettings']['Networks'].keys()
 
-		print("Container is connected to the following networks:")
+
 		for network_name in network_names:
+			#if the connected network is already created -> I don't create an actuator
+			if(any(item[1] == container_name for item in self.actuators) == False):
+				self.actuators[(ctxd.Profile.nsid,str(network_name))] = CTXDActuator(services= self.get_network_service(str(network_name)),
+                                                                            	links= ArrayOf(Link)(),
+                                                                                domain=None,
+                                                                                asset_id=str(network_name))				
+
 			tmp_network = Peer(service_name=(Name(network_name)),
 								role= PeerRole(7), #Both -> the communication between different containers can be egress and/or ingress
-								consumer=Consumer(server=Server(Hostname(network_name)), #remove / 
+								consumer=Consumer(server=Server(Hostname(network_name)), 
 								port=self.port,
 								protocol= L4Protocol(self.protocol),
 								endpoint=self.endpoint,
@@ -253,4 +260,22 @@ class CTXDActuator_docker(CTXDActuator):
 		#create a packet flow link
 		links.append(Link(name = Name(network_name), link_type=LinkType(3), peers=ArrayOf(Peer)([tmp_network])))
 		return links
+	
+	def get_network_service(self, network_name):
+
+		network = Network(description='network',
+                                      name=Name(network_name),
+                                      type=NetworkType('wan'))
+        
+		network_service = Service(name=Name(network_name),
+                                      type=ServiceType(network),
+                                      links= ArrayOf(Name)(),
+                                      subservices=None,
+                                      owner=None,
+                                      release=None,
+                                      security_functions=None,
+                                      actuator=None)
+        
+	
+		return ArrayOf(Service)([network_service])
 
