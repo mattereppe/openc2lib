@@ -28,5 +28,3 @@ relationship between them. The most important data stored are:
 .. figure:: data%20model.png
    :alt: Centered Image
 
-   Centered Image
-
