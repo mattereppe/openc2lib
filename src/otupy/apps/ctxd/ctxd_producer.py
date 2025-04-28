@@ -7,13 +7,17 @@ import logging
 import os
 import sys
 
-import openc2lib as oc2
+import otupy as oc2
 
-from openc2lib.encoders.json import JSONEncoder
-from openc2lib.transfers.http import HTTPTransfer
-import openc2lib.profiles.ctxd as ctxd
-from openc2lib.profiles.ctxd.data.name import Name
-from openc2lib.types.base.array_of import ArrayOf
+from otupy.encoders.json import JSONEncoder
+from otupy.transfers.http import HTTPTransfer
+import otupy.profiles.ctxd as ctxd
+from otupy.profiles.ctxd.data.name import Name
+from otupy.types.base.array_of import ArrayOf
+from otupy.transfers.http.message import Message
+
+from pymongo import MongoClient
+
 
 logger = logging.getLogger()
 # Ask for 4 levels of logging: INFO, WARNING, ERROR, CRITICAL
@@ -28,6 +32,7 @@ logger.addHandler(stdout_handler)
 
 edges_set = set()  # Track visited edges
 processed_links_set = set()  # Track processed links to avoid recursion on the same links
+nodes_visited = set() #track all visited nodes
 
 def add_edge(graph, source, target, relationship_type="", dir_type="forward", color="black", fontcolor="black"):
     edge = (source, target, relationship_type, dir_type)
@@ -48,6 +53,39 @@ def get_unprocessed_links(links, parent_node):
         if link_key not in processed_links_set:
             unprocessed_links.append(it_link)
     return unprocessed_links
+
+def connect_to_database(username, password, ip, port, database_name, collection_name):
+
+        try:
+            client = MongoClient("mongodb://"+ip+":"+str(port)+"/")
+        except Exception:
+            client = MongoClient("mongodb://"+username+":"+password+"@"+ip+":"+str(port)+"/")    
+
+        # Create or switch to a database
+        db = client[database_name]
+
+        # Create or switch to a collection
+        collection = db[collection_name]
+
+        # Delete all documents in the collection
+        collection.delete_many({})
+
+        #return an empty collection
+        return collection 
+
+
+def insert_data_database(collection, response, peer_hostname =None):
+        #if the node is not already visited -> add to the database
+        if peer_hostname not in nodes_visited:
+            m = Message()
+            m.set(response)
+            data = JSONEncoder().encode(m)
+            parsed_data = json.loads(data)
+            #insert only the results into the database
+            result = parsed_data['body']['openc2']['response']['results']['x-ctxd']
+            collection.insert_one(result).inserted_id
+            nodes_visited.add(peer_hostname)
+
 
 def recursive_process_links(links, cmd, pf, p, dot, parent_node):
     for it_link in links:
@@ -99,6 +137,9 @@ def recursive_process_links(links, cmd, pf, p, dot, parent_node):
                 tmp_resp = p.sendcmd(cmd)
                 logger.info("Got response: %s", tmp_resp)
 
+                #insert data into database
+                insert_data_database(collection, tmp_resp, peer_hostname)
+
                 # Safeguard for recursive calls
                 if 'results' in tmp_resp.content and 'links' in tmp_resp.content['results']:
                     new_links = tmp_resp.content['results']['links']
@@ -110,7 +151,7 @@ def recursive_process_links(links, cmd, pf, p, dot, parent_node):
 
     return
 
-def main(openstack_parameters):
+def main(openstack_parameters, collection):
     logger.info("Creating Producer")
 
     p = oc2.Producer("producer.example.net", JSONEncoder(), HTTPTransfer(openstack_parameters['ip'],
@@ -126,6 +167,9 @@ def main(openstack_parameters):
     resp_openstack = p.sendcmd(cmd)
     logger.info("Got response: %s", resp_openstack)
 
+    insert_data_database(collection, resp_openstack, openstack_parameters['asset_id'])
+
+
     if not arg['name_only']: #explore actuators only if it is false
         dot = Digraph("example_graph", graph_attr={'rankdir': 'LR'})
         dot.node('openstack', 'OpenStack')
@@ -136,12 +180,17 @@ def main(openstack_parameters):
             s.node('os-fw')
             s.node('kubernetes')
             s.node('openstack')
+    
+        with dot.subgraph() as s:
+            s.attr(rank='same')
             s.node('kube-fw')
+            s.node('kube0')
+            s.node('kube1')
+            s.node('kube2')
 
 
         dot.render(os.path.dirname(os.path.abspath(__file__))+'/example_graph' , view=False)
         dot.save(os.path.dirname(os.path.abspath(__file__))+'/example_graph.gv')
-
 
 if __name__ == '__main__':
 	
@@ -149,7 +198,14 @@ if __name__ == '__main__':
     with open(configuration_file, 'r') as file:
         configuration_parameters = json.load(file)
 
+    collection = connect_to_database(username=configuration_parameters['mongodb']['username'],
+                                     password=configuration_parameters['mongodb']['password'],
+                                     ip = configuration_parameters['mongodb']['ip'],
+                                     port = configuration_parameters['mongodb']['port'],
+                                     database_name= configuration_parameters['mongodb']['database_name'],
+                                     collection_name= configuration_parameters['mongodb']['collection_name'])
+
     for element in configuration_parameters['clusters']:
         if (element["type"] == "openstack"):      
-            main(element) #start the discovery at the openstack service
+            main(element, collection) #start the discovery at the openstack service
 

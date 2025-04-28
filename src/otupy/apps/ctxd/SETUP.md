@@ -46,7 +46,9 @@ Home-page: https://github.com/kubernetes-client/python
 
 5. It is possible to add kubernetes and openstack element to ```["clusters"][]``` but the ```type``` field must be equal to "kubernetes" or "openstack"
 
-6. The other parameters (asset_id, hostname, ip, port, protocol, endpoint, transfer, encoding) in the file ```openc2lib/applications/ctxd/configuration.json``` in the field ```["clusters"][]``` allow to specify how to connect to the consumer that is running kubernetes or openstack. Transfer and encoding must be in numeric format. To know which integer to use, see ```/openc2lib/docs/CTXD documentation.md``` file, specifically paragraphs 5.19 and 5.20
+6. The consumer parameters (asset_id, hostname, ip, port, protocol, endpoint, transfer, encoding) in the file ```openc2lib/applications/ctxd/configuration.json``` in the field ```["clusters"][]``` allow to specify how to connect to the consumer that is running kubernetes or openstack. Transfer and encoding must be in numeric format. To know which integer to use, see ```/openc2lib/docs/CTXD documentation.md``` file, specifically paragraphs 5.19 and 5.20
+
+8. To connect to the mongodb database, the file ```openc2lib/applications/ctxd/configuration.json``` in the field ```["mongodb"][]``` allow to specify the parameters useful for the connection. It is possible to connect to the mongodb database without username and password.
 
 7. Run the consumer python ```openc2lib/applications/ctxd/ctxd_consumers.py```
 

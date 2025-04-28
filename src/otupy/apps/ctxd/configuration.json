@@ -2,7 +2,7 @@
     "clusters": [
         {
             "type": "openstack",
-            "hostname": "abete.tnt-lab.unige.it",
+            "hostname": "kube0",
             "ip": "127.0.0.1",
             "port": 8080,
             "protocol": 6,
@@ -14,7 +14,7 @@
         },
         {
             "type": "kubernetes",
-            "hostname": "abete.tnt-lab.unige.it",
+            "hostname": "kube0",
             "ip": "127.0.0.1",
             "port": 8080,
             "protocol": 6,
@@ -27,11 +27,30 @@
             ],
             "config_file": "/home/tanzarella/.kube/config",
             "kube_context": "kubernetes-super-admin@kubernetes"
+        },
+        {
+            "type": "docker",
+            "hostname": "kube0",
+            "ip": "127.0.0.1",
+            "port": 8080,
+            "protocol": 6,
+            "endpoint": "/.well-known/openc2",
+            "transfer": 1,
+            "encoding": 1,
+            "asset_id": "docker"
         }
     ],
     "consumer": {
         "ip": "127.0.0.1",
         "port": 8080,
         "endpoint": "/.well-known/openc2"
+    },
+    "mongodb":{
+        "username": "",
+        "password": "",
+        "ip": "127.0.0.1",
+        "port": 27017,
+        "database_name": "my_cluster_db",
+        "collection_name": "my_collection"
     }
 }
