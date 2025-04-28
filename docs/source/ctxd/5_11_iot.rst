@@ -1,0 +1,42 @@
+5.11 IOT
+=========
+
+It describes an IoT device.
+
+Type: IOT (Record)
+
+.. list-table::
+   :widths: 3 4 4 3 40
+   :header-rows: 1
+
+   * - ID
+     - Name
+     - Type
+     - #
+     - Description
+   * - 1
+     - de
+     - String
+     - 1
+     - Identifier of the IoT function.
+   * - 2
+     - name
+     - String
+     - 1
+     - Name of the IoT service provider.
+   * - 3
+     - type
+     - String
+     - 1
+     - Type of the IoT device.
+
+Sample IOT object represented in JSON Format:
+
+.. code:: json
+
+   {
+     "description": "IoT",
+     "name": "Azure IoT",
+     "type": "sensor"
+   }
+
