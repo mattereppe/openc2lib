@@ -6,26 +6,28 @@ Two of the most popular open-source CMS were considered: OpenStack and Kubernete
 
 OpenStack is an open-source cloud computing platform that enables users to build and manage their own cloud infrastructure. It provides Infrastructure-as-a-Service (IaaS), which offers a framework for creating and controlling virtualized resources such as computing power, storage, and networking on demand. 
 
-Kubernetes is an open-source container orchestration system, and it can manage containerized applications across multiple hosts for deploying, monitoring, and scaling containers. Containers are portable units that include the code and everything the application needs to run. 
+Kubernetes is an open-source container orchestration system, and it can manage containerized applications across multiple hosts for deploying, monitoring, and scaling containers. Containers are portable units that include the code and everything the application needs to run.
 
 The goal of CTXD is to discover the relationships between OpenStack, Kubernetes, cloud-based virtual machines (VMs), and containers. Additionally, the types of connections between these resources are documented.
 
+It is also possible to find the relationships between VMs and the Docker service.
+
+Docker is a tool that lets developers package applications with all their dependencies into lightweight containers, ensuring they run consistently across different environments.
+
 ## 2 Pre-requisities
 To run correctly the Opestack actuator the following python library is needed:
-```
-Name: openstacksdk
-Version: 4.3.0
-Summary: An SDK for building applications to work with OpenStack
-Home-page: https://docs.openstack.org/openstacksdk/
-```
+
+```pip install openstacksdk```
+
 
 To run correctly the Kubernetes actuator the following python library is needed:
-```
-Name: kubernetes
-Version: 32.0.0
-Summary: Kubernetes python client
-Home-page: https://github.com/kubernetes-client/python
-```
+
+```pip install kubernetes```
+
+To run correctly the Docker actuator the following python library is needed:
+
+```pip install docker```
+
 
 ## Running the Consumer
 
@@ -39,14 +41,13 @@ Home-page: https://github.com/kubernetes-client/python
 
 2. Specify the namespaces of interest in the file ```openc2lib/applications/ctxd/configuration.json``` and the field is ```["clusters"][]["namespace"]```. If no namespaces are specified, all namespaces will be displayed.
 
-
 3. The consumer, in order to connect to kubernetes, will use by default the configuration file contained in ```~/.kube/config```. It is also possible to specifify the configuration file into ```openc2lib/applications/ctxd/configuration.json``` in the field ```["clusters"][]["config_file"]```.
 
 4. Specify the kubernetes context into the file ```openc2lib/applications/ctxd/configuration.json``` in the field ```["clusters"][]["kube_context"]```. If not specified, the function uses the current context in the kubeconfig file.
 
-5. It is possible to add kubernetes and openstack element to ```["clusters"][]``` but the ```type``` field must be equal to "kubernetes" or "openstack"
+5. It is possible to add kubernetes, openstack and docker elements to ```["clusters"][]``` but the ```type``` field must be equal to "kubernetes", "openstack" or "docker".
 
-6. The consumer parameters (asset_id, hostname, ip, port, protocol, endpoint, transfer, encoding) in the file ```openc2lib/applications/ctxd/configuration.json``` in the field ```["clusters"][]``` allow to specify how to connect to the consumer that is running kubernetes or openstack. Transfer and encoding must be in numeric format. To know which integer to use, see ```/openc2lib/docs/CTXD documentation.md``` file, specifically paragraphs 5.19 and 5.20
+6. The consumer parameters (asset_id, hostname, ip, port, protocol, endpoint, transfer, encoding) in the file ```openc2lib/applications/ctxd/configuration.json``` in the field ```["clusters"][]``` allow to specify how to connect to the consumer that is running kubernetes, openstack or docker. Transfer and encoding must be in numeric format. To know which integer to use, see ```/openc2lib/docs/CTXD documentation.md``` file, specifically paragraphs 5.19 and 5.20
 
 8. To connect to the mongodb database, the file ```openc2lib/applications/ctxd/configuration.json``` in the field ```["mongodb"][]``` allow to specify the parameters useful for the connection. It is possible to connect to the mongodb database without username and password.
 
