@@ -15,3 +15,7 @@ The components of an OpenC2 Command include:
 -  **Actuator:** List of Actuator Specifiers that are relevant for the
    CTXD.
 
+.. toctree::
+   :maxdepth: 1
+
+   3_1_actions
