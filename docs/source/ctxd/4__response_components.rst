@@ -11,7 +11,7 @@ Type: OpenC2-Response (Map)
    :widths: 3 4 4 3 40
    :header-rows: 1
 
-   * - I
+   * - ID
      - Name
      - Type
      - #
@@ -35,7 +35,6 @@ Type: OpenC2-Response (Map)
 
 .. toctree::
    :maxdepth: 1
-
 
    4_1_response_status_code
    4_2_common_results
