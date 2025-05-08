@@ -1,0 +1,10 @@
+Metadata-Version: 2.1
+Name: cassidy
+Version: 0.1.4
+Summary: String case conversion, identification and parsing
+Author: Tom Bulled
+Author-email: 26026015+tombulled@users.noreply.github.com
+Requires-Python: >=3.8,<4.0
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9

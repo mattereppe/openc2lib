@@ -1,0 +1,147 @@
+#!../../.oc2-env/bin/python3
+# Example to use the OpenC2 library
+#
+import json
+import logging
+import os
+import sys
+import time
+
+import openc2lib as oc2
+
+from openc2lib.encoders.json import JSONEncoder
+from openc2lib.transfers.http import HTTPTransfer
+import openc2lib.profiles.slpf as slpf
+from openc2lib.profiles.slpf.data import DropProcess
+
+
+logger = logging.getLogger()
+# Ask for 4 levels of logging: INFO, WARNING, ERROR, CRITICAL
+logger.setLevel(logging.INFO)
+# Create stdout handler for logging to the console 
+stdout_handler = logging.StreamHandler()
+stdout_handler.setLevel(logging.DEBUG)
+stdout_handler.setFormatter(oc2.LogFormatter(datetime=True,name=True))
+hdls = [ stdout_handler ]
+# Add both handlers to the logger
+logger.addHandler(stdout_handler)
+
+def main(iptables_parameters):
+    logger.info("Creating Producer")
+
+    p = oc2.Producer("producer.example.net", JSONEncoder(), HTTPTransfer(iptables_parameters['ip'],
+                                                                        iptables_parameters['port']))
+    pf = slpf.Specifiers({'hostname': iptables_parameters['hostname'],
+                          'named_group': iptables_parameters['named_group'],
+                          'asset_id': iptables_parameters['asset_id']})
+    pf.fieldtypes['asset_id'] = iptables_parameters['asset_id']  # I have to repeat a second time to have no bugs
+
+    # Args
+#    arg = slpf.Args({})
+    # (response_requested)
+    arg = oc2.Args({'response_requested': oc2.ResponseType.complete})
+#    arg = oc2.Args({'response_requested': oc2.ResponseType.ack})
+    # (direction)
+#    arg = slpf.Args({'response_requested': oc2.ResponseType.complete, 'direction': slpf.Direction.ingress})
+#    arg = slpf.Args({'response_requested': oc2.ResponseType.complete, 'direction': slpf.Direction.egress})
+#    arg = slpf.Args({'response_requested': oc2.ResponseType.complete, 'direction': slpf.Direction.both})
+    # (insert_rule) (with slpf.RuleID and just int)(response_requested MUST be present)
+#    arg = slpf.Args({'insert_rule': slpf.RuleID(10), 'response_requested': oc2.ResponseType.complete})
+#    arg = slpf.Args({'insert_rule': 8, 'response_requested': oc2.ResponseType.complete})
+    # (drop_process)
+#    arg = slpf.Args({'drop_process': DropProcess.reject})
+#    arg = slpf.Args({'insert_rule': slpf.RuleID(15), 'drop_process': DropProcess.reject})
+    # (persistent) (with bool and int)
+#    arg = slpf.Args({'persistent': False})
+#    arg = slpf.Args({'persistent': 0})
+    # (start_time) (stop_time) (duration) (with oc2.DateTime and just int)
+#    arg = slpf.Args({'start_time': oc2.DateTime((time.time() + 20) * 1000)})
+#    arg = slpf.Args({'start_time': (time.time() + 20) * 1000})
+#    arg = slpf.Args({'stop_time': oc2.DateTime((time.time() + 30) * 1000)})
+#    arg = slpf.Args({'duration': oc2.Duration(10000)})
+#    arg = slpf.Args({'duration': 10000})
+#    arg = slpf.Args({'start_time': oc2.DateTime((time.time() + 10) * 1000), 'stop_time': oc2.DateTime((time.time() + 20) * 1000)})
+#    arg = slpf.Args({'start_time': oc2.DateTime((time.time() + 10) * 1000), 'duration': 10000})
+#    arg = slpf.Args({'stop_time': oc2.DateTime((time.time() + 20) * 1000), 'duration': 10000})
+
+    # Invalid args
+#    arg = slpf.Args({'insert_rule': 1}) # response_requested required
+#    arg = slpf.Args({'start_time': (time.time() + 10) * 1000, 'stop_time': (time.time() + 20), 'duration': 10000})
+
+
+    # Actions
+    # (query)
+#    cmd = oc2.Command(oc2.Actions.query, oc2.Features([oc2.Feature.versions, oc2.Feature.profiles, oc2.Feature.pairs]), arg, actuator=pf)
+
+#   ----------------------------------------------------------   
+
+    # (allow IPv4Net)
+#    cmd = oc2.Command(oc2.Actions.allow, oc2.IPv4Net("172.19.0.0/24"), arg, actuator=pf)
+
+    # (allow IPv6Net)
+#    cmd = oc2.Command(oc2.Actions.allow, oc2.IPv6Net("2001:0db8:85a3::/64"), arg, actuator=pf)
+
+    # (allow IPv4Connection)
+#    cmd = oc2.Command(oc2.Actions.allow, oc2.IPv4Connection(src_addr=oc2.IPv4Net("172.19.0.1")), arg, actuator=pf)
+#    cmd = oc2.Command(oc2.Actions.allow, oc2.IPv4Connection(dst_addr=oc2.IPv4Net("172.19.0.1")), arg, actuator=pf)
+#    cmd = oc2.Command(oc2.Actions.allow, oc2.IPv4Connection(protocol=oc2.L4Protocol.tcp), arg, actuator=pf)
+#    cmd = oc2.Command(oc2.Actions.allow, oc2.IPv4Connection(src_addr=oc2.IPv4Net("172.19.0.1"), protocol=oc2.L4Protocol.tcp), arg, actuator=pf)
+#    cmd = oc2.Command(oc2.Actions.allow, oc2.IPv4Connection(dst_addr=oc2.IPv4Net("172.19.0.1"), protocol=oc2.L4Protocol.tcp), arg, actuator=pf)
+    cmd = oc2.Command(oc2.Actions.allow, oc2.IPv4Connection(src_addr=oc2.IPv4Net("172.19.0.1"), src_port=oc2.Port(8080), protocol=oc2.L4Protocol.tcp), arg, actuator=pf)
+#    cmd = oc2.Command(oc2.Actions.allow, oc2.IPv4Connection(src_addr=oc2.IPv4Net("172.19.0.1"), src_port=oc2.Port(8080), protocol=oc2.L4Protocol.udp), arg, actuator=pf)
+#    cmd = oc2.Command(oc2.Actions.allow, oc2.IPv4Connection(src_addr=oc2.IPv4Net("172.19.0.1"), src_port=oc2.Port(8080), protocol=oc2.L4Protocol.sctp), arg, actuator=pf)
+#    cmd = oc2.Command(oc2.Actions.allow, oc2.IPv4Connection(dst_addr=oc2.IPv4Net("172.19.0.1"), dst_port=oc2.Port(8080), protocol=oc2.L4Protocol.tcp), arg, actuator=pf)
+#    cmd = oc2.Command(oc2.Actions.allow, oc2.IPv4Connection(src_addr=oc2.IPv4Net("172.19.0.1"), dst_port=oc2.Port(8080), protocol=oc2.L4Protocol.tcp), arg, actuator=pf)
+#    cmd = oc2.Command(oc2.Actions.allow, oc2.IPv4Connection(dst_addr=oc2.IPv4Net("172.19.0.1"), src_port=oc2.Port(8080), protocol=oc2.L4Protocol.tcp), arg, actuator=pf)
+#    cmd = oc2.Command(oc2.Actions.allow, oc2.IPv4Connection(src_addr=oc2.IPv4Net("172.19.0.3"), dst_addr=oc2.IPv4Net("172.19.0.4")), arg, actuator=pf)
+#    cmd = oc2.Command(oc2.Actions.allow, oc2.IPv4Connection(src_addr=oc2.IPv4Net("172.19.0.3"), dst_addr=oc2.IPv4Net("172.19.0.4"), protocol=oc2.L4Protocol.tcp, src_port=oc2.Port(8080), dst_port=oc2.Port(8080)), arg, actuator=pf)
+#	not valid:
+#    cmd = oc2.Command(oc2.Actions.allow, oc2.IPv4Connection(src_port=oc2.Port(8080)), arg, actuator=pf)
+#	cmd = oc2.Command(oc2.Actions.allow, oc2.IPv4Connection(dst_port=oc2.Port(8080)), arg, actuator=pf)
+
+    # (allow IPv6Connection)
+#    cmd = oc2.Command(oc2.Actions.allow, oc2.IPv6Connection(src_addr=oc2.IPv6Net("2001:db8:85a3::8a2e:370:7334")), arg, actuator=pf)
+#	cmd = oc2.Command(oc2.Actions.allow, oc2.IPv6Connection(dst_addr=oc2.IPv6Net("2001:db8:85a3::8a2e:370:7334")), arg, actuator=pf)
+#	cmd = oc2.Command(oc2.Actions.allow, oc2.IPv6Connection(src_addr=oc2.IPv6Net("2001:db8:85a3::8a2e:370:7334"), protocol=oc2.L4Protocol.tcp), arg, actuator=pf)
+#	cmd = oc2.Command(oc2.Actions.allow, oc2.IPv6Connection(dst_addr=oc2.IPv6Net("2001:db8:85a3::8a2e:370:7334"), protocol=oc2.L4Protocol.tcp), arg, actuator=pf)
+#    cmd = oc2.Command(oc2.Actions.allow, oc2.IPv6Connection(src_addr=oc2.IPv6Net("2001:db8:85a3::8a2e:370:7334"), dst_port=oc2.Port(8080), protocol=oc2.L4Protocol.tcp), arg, actuator=pf)
+#	cmd = oc2.Command(oc2.Actions.allow, oc2.IPv6Connection(dst_addr=oc2.IPv6Net("2001:db8:85a3::8a2e:370:7334"), src_port=oc2.Port(8080), protocol=oc2.L4Protocol.tcp), arg, actuator=pf)
+#	not valid:
+#    cmd = oc2.Command(oc2.Actions.allow, oc2.IPv6Connection(src_addr=oc2.IPv6Net("2001:db8:85a3::8a2e:370:7334"), dst_port=oc2.Port(8080)), arg, actuator=pf)
+#	cmd = oc2.Command(oc2.Actions.allow, oc2.IPv6Connection(dst_addr=oc2.IPv6Net("2001:db8:85a3::8a2e:370:7334"), src_port=oc2.Port(8080)), arg, actuator=pf)
+
+#   ----------------------------------------------------------  
+
+    # (deny IPv4Net)
+#    cmd = oc2.Command(oc2.Actions.deny, oc2.IPv4Net("172.19.0.0/24"), arg, actuator=pf)
+    # deny IPv6Net
+#    cmd = oc2.Command(oc2.Actions.deny, oc2.IPv6Net("2001:0db8:85a3::/64"), arg, actuator=pf)
+
+    # (deny IPv4Connection)
+#    cmd = oc2.Command(oc2.Actions.deny, oc2.IPv4Connection(src_addr=oc2.IPv4Net("172.19.0.1")), arg, actuator=pf)
+#    cmd = oc2.Command(oc2.Actions.deny, oc2.IPv4Connection(dst_addr=oc2.IPv4Net("172.19.0.1")), arg, actuator=pf)
+
+    # (deny IPv6Connection)
+#    cmd = oc2.Command(oc2.Actions.deny, oc2.IPv6Connection(src_addr=oc2.IPv6Net("2001:db8:85a3::8a2e:370:7334")), arg, actuator=pf)
+#    cmd = oc2.Command(oc2.Actions.deny, oc2.IPv6Connection(dst_addr=oc2.IPv6Net("2001:db8:85a3::8a2e:370:7334")), arg, actuator=pf)
+
+#   ----------------------------------------------------------  
+
+    # (Delete)
+
+#    cmd = oc2.Command(oc2.Actions.delete, slpf.RuleID(1), arg, actuator=pf)
+
+    logger.info("Sending command: %s", cmd)
+    response = p.sendcmd(cmd)
+    logger.info("Got response: %s", response)
+    
+
+if __name__ == '__main__':
+	
+    configuration_file = os.path.dirname(os.path.abspath(__file__))+"/configuration.json"
+    with open(configuration_file, 'r') as file:
+        configuration_parameters = json.load(file)
+
+    for element in configuration_parameters['slpf_actuators']:
+        if (element["type"] == "iptables"):      
+            main(element)

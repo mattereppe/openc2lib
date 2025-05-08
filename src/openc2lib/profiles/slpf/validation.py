@@ -26,12 +26,12 @@ AllowedCommandTarget = ActionTargets()
 	 Command Matrix (Table 2.3.1): valid Command/Target pairs
 """
 # TODO: complete (replace with commented lines) after defining all targets
-AllowedCommandTarget[Actions.allow] = [TargetEnum.ipv4_connection, TargetEnum.ipv4_net]
-#AllowedCommandTarget[Actions.allow] = [TargetEnum.ipv4_connection, TargetEnum.ipv6_connection,
-#	TargetEnum.ipv4_net, TargetEnum.ipv6_net]
-AllowedCommandTarget[Actions.deny] = [TargetEnum.ipv4_connection, TargetEnum.ipv4_net]
-#AllowedCommandTarget[Actions.deny] = [TargetEnum.ipv4_connection, TargetEnum.ipv6_connection,
-#	TargetEnum.ipv4_net, TargetEnum.ipv6_net]
+#AllowedCommandTarget[Actions.allow] = [TargetEnum.ipv4_connection, TargetEnum.ipv4_net]
+AllowedCommandTarget[Actions.allow] = [TargetEnum.ipv4_connection, TargetEnum.ipv6_connection,
+	TargetEnum.ipv4_net, TargetEnum.ipv6_net]
+#AllowedCommandTarget[Actions.deny] = [TargetEnum.ipv4_connection, TargetEnum.ipv4_net]
+AllowedCommandTarget[Actions.deny] = [TargetEnum.ipv4_connection, TargetEnum.ipv6_connection,
+	TargetEnum.ipv4_net, TargetEnum.ipv6_net]
 AllowedCommandTarget[Actions.query] = [TargetEnum.features]
 AllowedCommandTarget[Actions.delete] = [TargetEnum[Profile.nsid+':rule_number']]
 AllowedCommandTarget[Actions.update] = [TargetEnum.file]
@@ -50,9 +50,14 @@ def fillin_allowed_command_arguments(AllowedCommandArguments, action, targets, a
 	return AllowedCommandArguments
 
 # TODO: complete the list (if necessary)
-args = ['response_requested', 'start_time', 'stop_time', 'duration','persistent','direction','insert_rule','drop_process']
-AllowedCommandArguments = fillin_allowed_command_arguments(AllowedCommandArguments, Actions.allow, AllowedCommandTarget[Actions.allow], args)
-AllowedCommandArguments = fillin_allowed_command_arguments(AllowedCommandArguments, Actions.deny, AllowedCommandTarget[Actions.deny], args)
+# Cambiato perche prima allow permetteva arg drop_process
+args_allow = ['response_requested', 'start_time', 'stop_time', 'duration','persistent','direction','insert_rule']
+args_deny = ['response_requested', 'start_time', 'stop_time', 'duration','persistent','direction','insert_rule','drop_process']
+AllowedCommandArguments = fillin_allowed_command_arguments(AllowedCommandArguments, Actions.allow, AllowedCommandTarget[Actions.allow], args_allow)
+AllowedCommandArguments = fillin_allowed_command_arguments(AllowedCommandArguments, Actions.deny, AllowedCommandTarget[Actions.deny], args_deny)
+#args = ['response_requested', 'start_time', 'stop_time', 'duration','persistent','direction','insert_rule','drop_process']
+#AllowedCommandArguments = fillin_allowed_command_arguments(AllowedCommandArguments, Actions.allow, AllowedCommandTarget[Actions.allow], args)
+#AllowedCommandArguments = fillin_allowed_command_arguments(AllowedCommandArguments, Actions.deny, AllowedCommandTarget[Actions.deny], args)
 AllowedCommandArguments[(Actions.query, TargetEnum.features)] = ['response_requested']
 AllowedCommandArguments[(Actions.delete, TargetEnum[Profile.nsid+':rule_number'])] = ['response_requested', 'start_time']
 AllowedCommandArguments[(Actions.update, TargetEnum.file)] = ['response_requested', 'start_time']

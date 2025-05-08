@@ -44,9 +44,9 @@ def main():
 #	pf = dumb.dumb({'hostname':'mockup', 'named_group':'testing', 'asset_id':'dumb'})
 
 
-#	arg = oc2.Args({'response_requested': oc2.ResponseType.complete})
+	arg = oc2.Args({'response_requested': oc2.ResponseType.complete})
 #	arg = slpf.Args({'response_requested': oc2.ResponseType.none})
-	arg = slpf.Args({'response_requested': oc2.ResponseType.complete, 'direction': slpf.Direction.ingress})
+#	arg = slpf.Args({'response_requested': oc2.ResponseType.complete, 'direction': slpf.Direction.ingress})
 
 	cmd = oc2.Command(oc2.Actions.query, oc2.Features([oc2.Feature.versions, oc2.Feature.profiles, oc2.Feature.pairs]), arg, actuator=pf)
 #	cmd = oc2.Command(oc2.Actions.allow, oc2.IPv4Net("172.19.0.0/24"), arg, actuator=pf)

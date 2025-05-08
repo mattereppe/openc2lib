@@ -1,4 +1,4 @@
-#!/Users/matteo/Progetti/OpenC2/openc2/.oc2-env/bin/python3
+#!/home/kali/Scrivania/openc2lib/.oc2-env/bin/python3
 # -*- coding: utf-8 -*-
 import re
 import sys
