@@ -32,3 +32,11 @@ Type: OpenC2-Response (Map)
      - 1
      - Results derived from the executed Command.
 
+
+.. toctree::
+   :maxdepth: 1
+
+
+   4_1_response_status_code
+   4_2_common_results
+   4_3_ctxd_results
