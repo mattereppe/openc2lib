@@ -1,0 +1,99 @@
+1745310456.920121 [[38;5;42m  INFO  [0m]werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+1745310456.920351 [[38;5;42m  INFO  [0m]werkzeug: [33mPress CTRL+C to quit[0m
+1745310456.920825 [[38;5;42m  INFO  [0m]werkzeug:  * Restarting with stat
+1745310457.278217 [[38;5;226mWARNING [0m]werkzeug:  * Debugger is active!
+1745310457.281301 [[38;5;42m  INFO  [0m]werkzeug:  * Debugger PIN: 885-270-589
+1745310460.591380 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: Received HTTP body: 
+{
+   "headers": {
+      "request_id": "740e53ec-7a47-45e3-b4b9-aa07ce040078",
+      "created": 1745310460588,
+      "from": "producer2.example.net",
+      "to": [
+         "127.0.0.1"
+      ]
+   },
+   "body": {
+      "openc2": {
+         "request": {
+            "action": "start",
+            "target": {
+               "x-nfm:monitor": {
+                  "interfaces": [
+                     {
+                        "name": "ens33"
+                     }
+                  ],
+                  "information_elements": [
+                     "source ip",
+                     "destination ip"
+                  ],
+                  "filter_v4": [],
+                  "filter_v6": []
+               }
+            },
+            "args": {
+               "x-nfm": {
+                  "exporter": {
+                     "storage": {
+                        "path": "/flows"
+                     },
+                     "collectors": [
+                        {
+                           "address": "192.168.1.0/32",
+                           "port": 5213
+                        },
+                        {
+                           "address": "192.168.2.0/32",
+                           "port": 5213
+                        }
+                     ]
+                  },
+                  "exporter_options": {
+                     "sampling": 20,
+                     "format": "json"
+                  }
+               }
+            },
+            "actuator": {
+               "x-nfm": {
+                  "asset_id": "probe_y"
+               }
+            }
+         }
+      }
+   }
+}
+1745310460.592266 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: Received command: Message(content=Command(action=start, target=FlowMonitor(interfaces=[Interface(name=ens33, description=None, if_id=None, ipv4_net=None, ipv6_net=None, mac_addr=None, iface_type=None, active=None)], information_elements=['source ip', 'destination ip'], filter_v4=[], filter_v6=[]), args={'exporter': Exporter(storage={'path': '/flows'}, collectors=[Collector(address=192.168.1.0, port=5213), Collector(address=192.168.2.0, port=5213)]), 'exporter_options': ExportOptions(sampling=20, aggregate=None, buffer=None, timeout=None, format=json)}, actuator=x-nfm(asset_id:probe_y), command_id=None), content_type='openc2', msg_type=<MessageType.command: 1>, status=None, request_id='740e53ec-7a47-45e3-b4b9-aa07ce040078', created=1745310460588, from_='producer2.example.net', to=['127.0.0.1'], version='1.0', encoding=<class 'openc2lib.encoders.json.JSONEncoder'>)
+1745310460.592568 [[38;5;42m  INFO  [0m]openc2lib.core.consumer: Dispatching command to: <openc2lib.actuators.nmf.nfm_actuator_packetbeat.PacketbeatActuator object at 0x7dc32cf068d0>
+1745310460.592875 [[38;5;42m  INFO  [0m]openc2lib.actuators.nmf.nfm_flow_monitor: Received command: Command(action=start, target=FlowMonitor(interfaces=[Interface(name=ens33, description=None, if_id=None, ipv4_net=None, ipv6_net=None, mac_addr=None, iface_type=None, active=None)], information_elements=['source ip', 'destination ip'], filter_v4=[], filter_v6=[]), args={'exporter': Exporter(storage={'path': '/flows'}, collectors=[Collector(address=192.168.1.0, port=5213), Collector(address=192.168.2.0, port=5213)]), 'exporter_options': ExportOptions(sampling=20, aggregate=None, buffer=None, timeout=None, format=json)}, actuator=x-nfm(asset_id:probe_y), command_id=None)
+1745310460.614047 [[38;5;42m  INFO  [0m]openc2lib.actuators.nmf.nfm_actuator_packetbeat: Packetbeat configuration updated successfully.
+1745310460.614273 [[38;5;42m  INFO  [0m]openc2lib.actuators.nmf.utils.process_utils: Executing: /usr/share/packetbeat/bin/packetbeat -c /etc/packetbeat/packetbeat_Delta_1464R4.yml
+1745310463.617618 [[38;5;42m  INFO  [0m]openc2lib.actuators.nmf.handlers.response_handler: Monitor started
+1745310463.617970 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: Got response: Message(content={'status': <StatusCode.OK: 200>, 'status_text': 'Monitor started', 'results': {'monitor_id': 'Delta_1464R4'}}, content_type='openc2', msg_type=<MessageType.response: 2>, status=<StatusCode.OK: 200>, request_id='740e53ec-7a47-45e3-b4b9-aa07ce040078', created=1745310463617, from_='testconsumer', to=['producer2.example.net'], version='1.0', encoding=None)
+1745310463.618412 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: Sending response:
+{
+   "headers": {
+      "request_id": "740e53ec-7a47-45e3-b4b9-aa07ce040078",
+      "created": 1745310463617,
+      "from": "testconsumer",
+      "to": [
+         "producer2.example.net"
+      ]
+   },
+   "body": {
+      "openc2": {
+         "response": {
+            "status": 200,
+            "status_text": "Monitor started",
+            "results": {
+               "x-nfm": {
+                  "monitor_id": "Delta_1464R4"
+               }
+            }
+         }
+      }
+   }
+}
+1745310463.618950 [[38;5;42m  INFO  [0m]werkzeug: 127.0.0.1 - - [22/Apr/2025 10:27:43] "POST /.well-known/openc2 HTTP/1.1" 200 -

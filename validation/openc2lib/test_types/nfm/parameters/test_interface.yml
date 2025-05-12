@@ -1,0 +1,155 @@
+test_good_interface:
+  - name: "eth0"
+    description: "Ethernet interface"
+    if_id: 1
+    ipv4_net: ["192.168.0.1/24"]
+    ipv6_net: ["fe80::1/64"]
+    mac_addr: "00:1A:2B:3C:4D:5E"
+    iface_type: 1
+    active: "True"
+
+  - name: "br0"
+    description: "Bridge"
+    if_id: 2
+    ipv4_net: ["10.0.0.1/8"]
+    ipv6_net: []
+    mac_addr: "00:11:22:33:44:55"
+    iface_type: 2
+    active: "False"
+
+  - name: "ppp0"
+    description: "PPP interface"
+    if_id: 3
+    ipv4_net: []
+    ipv6_net: ["2001:db8::1/64"]
+    mac_addr: ""
+    iface_type: 6
+    active: "True"
+
+  - name: "tun0"
+    description: "VPN tunnel"
+    if_id: 4
+    ipv4_net: ["172.16.0.1/12"]
+    ipv6_net: ["fd00::1/64"]
+    mac_addr: "AA:BB:CC:DD:EE:FF"
+    iface_type: 3
+    active: "True"
+
+  - name: "eth1"
+    description: "Backup NIC"
+    if_id: 5
+    ipv4_net: []
+    ipv6_net: []
+    mac_addr: "01:23:45:67:89:AB"
+    iface_type: 1
+    active: "False"
+
+  - name: "vpn0"
+    description: "IPSec tunnel"
+    if_id: 6
+    ipv4_net: ["192.0.2.1/24"]
+    ipv6_net: []
+    mac_addr: "DE:AD:BE:EF:CA:FE"
+    iface_type: 3
+    active: "True"
+
+  - name: "l2tp0"
+    description: "L2TP"
+    if_id: 7
+    ipv4_net: []
+    ipv6_net: ["2001:db8:abcd::1/64"]
+    mac_addr: "11:22:33:44:55:66"
+    iface_type: 4
+    active: "True"
+
+  - name: "pppoe0"
+    description: "PPPoE DSL"
+    if_id: 8
+    ipv4_net: ["203.0.113.1/24"]
+    ipv6_net: []
+    mac_addr: "66:77:88:99:AA:BB"
+    iface_type: 7
+    active: "True"
+
+  - name: "ovpn0"
+    description: "OpenVPN interface"
+    if_id: 9
+    ipv4_net: ["198.51.100.1/24"]
+    ipv6_net: ["fd00:1234::1/64"]
+    mac_addr: "CC:DD:EE:FF:00:11"
+    iface_type: 9
+    active: "True"
+
+  - name: "test0"
+    description: "Test interface"
+    if_id: 10
+    ipv4_net: ["127.0.0.1/8"]
+    ipv6_net: ["::1/128"]
+    mac_addr: "00:00:00:00:00:00"
+    iface_type: 1
+    active: "False"
+
+test_bad_interface:
+  - bad_name: null
+    bad_description: "Missing name"
+    bad_if_id: 1
+    bad_ipv4_net: ["192.168.0.1/24"]
+    bad_ipv6_net: []
+    bad_mac_addr: "00:1A:2B:3C:4D:5E"
+    bad_iface_type: 1
+    bad_active: "True"
+
+  - bad_name: "ethX"
+    bad_description: "Bad IP"
+    bad_if_id: 2
+    bad_ipv4_net: ["invalid-ip"]
+    bad_ipv6_net: []
+    bad_mac_addr: "00:1A:2B:3C:4D:5E"
+    bad_iface_type: 1
+    bad_active: "True"
+
+  - bad_name: "eth1"
+    bad_description: "Bad MAC"
+    bad_if_id: 3
+    bad_ipv4_net: ["10.0.0.1/8"]
+    bad_ipv6_net: []
+    bad_mac_addr: "BAD:MAC:ADDR"
+    bad_iface_type: 1
+    bad_active: "True"
+
+  - bad_name: "vpn0"
+    bad_description: "Invalid iface type"
+    bad_if_id: 4
+    bad_ipv4_net: ["172.16.0.1/12"]
+    bad_ipv6_net: []
+    bad_mac_addr: "00:1A:2B:3C:4D:5E"
+    bad_iface_type: 99
+    bad_active: "True"
+
+  - bad_name: "testX"
+    bad_description: "Negative ID"
+    bad_if_id: -1
+    bad_ipv4_net: ["192.168.0.1/24"]
+    bad_ipv6_net: []
+    bad_mac_addr: "00:1A:2B:3C:4D:5E"
+    bad_iface_type: 1
+    bad_active: "True"
+
+  - bad_name: 123
+    bad_description: "Name as int"
+    bad_if_id: 7
+    bad_ipv4_net: []
+    bad_ipv6_net: []
+    bad_mac_addr: "00:1A:2B:3C:4D:5E"
+    bad_iface_type: 1
+    bad_active: "False"
+
+  - bad_name: "eth3"
+    bad_description: "Invalid IPv6"
+    bad_if_id: 8
+    bad_ipv4_net: []
+    bad_ipv6_net: ["gggg::1"]
+    bad_mac_addr: "00:1A:2B:3C:4D:5E"
+    bad_iface_type: 1
+    bad_active: "True"
+

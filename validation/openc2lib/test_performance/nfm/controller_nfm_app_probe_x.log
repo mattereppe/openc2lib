@@ -1,0 +1,90 @@
+1745310432.370342 [[38;5;42m  INFO  [0m]root: Creating Producer
+1745310432.371019 [[38;5;42m  INFO  [0m]root: Sending command: Command(action=start, target=FlowMonitor(interfaces=[Interface(name=ens33, description=None, if_id=None, ipv4_net=None, ipv6_net=None, mac_addr=None, iface_type=None, active=None)], information_elements=['source ip', 'destination ip'], filter_v4=[], filter_v6=[]), args={'exporter': Exporter(storage={'path': '/flows'}, collectors=[Collector(address=192.168.1.0, port=5213), Collector(address=192.168.2.0, port=5213)]), 'exporter_options': ExportOptions(sampling=20, aggregate=None, buffer=None, timeout=None, format=json)}, actuator=x-nfm(asset_id:probe_x), command_id=None)
+1745310432.371808 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: Sending to http://127.0.0.1:8080/.well-known/openc2
+1745310432.372051 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP Request Content:
+{
+   "headers": {
+      "request_id": "83ae50df-5f97-4cd8-8a57-632ce0361930",
+      "created": 1745310432371,
+      "from": "producer2.example.net",
+      "to": [
+         "127.0.0.1"
+      ]
+   },
+   "body": {
+      "openc2": {
+         "request": {
+            "action": "start",
+            "target": {
+               "x-nfm:monitor": {
+                  "interfaces": [
+                     {
+                        "name": "ens33"
+                     }
+                  ],
+                  "information_elements": [
+                     "source ip",
+                     "destination ip"
+                  ],
+                  "filter_v4": [],
+                  "filter_v6": []
+               }
+            },
+            "args": {
+               "x-nfm": {
+                  "exporter": {
+                     "storage": {
+                        "path": "/flows"
+                     },
+                     "collectors": [
+                        {
+                           "address": "192.168.1.0/32",
+                           "port": 5213
+                        },
+                        {
+                           "address": "192.168.2.0/32",
+                           "port": 5213
+                        }
+                     ]
+                  },
+                  "exporter_options": {
+                     "sampling": 20,
+                     "format": "json"
+                  }
+               }
+            },
+            "actuator": {
+               "x-nfm": {
+                  "asset_id": "probe_x"
+               }
+            }
+         }
+      }
+   }
+}
+1745310435.394480 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP got response: <Response [200]>
+1745310435.395900 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP Response Content:
+{
+   "headers": {
+      "request_id": "83ae50df-5f97-4cd8-8a57-632ce0361930",
+      "created": 1745310435392,
+      "from": "testconsumer",
+      "to": [
+         "producer2.example.net"
+      ]
+   },
+   "body": {
+      "openc2": {
+         "response": {
+            "status": 200,
+            "status_text": "Monitor started",
+            "results": {
+               "x-nfm": {
+                  "monitor_id": "Theta_260140"
+               }
+            }
+         }
+      }
+   }
+}
+1745310435.396462 [[38;5;42m  INFO  [0m]root: Got response: Message(content={'status': <StatusCode.OK: 200>, 'status_text': 'Monitor started', 'results': {'monitor_id': 'Theta_260140'}}, content_type='openc2', msg_type=<MessageType.response: 2>, status=<StatusCode.OK: 200>, request_id='83ae50df-5f97-4cd8-8a57-632ce0361930', created=1745310435392, from_='testconsumer', to=['producer2.example.net'], version='1.0', encoding=<class 'openc2lib.encoders.json.JSONEncoder'>)

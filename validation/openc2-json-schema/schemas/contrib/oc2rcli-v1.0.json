@@ -1,0 +1,749 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://oasis-open.org/openc2/oc2ls/v1.0/schema.json",
+  "title": "oc2rcli version 1.0 json schema",
+  "description": "This schema is intended to validate all possible derived content for the OpenC2 Remote Command Line Interface",
+  "type": "object",
+  "oneOf": [
+    {
+      "$ref": "#/definitions/OpenC2_Command",
+      "description": "A message defined by an Action-Target pair that is sent from a Producer and received by a Consumer"
+    },
+    {
+      "$ref": "#/definitions/OpenC2_Response",
+      "description": "A message from a Consumer to a Producer acknowledging a Command or returning the requested resources or status to a previously received Command"
+    }
+  ],
+  "definitions": {
+    "OpenC2_Command": {
+      "title": "OpenC2 Command",
+      "type": "object",
+      "description": "The Command defines an Action to be performed on a Target",
+      "additionalProperties": false,
+      "required": [
+        "action",
+        "target"
+      ],
+      "properties": {
+        "action": {
+          "$ref": "#/definitions/Action",
+          "description": "The task or activity to be performed (i.e., the 'verb')"
+        },
+        "target": {
+          "$ref": "#/definitions/Target",
+          "description": "The object of the Action. The Action is performed on the Target"
+        },
+        "args": {
+          "$ref": "#/definitions/Args",
+          "description": "Additional information that applies to the Command"
+        },
+        "actuator": {
+          "$ref": "#/definitions/Actuator",
+          "description": "The subject of the Action. The Actuator executes the Action on the Target"
+        },
+        "command_id": {
+          "$ref": "#/definitions/Command_ID",
+          "description": "An identifier of this Command"
+        }
+      }
+    },
+    "OpenC2_Response": {
+      "title": "OpenC2 Response",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status"
+      ],
+      "properties": {
+        "status": {
+          "$ref": "#/definitions/Status_Code",
+          "description": "An integer status code"
+        },
+        "status_text": {
+          "type": "string",
+          "description": "A free-form human-readable description of the response status"
+        },
+        "results": {
+          "$ref": "#/definitions/Results",
+          "description": "Map of key:value pairs that contain additional results based on the invoking Command"
+        }
+      }
+    },
+    "Action": {
+      "title": "OpenC2 Action",
+      "type": "string",
+      "oneOf": [
+        {
+          "const": "query",
+          "description": "Initiate a request for information"
+        },
+        {
+          "const": "start",
+          "description": "Initiate an action"
+        },
+        {
+          "const": "stop",
+          "description": "Stop an action"
+        },
+        {
+          "const": "delete",
+          "description": "Delete an object"
+        },
+        {
+          "const": "copy",
+          "description": "Copy an object"
+        }
+      ]
+    },
+    "Target": {
+      "title": "OpenC2 Target",
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "maxProperties": 1,
+      "properties": {
+        "features": {
+          "$ref": "#/definitions/Features",
+          "description": "A set of items used with the query Action to determine an Actuator's capabilities"
+        },
+        "artifact": {
+          "$ref": "#/definitions/Artifact",
+          "description": "A set of items used with the query Action to determine an Actuator's capabilities"
+        },
+        "x-rcli:processes": {
+          "$ref": "#/definitions/rcli:Processes",
+          "description": "It describes the service enviroment, its connections and security capabilities"
+        },
+        "x-rcli:files": {
+          "$ref": "#/definitions/rcli:Files",
+          "description": "It describes the service enviroment, its connections and security capabilities"
+        }
+      }
+    },
+    "Actuator": {
+      "title": "OpenC2 Actuator",
+      "type": "object",
+      "properties": {
+        "x-rcli": {
+          "$ref": "#/definitions/rcli:Actuator",
+          "description": "Actuator specifiers defined in the rcli profile"
+        }
+      },
+      "additionalProperties": false
+    },
+    "Args": {
+      "title": "OpenC2 Args",
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 0,
+      "properties": {
+        "response_requested": {
+          "$ref": "#/definitions/Response_Type",
+          "description": "The type of Response required for the Command: none, ack, status, complete"
+        },
+        "start_time": {
+          "$ref": "#/definitions/DateTime",
+          "description": "The specific date/time to initiate the Action"
+        },
+        "stop_time": {
+          "$ref": "#/definitions/DateTime",
+          "description": "The specific date/time to terminate the Action"
+        },
+        "duration": {
+          "$ref": "#/definitions/Duration",
+          "description": "The length of time for an Action to be in effect"
+        },
+        "x-rcli": {
+          "$ref": "#/definitions/rcli:Args",
+          "description": "Command Arguments defined in the rcli profile"
+        }
+      }
+    },
+    "Status_Code": {
+      "title": "OpenC2 Status Code",
+      "type": "integer",
+      "oneOf": [
+        {
+          "const": 102,
+          "description": "Processing -an interim response used to inform the Producer that the Consumer has accepted the Command but has not yet completed it"
+        },
+        {
+          "const": 200,
+          "description": "OK - the Command has succeeded"
+        },
+        {
+          "const": 400,
+          "description": "Bad Request - the Consumer cannot process the Command due to something that is perceived to be a Producer error (e.g., malformed Command syntax)"
+        },
+        {
+          "const": 401,
+          "description": "Unauthorized - the Command message lacks valid authentication credentials for the Target resource or authorization has been refused for the submitted credentials"
+        },
+        {
+          "const": 403,
+          "description": "Forbidden - the Consumer understood the Command but refuses to authorize it"
+        },
+        {
+          "const": 404,
+          "description": "Not Found - the Consumer has not found anything matching the Command"
+        },
+        {
+          "const": 500,
+          "description": "Internal Error - the Consumer encountered an unexpected condition that prevented it from performing the Command"
+        },
+        {
+          "const": 501,
+          "description": "Not Implemented - the Consumer does not support the functionality required to perform the Command"
+        },
+        {
+          "const": 503,
+          "description": "Service Unavailable - the Consumer is currently unable to perform the Command due to a temporary overloading or maintenance of the Consumer"
+        }
+      ]
+    },
+    "Results": {
+      "title": "OpenC2 Response Results",
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "versions": {
+          "type": "array",
+          "description": "List of OpenC2 language versions supported by this Actuator",
+          "uniqueItems": true,
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/Version"
+          }
+        },
+        "profiles": {
+          "type": "array",
+          "description": "List of profiles supported by this Actuator",
+          "uniqueItems": true,
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/Nsid"
+          }
+        },
+        "pairs": {
+          "$ref": "#/definitions/Action_Targets",
+          "description": "List of Targets applicable to each supported Action"
+        },
+        "rate_limit": {
+          "type": "number",
+          "description": "Maximum number of requests per minute supported by design or policy",
+          "minimum": 0
+        },
+        "x-rcli": {
+          "$ref": "#/definitions/rcli:Response",
+          "description": "Response types defined in the rcli profile"
+        }
+      }
+    },
+    "Domain_Name": {
+      "title": "OpenC2 Domain Name",
+      "type": "string",
+      "description": "[RFC1034], Section 3.5",
+      "format": "hostname"
+    },
+    "Features": {
+      "title": "OpenC2 Features Items",
+      "type": "array",
+      "description": "An array of zero to ten names used to query an Actuator for its supported capabilities",
+      "uniqueItems": true,
+      "minItems": 0,
+      "maxItems": 10,
+      "items": {
+        "$ref": "#/definitions/Feature"
+      }
+    },
+    "IDN_Domain_Name": {
+      "title": "OpenC2 Internationalized Domain Name",
+      "type": "string",
+      "description": "Internationalized Domain Name - [RFC5890], Section 2.3.2.3",
+      "format": "idn-hostname"
+    },
+    "IPv4_Net": {
+      "title": "OpenC2 IPv4 Net",
+      "type": "string",
+      "description": "IPv4 address as defined in [RFC0791] - CIDR prefix-length. If omitted, refers to a single host address",
+      "pattern": "^((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])(\\/(3[0-2]|[0-2]?[0-9]))?"
+    },
+    "IPv6_Net": {
+      "title": "OpenC2 IPv6 Net",
+      "type": "string",
+      "description": "IPv6 address as defined in [RFC8200] - CIDR prefix-length. If omitted, refers to a single host address",
+      "pattern": "^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))(%.+)?s*(\\/([0-9]|[1-9][0-9]|1[0-1][0-9]|12[0-8]))?$"
+    },
+    "IRI": {
+      "title": "OpenC2 IRI",
+      "description": "Internationalized Resource Identifier - [RFC3987]",
+      "type": "string",
+      "format": "iri"
+    },
+    "Duration": {
+      "title": "OpenC2 Duration",
+      "type": "integer",
+      "description": "A length of time - number of milliseconds",
+      "minimum": 0
+    },
+    "DateTime": {
+      "title": "OpenC2 Date Time",
+      "type": "integer",
+      "description": "Date and Time - milliseconds since 00:00:00 UTC, 1 January 1970",
+      "minimum": 0
+    },
+    
+    "URI": {
+      "title": "OpenC2 URI",
+      "type": "string",
+      "description": "Uniform Resource Identifier - [RFC3986]",
+      "format": "uri"
+    },
+    "Action_Targets": {
+      "title": "OpenC2 Action Target Pairs",
+      "type": "object",
+      "description": "Map of each action supported by this Actuator to the list of Targets applicable to the specific Action",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "query": {
+          "type": "array",
+          "description": "Initiate a request for information. Used to communicate the supported options and determine the state or settings",
+          "uniqueItems": true,
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "oneOf": [
+              {
+                "const": "features",
+                "description": "A set of items such as Action/Target pairs, profiles versions, options that are supported by the Actuator"
+              },
+              {
+                "const": "processes",
+                "description": "Information about one or more processes"
+              },
+              {
+                "const": "files",
+                "description": "Information about one or more files"
+              }
+            ]
+          }
+        },
+        "start": {
+          "type": "array",
+          "description": "Start a security function",
+          "uniqueItems": true,
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "oneOf": [
+              {
+                "const": "processes",
+                "description": "Processes to be started"
+              }
+            ]
+          }
+        },
+        "stop": {
+          "type": "array",
+          "description": "Stop a security function",
+          "uniqueItems": true,
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "oneOf": [
+              {
+                "const": "processes",
+                "description": "Processes to be stopped"
+              }
+            ]
+          }
+        },
+        "copy": {
+          "type": "array",
+          "description": "Send a file from Producer to Consumer",
+          "uniqueItems": true,
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "oneOf": [
+              {
+                "const": "artifact",
+                "description": "Binary version of a file or URL"
+              }
+            ]
+          }
+        },
+        "delete": {
+          "type": "array",
+          "description": "Delete a copied file",
+          "uniqueItems": true,
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "oneOf": [
+              {
+                "const": "files",
+                "description": "Files to be deleted"
+              }
+            ]
+          }
+        }
+      }
+    }, 
+    "Feature": {
+      "title": "OpenC2 Feature",
+      "type": "string",
+      "oneOf": [
+        {
+          "const": "versions",
+          "description": "List of OpenC2 Language versions supported by this Actuator"
+        },
+        {
+          "const": "profiles",
+          "description": "List of profiles supported by this Actuator"
+        },
+        {
+          "const": "pairs",
+          "description": "List of supported Actions and applicable Targets"
+        },
+        {
+          "const": "rate_limit",
+          "description": "Maximum number of Commands per minute supported by design or policy"
+        },
+        {
+          "const": "clicommands"
+        }
+      ]
+    },
+    "Hostname": {
+      "title": "OpenC2 Hostname",
+      "type": "string",
+      "description": "Internet host name as specified in [RFC1123]",
+      "format": "hostname"
+    },
+    "IDN_Hostname": {
+      "title": "OpenC2 Internationalized Hostname",
+      "type": "string",
+      "description": "Internationalized Internet host name as specified in [RFC5890], Section 2.3.2.3",
+      "format": "idn-hostname"
+    },
+    "L4_Protocol": {
+      "title": "OpenC2 layer four protocol",
+      "type": "string",
+      "description": "Value of the protocol (IPv4) or next header (IPv6) field in an IP packet. Any IANA value - [RFC5237]",
+      "oneOf": [
+        {
+          "const": "icmp",
+          "description": "Internet Control Message Protocol - [RFC0792]"
+        },
+        {
+          "const": "tcp",
+          "description": "Transmission Control Protocol - [RFC0793]"
+        },
+        {
+          "const": "udp",
+          "description": "User Datagram Protocol - [RFC0768]"
+        },
+        {
+          "const": "sctp",
+          "description": "Stream Control Transmission Protocol - [RFC4960]"
+        }
+      ]
+    },
+    "Nsid": {
+      "title": "Namespace Identifier",
+      "type": "string",
+      "description": "A short identifier that refers to a namespace",
+      "minLength": 1,
+      "maxLength": 16
+    },
+    "Port": {
+      "title": "OpenC2 Port",
+      "type": "integer",
+      "description": "Transport Protocol Port Number - [RFC6335]",
+      "minimum": 0,
+      "maximum": 65535
+    },
+
+    "File": {
+      "title": "OpenC2 File",
+      "$comment": "Upgraded to require any one of these (or more), which is more useful",
+      "type": "object",
+      "properties": {
+        "name": {
+          "title": "The name of the file as defined in the file system",
+          "$ref": "#/definitions/Hostname"
+        },
+        "path": {
+          "title": "The absolute path to the location of the file in the file system",
+          "type": "string"
+        },
+        "hashes": {
+          "title": "One or more cryptographic hash codes of the file contents",
+          "$ref": "#/definitions/Hashes"
+        }
+      },
+      "minProperties": 1,
+      "additionalProperties": false
+    },
+
+    "Hashes": {
+      "title": "OpenC2 Hashes",
+      "$comment": "Upgrade to require at least one of (the spec allows it to be empty, but that is not useful)",
+      "type": "object",
+      "properties": {
+        "md5": {
+          "title": "MD5 hash as defined in RFC 1321",
+          "$ref": "#/definitions/Binary"
+        },
+        "sha1": {
+          "title": "SHA1 hash as defined in RFC 6234",
+          "$ref": "#/definitions/Binary"
+        },
+        "sha256": {
+          "title": "SHA256 hash as defined in RFC 6234",
+          "$ref": "#/definitions/Binary"
+        }
+      },
+      "minProperties": 1,
+      "additionalProperties": false
+    },
+    "Artifact": {
+      "title": "OpenC2 Artifact",
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "mime_type": {
+          "type": "string",
+          "description": "Permitted values specified in the IANA Media Types registry - [RFC6838]",
+          "pattern": "^\\w+\\/[-+.\\w]+$"
+        },
+        "payload": {
+          "$ref": "#/definitions/Payload",
+          "description": "Choice of literal content or URL"
+        },
+        "hashes": {
+          "$ref": "#/definitions/Hashes",
+          "description": "Hashes of the payload content"
+        }
+      }
+    },
+    "Payload": {
+      "title": "OpenC2 Payload",
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "maxProperties": 1,
+      "properties": {
+        "bin": {
+          "$ref": "#/definitions/Binary",
+          "description": "Specifies the data contained in the Artifact"
+        },
+        "url": {
+          "$ref": "#/definitions/URI",
+          "description": "MUST be a valid URL that resolves to the un-encoded content"
+        }
+      }
+    },
+    "rcli:Process": {
+      "title": "OpenC2 Process",
+      "$comment": "Upgraded to require at least one property specified",
+      "type": "object",
+      "properties": {
+        "pid": {
+          "title": "Process ID of the process",
+          "type": "integer",
+          "minimum": 0
+        },
+        "name": {
+          "title": "Name of the process",
+          "type": "string"
+        },
+        "cwd": {
+          "title": "Current working directory of tshe process",
+          "type": "string"
+        },
+        "executable": {
+          "title": "Executable that was executed to start the process",
+          "$ref": "#/definitions/File"
+        },
+        "parent": {
+          "title": "Process that spawned this one",
+          "$ref": "#/definitions/rcli:Process"
+        },
+        "command_line": {
+          "title": "The full command line invocation used to start this process, including all arguments",
+          "type": "string"
+        },
+        "state": {
+          "title": "Current state of the process",
+          "$ref": "#/definitions/rcli:State"
+        }
+      },
+      "minProperties": 1,
+      "additionalProperties": false
+    },
+    "Response_Type": {
+      "title": "OpenC2 Response Type",
+      "type": "string",
+      "oneOf": [
+        {
+          "const": "none",
+          "description": "No response"
+        },
+        {
+          "const": "ack",
+          "description": "Respond when Command received"
+        },
+        {
+          "const": "status",
+          "description": "Respond with progress toward Command completion"
+        },
+        {
+          "const": "complete",
+          "description": "Respond when all aspects of Command completed"
+        }
+      ]
+    },
+    "Version": {
+      "title": "OpenC2 Version",
+      "type": "string",
+      "description": "Major.Minor version number",
+      "pattern": "^\\d+\\.\\d+$"
+    },
+    "Binary": {
+      "title": "OpenC2 Binary",
+      "type": "string",
+      "contentEncoding": "base64"
+    },
+    "Command_ID": {
+      "title": "OpenC2 Command Identifier",
+      "type": "string"
+    },
+    "rcli:Processes": {
+      "type": "array",
+      "description": "It describes the service enviroment, its connections and security capabilities",
+      "items": {
+        "$ref": "#/definitions/rcli:Process"
+      }
+      },
+    "rcli:Files": {
+      "type": "array",
+      "description": "It describes the service enviroment, its connections and security capabilities",
+      "items": {
+        "$ref": "#/definitions/File"
+      }
+    },
+    "rcli:Args": {
+      "title": "rcli Args Specifiers",
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 0,
+      "properties": {
+        "storage": {
+          "$ref": "#/definitions/File",
+          "description": "The response includes either only the name or all the details about the service and the links"
+        }
+      }
+    },
+    "rcli:Actuator":{
+      "title": "rcli Actuator specifiers",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+      }
+    },
+    "rcli:Response": {
+      "title": "rcli response types",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "clicommands": {
+          "title": "clicommands",
+          "description": "list all the services",
+          "$ref": "#/definitions/rcli:Processes"
+        },
+        "process_status": {
+          "title": "process_status",
+          "description": "list all the services",
+          "$ref": "#/definitions/rcli:Processes"
+        },
+        "file_status": {
+          "title": "file_status",
+          "description": "list all the services",
+          "$ref": "#/definitions/rcli:Files"
+        }
+      }
+    },
+    "rcli:State": {
+      "title": "process state",
+      "description": "The observed state of a process, typically from the OS",
+      "properties": {
+        "running": {
+          "type": "string",
+          "description": "The process is actively executing."
+        },
+        "sleeping": {
+          "type": "string",
+          "description": "The process is sleeping and waiting for a resource."
+        },
+        "disk_sleep": {
+          "type": "string",
+          "description": "Waiting for disk I/O."
+        },
+        "stopped": {
+          "type": "string",
+          "description": "The process has been stopped (e.g., via SIGSTOP)."
+        },
+        "tracing_stop": {
+          "type": "string",
+          "description": "Stopped during tracing/debugging."
+        },
+        "zombie": {
+          "type": "string",
+          "description": "The process has terminated but not been reaped by its parent."
+        },
+        "dead": {
+          "type": "string",
+          "description": "Dead process (should be gone but still in the process list)."
+        },
+        "wake_kill": {
+          "type": "string",
+          "description": "Waking and being killed simultaneously."
+        },
+        "waking": {
+          "type": "string",
+          "description": "Waking up from sleep."
+        },
+        "parked": {
+          "type": "string",
+          "description": "Parked by the scheduler."
+        },
+        "idle": {
+          "type": "string",
+          "description": "Idle kernel thread."
+        },
+        "locked": {
+          "type": "string",
+          "description": "Waiting on a lock."
+        },
+        "waiting": {
+          "type": "string",
+          "description": "General waiting state."
+        },
+        "suspended": {
+          "type": "string",
+          "description": "Suspended state, often used by external tools."
+        },
+        "not_found": {
+          "type": "string",
+          "description": "State not found or unknown."
+        }
+      }
+    }
+
+  }
+}

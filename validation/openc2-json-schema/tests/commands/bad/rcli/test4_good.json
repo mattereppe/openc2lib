@@ -1,0 +1,22 @@
+{
+  "action": "copy",
+  "target": {
+    "artifact": {
+      "mime_type": "application/json",
+      "payload": {
+        "url": "https://www.w3.org/TR/png/iso_8859-1.txt"
+      }
+    }
+  },
+  "args": {
+    "x-rcli": {
+      "storage": {
+        "path": "tmacp/fcd/a",
+        "name": "acxzcss.txt"
+      }
+    }
+  },
+  "actuator": {
+    "x-rcli": {}
+  }
+}

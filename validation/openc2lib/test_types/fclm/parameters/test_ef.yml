@@ -1,0 +1,22 @@
+test_good_ef:
+  - good_ef: "source.ip"
+  - good_ef: "destination.port"
+  - good_ef: "timestamp"
+  - good_ef: "event.type"
+  - good_ef: "user.name"
+  - good_ef: "process.pid"
+  - good_ef: "network.transport"
+  - good_ef: "log.level"
+  - good_ef: "file.name"
+  - good_ef: "dns.question.name"
+  - good_ef: ""               # possibly invalid if empty strings are disallowed
+  - good_ef: "\n"             # newline string
+  - good_ef: " "              # space-only string
+test_bad_ef:
+  - bad_ef: 123              # not a string
+  - bad_ef: null             # None
+  - bad_ef: true             # boolean
+  - bad_ef: ["source.ip"]    # list
+  - bad_ef: {"field": "ip"}  # dict
+  - bad_ef: 12.34            # float
+

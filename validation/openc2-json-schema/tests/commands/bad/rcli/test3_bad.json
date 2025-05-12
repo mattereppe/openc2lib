@@ -1,0 +1,20 @@
+{
+  "action": "copy",
+  "target": {
+    "artifact": {
+      "mime_type": "application/json",
+      "payload": null
+    }
+  },
+  "args": {
+    "x-rcli": {
+      "storage": {
+        "path": "/tmp",
+        "name": "output.txt"
+      }
+    }
+  },
+  "actuator": {
+    "x-rcli": {}
+  }
+}

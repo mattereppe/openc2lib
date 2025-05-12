@@ -1,0 +1,53 @@
+test_good_export_options:
+  - sampling: 1
+    aggregate: 2
+    buffer: 1024
+    timeout: 500
+    format: "netflow5"
+  - sampling: 10
+    aggregate: 3
+    buffer: 2048
+    timeout: 1000
+    format: "netflow9"
+  - sampling: 5
+    aggregate: 1
+    buffer: 512
+    timeout: 2000
+    format: "ipfix"
+  - sampling: 2
+    aggregate: 1
+    buffer: 1024
+    timeout: 1000
+    format: "json"
+  - sampling: 7
+    aggregate: 2
+    buffer: 4096
+    timeout: 500
+    format: "csv"
+
+test_bad_export_options:
+  - bad_sampling: "not_int"  # Invalid sampling (string instead of integer)
+    bad_aggregate: 3
+    bad_buffer: 2048
+    bad_timeout: 1000
+    bad_format: "netflow5"
+  - bad_sampling: 1
+    bad_aggregate: "not_int"  # Invalid aggregate (string instead of integer)
+    bad_buffer: 512
+    bad_timeout: 2000
+    bad_format: "ipfix"
+  - bad_sampling: 10
+    bad_aggregate: 2
+    bad_buffer: "not_int"  # Invalid buffer (string instead of integer)
+    bad_timeout: 500
+    bad_format: "invalid_format"  # Invalid format
+  - bad_sampling: 1
+    bad_aggregate: 2
+    bad_buffer: 1024
+    bad_timeout: "not_int"  # Invalid timeout (string instead of integer)
+    bad_format: "netflow5"
+  - bad_sampling: 10
+    bad_aggregate: 3
+    bad_buffer: 2048
+    bad_timeout: 1000
+    bad_format: 1

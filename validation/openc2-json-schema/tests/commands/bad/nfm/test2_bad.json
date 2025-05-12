@@ -1,0 +1,31 @@
+{
+    "action": "start",
+    "target": {
+      "x-nfm:monitor": {
+        "interfaces": [
+          {
+            "name": "ens33"
+          }
+        ],
+        "information_elements": ["source ip", "destination ip"]
+      }
+    },
+    "args": {
+      "x-nfm": {
+        "exporter": {
+          "collectors": [
+            {
+              "address": "256.300.1.1.1",
+              "port": 5213
+            }
+          ]
+        }
+      }
+    },
+    "actuator": {
+      "x-nfm": {
+        "asset_id": "probe_x"
+      }
+    }
+  }
+  
