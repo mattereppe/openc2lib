@@ -1,0 +1,20 @@
+{
+    "agent_x" : {
+        "agent" : "filebeat",
+        "imports_config": [
+            "file",
+            "uri",
+            "socket"
+        ],
+        "exports_config": [
+            "file"
+        ],
+        "import_controls" : [
+            "scan_frequency",
+            "backoff",
+            "max_backoff ",
+            "close_inactive",
+            "ignore_older"
+        ]
+    }
+}

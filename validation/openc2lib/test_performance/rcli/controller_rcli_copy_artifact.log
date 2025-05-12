@@ -1,0 +1,74 @@
+1745310742.420202 [[38;5;42m  INFO  [0m]root: Creating Producer
+1745310743.411859 [[38;5;42m  INFO  [0m]root: Sending command: Command(action=copy, target=<openc2lib.types.targets.artifact.Artifact object at 0x71875f05bb90>, args={'storage': {'path': 'tmacp/fcd/a', 'name': 'acxzcsxs.txt'}}, actuator=x-rcli(), command_id=None)
+1745310743.412874 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: Sending to http://127.0.0.1:8080/.well-known/openc2
+1745310743.413196 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP Request Content:
+{
+   "headers": {
+      "request_id": "8ed0591a-3f2b-4423-b136-58fcf8caaa30",
+      "created": 1745310743412,
+      "from": "producer.example.net",
+      "to": [
+         "127.0.0.1"
+      ]
+   },
+   "body": {
+      "openc2": {
+         "request": {
+            "action": "copy",
+            "target": {
+               "artifact": {
+                  "mime_type": "application/json",
+                  "payload": {
+                     "url": "https://www.w3.org/TR/png/iso_8859-1.txt"
+                  }
+               }
+            },
+            "args": {
+               "x-rcli": {
+                  "storage": {
+                     "path": "tmacp/fcd/a",
+                     "name": "acxzcsxs.txt"
+                  }
+               }
+            },
+            "actuator": {
+               "x-rcli": {}
+            }
+         }
+      }
+   }
+}
+1745310744.788822 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP got response: <Response [200]>
+1745310744.791214 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP Response Content:
+{
+   "headers": {
+      "request_id": "8ed0591a-3f2b-4423-b136-58fcf8caaa30",
+      "created": 1745310744785,
+      "from": "testconsumer",
+      "to": [
+         "producer.example.net"
+      ]
+   },
+   "body": {
+      "openc2": {
+         "response": {
+            "status": 200,
+            "status_text": "Ok",
+            "results": {
+               "x-rcli": {
+                  "file_status": [
+                     {
+                        "name": "acxzcsxs.txt",
+                        "path": "/opt/hani/tmacp/fcd/a",
+                        "hashes": {
+                           "md5": "8026E3AF0D2E130DAB1F5C530BF1C353"
+                        }
+                     }
+                  ]
+               }
+            }
+         }
+      }
+   }
+}
+1745310744.792158 [[38;5;42m  INFO  [0m]root: Got response: Message(content={'status': <StatusCode.OK: 200>, 'status_text': 'Ok', 'results': {'file_status': [{'name': 'acxzcsxs.txt', 'path': '/opt/hani/tmacp/fcd/a', 'hashes': {'md5': <openc2lib.types.base.binary_x.Binaryx object at 0x71875f846a80>}}]}}, content_type='openc2', msg_type=<MessageType.response: 2>, status=<StatusCode.OK: 200>, request_id='8ed0591a-3f2b-4423-b136-58fcf8caaa30', created=1745310744785, from_='testconsumer', to=['producer.example.net'], version='1.0', encoding=<class 'openc2lib.encoders.json.JSONEncoder'>)

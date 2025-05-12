@@ -1,0 +1,31 @@
+test_flow_format:
+  - flow_format: netflow5
+    expected_value: 1
+    expected_repr: "FlowFormat.netflow5"
+    expected_str: "netflow5"
+    invalid_value: null
+  - flow_format: netflow9
+    expected_value: 2
+    expected_repr: "FlowFormat.netflow9"
+    expected_str: "netflow9"
+    invalid_value: null
+  - flow_format: ipfix
+    expected_value: 3
+    expected_repr: "FlowFormat.ipfix"
+    expected_str: "ipfix"
+    invalid_value: null
+  - flow_format: json
+    expected_value: 4
+    expected_repr: "FlowFormat.json"
+    expected_str: "json"
+    invalid_value: null
+  - flow_format: csv
+    expected_value: 5
+    expected_repr: "FlowFormat.csv"
+    expected_str: "csv"
+    invalid_value: null
+  - flow_format: null
+    expected_value: null
+    expected_repr: null
+    expected_str: null
+    invalid_value: 999

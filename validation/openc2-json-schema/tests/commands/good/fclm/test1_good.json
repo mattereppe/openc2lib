@@ -1,0 +1,20 @@
+{
+    "action": "query",
+    "target": {
+        "features": [
+            "export_fields",
+            "exports_config",
+            "import_controls",
+            "imports_config"
+        ]
+    },
+    "args": {
+        "x-fclm": {},
+        "response_requested": "complete"
+    },
+    "actuator": {
+        "x-fclm": {
+            "asset_id": "agent_x"
+        }
+    }
+}

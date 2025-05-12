@@ -1,0 +1,17 @@
+{
+  "action": "start",
+  "target": {
+    "x-rcli:processes": [
+      {
+        "name": "code",
+        "command_lizne": 12345
+      }
+    ]
+  },
+  "args": {
+    "x-rcli": {}
+  },
+  "actuator": {
+    "x-rcli": {}
+  }
+}

@@ -1,0 +1,15 @@
+{
+    "action": "query",
+    "target": {
+        "features": [
+            "versions",
+            "profiles",
+            "pairs"
+        ]
+    },
+    "actuator": {
+        "x-fclm": {
+            "asset_id": "agent_x"
+        }
+    }
+}

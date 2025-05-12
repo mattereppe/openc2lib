@@ -1,0 +1,889 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://oasis-open.org/openc2/oc2ls/v1.0/schema.json",
+  "title": "oc2nfm version 1.0 json schema",
+  "description": "This schema is intended to validate all possible derived content for the OpenC2 Context Discovery",
+  "type": "object",
+  "oneOf": [
+    {
+      "$ref": "#/definitions/OpenC2_Command",
+      "description": "A message defined by an Action-Target pair that is sent from a Producer and received by a Consumer"
+    },
+    {
+      "$ref": "#/definitions/OpenC2_Response",
+      "description": "A message from a Consumer to a Producer acknowledging a Command or returning the requested resources or status to a previously received Command"
+    }
+  ],
+  "definitions": {
+    "OpenC2_Command": {
+      "title": "OpenC2 Command",
+      "type": "object",
+      "description": "The Command defines an Action to be performed on a Target",
+      "additionalProperties": false,
+      "required": [
+        "action",
+        "target"
+      ],
+      "properties": {
+        "action": {
+          "$ref": "#/definitions/Action",
+          "description": "The task or activity to be performed (i.e., the 'verb')"
+        },
+        "target": {
+          "$ref": "#/definitions/Target",
+          "description": "The object of the Action. The Action is performed on the Target"
+        },
+        "args": {
+          "$ref": "#/definitions/Args",
+          "description": "Additional information that applies to the Command"
+        },
+        "actuator": {
+          "$ref": "#/definitions/Actuator",
+          "description": "The subject of the Action. The Actuator executes the Action on the Target"
+        },
+        "command_id": {
+          "$ref": "#/definitions/Command_ID",
+          "description": "An identifier of this Command"
+        }
+      }
+    },
+    "OpenC2_Response": {
+      "title": "OpenC2 Response",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status"
+      ],
+      "properties": {
+        "status": {
+          "$ref": "#/definitions/Status_Code",
+          "description": "An integer status code"
+        },
+        "status_text": {
+          "type": "string",
+          "description": "A free-form human-readable description of the response status"
+        },
+        "results": {
+          "$ref": "#/definitions/Results",
+          "description": "Map of key:value pairs that contain additional results based on the invoking Command"
+        }
+      }
+    },
+    "Action": {
+      "title": "OpenC2 Action",
+      "type": "string",
+      "oneOf": [
+        {
+          "const": "query",
+          "description": "Initiate a request for information"
+        },
+        {
+          "const": "start",
+          "description": "Initiate an action"
+        },
+        {
+          "const": "stop",
+          "description": "Stop an action"
+        }
+      ]
+    },
+    "Target": {
+      "title": "OpenC2 Target",
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "maxProperties": 1,
+      "properties": {
+        "features": {
+          "$ref": "#/definitions/Features",
+          "description": "A set of items used with the query Action to determine an Actuator's capabilities"
+        },
+        "x-nfm:monitor": {
+          "$ref": "#/definitions/nfm:FlowMonitor",
+          "description": "It describes the service enviroment, its connections and security capabilities"
+        },
+        "x-nfm:monitor_id": {
+          "$ref": "#/definitions/nfm:MonitorID",
+          "description": "It describes the service enviroment, its connections and security capabilities"
+        }
+      }
+    },
+    "Actuator": {
+      "title": "OpenC2 Actuator",
+      "type": "object",
+      "properties": {
+        "x-nfm": {
+          "$ref": "#/definitions/nfm:Actuator",
+          "description": "Actuator specifiers defined in the NFM profile"
+        }
+      },
+      "additionalProperties": false
+    },
+    "Args": {
+      "title": "OpenC2 Args",
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 0,
+      "properties": {
+        "response_requested": {
+          "$ref": "#/definitions/Response_Type",
+          "description": "The type of Response required for the Command: none, ack, status, complete"
+        },
+        "start_time": {
+          "$ref": "#/definitions/DateTime",
+          "description": "The specific date/time to initiate the Action"
+        },
+        "stop_time": {
+          "$ref": "#/definitions/DateTime",
+          "description": "The specific date/time to terminate the Action"
+        },
+        "duration": {
+          "$ref": "#/definitions/Duration",
+          "description": "The length of time for an Action to be in effect"
+        },
+        "x-nfm": {
+          "$ref": "#/definitions/nfm:Args",
+          "description": "Command Arguments defined in the NFM profile"
+        }
+      }
+    },
+    "Status_Code": {
+      "title": "OpenC2 Status Code",
+      "type": "integer",
+      "oneOf": [
+        {
+          "const": 102,
+          "description": "Processing -an interim response used to inform the Producer that the Consumer has accepted the Command but has not yet completed it"
+        },
+        {
+          "const": 200,
+          "description": "OK - the Command has succeeded"
+        },
+        {
+          "const": 400,
+          "description": "Bad Request - the Consumer cannot process the Command due to something that is perceived to be a Producer error (e.g., malformed Command syntax)"
+        },
+        {
+          "const": 401,
+          "description": "Unauthorized - the Command message lacks valid authentication credentials for the Target resource or authorization has been refused for the submitted credentials"
+        },
+        {
+          "const": 403,
+          "description": "Forbidden - the Consumer understood the Command but refuses to authorize it"
+        },
+        {
+          "const": 404,
+          "description": "Not Found - the Consumer has not found anything matching the Command"
+        },
+        {
+          "const": 500,
+          "description": "Internal Error - the Consumer encountered an unexpected condition that prevented it from performing the Command"
+        },
+        {
+          "const": 501,
+          "description": "Not Implemented - the Consumer does not support the functionality required to perform the Command"
+        },
+        {
+          "const": 503,
+          "description": "Service Unavailable - the Consumer is currently unable to perform the Command due to a temporary overloading or maintenance of the Consumer"
+        }
+      ]
+    },
+    "Results": {
+      "title": "OpenC2 Response Results",
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "versions": {
+          "type": "array",
+          "description": "List of OpenC2 language versions supported by this Actuator",
+          "uniqueItems": true,
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/Version"
+          }
+        },
+        "profiles": {
+          "type": "array",
+          "description": "List of profiles supported by this Actuator",
+          "uniqueItems": true,
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/Nsid"
+          }
+        },
+        "pairs": {
+          "$ref": "#/definitions/Action_Targets",
+          "description": "List of Targets applicable to each supported Action"
+        },
+        "rate_limit": {
+          "type": "number",
+          "description": "Maximum number of requests per minute supported by design or policy",
+          "minimum": 0
+        },
+        "x-nfm": {
+          "$ref": "#/definitions/nfm:Response",
+          "description": "Response types defined in the NFM profile"
+        }
+      }
+    },
+    "Domain_Name": {
+      "title": "OpenC2 Domain Name",
+      "type": "string",
+      "description": "[RFC1034], Section 3.5",
+      "format": "hostname"
+    },
+    "Features": {
+      "title": "OpenC2 Features Items",
+      "type": "array",
+      "description": "An array of zero to ten names used to query an Actuator for its supported capabilities",
+      "uniqueItems": true,
+      "minItems": 0,
+      "maxItems": 10,
+      "items": {
+        "$ref": "#/definitions/nfm:Feature"
+      }
+    },
+    "IDN_Domain_Name": {
+      "title": "OpenC2 Internationalized Domain Name",
+      "type": "string",
+      "description": "Internationalized Domain Name - [RFC5890], Section 2.3.2.3",
+      "format": "idn-hostname"
+    },
+    "IPv4Net": {
+      "title": "OpenC2 IPv4 Net",
+      "type": "string",
+      "description": "IPv4 address as defined in [RFC0791] - CIDR prefix-length. If omitted, refers to a single host address",
+      "pattern": "^((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])(\\/(3[0-2]|[0-2]?[0-9]))?"
+    },
+    "IPv6Net": {
+      "title": "OpenC2 IPv6 Net",
+      "type": "string",
+      "description": "IPv6 address as defined in [RFC8200] - CIDR prefix-length. If omitted, refers to a single host address",
+      "pattern": "^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))(%.+)?s*(\\/([0-9]|[1-9][0-9]|1[0-1][0-9]|12[0-8]))?$"
+    },
+    "IPv4_Connection": {
+      "title": "OpenC2 IPv4 Connection",
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "src_addr": {
+          "$ref": "#/definitions/IPv4Net",
+          "description": "IPv4 source address range"
+        },
+        "src_port": {
+          "$ref": "#/definitions/Port",
+          "description": "Source service per [RFC6335]"
+        },
+        "dst_addr": {
+          "$ref": "#/definitions/IPv4Net",
+          "description": "IPv4 destination address range"
+        },
+        "dst_port": {
+          "$ref": "#/definitions/Port",
+          "description": "Destination service per [RFC6335]"
+        },
+        "protocol": {
+          "$ref": "#/definitions/L4_Protocol",
+          "description": "Layer 4 protocol (e.g., TCP) - see L4_Protocol section"
+        }
+      }
+    },
+    "IPv6_Connection": {
+      "title": "OpenC2 IPv6 Connection",
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "src_addr": {
+          "$ref": "#/definitions/IPv6Net",
+          "description": "IPv6 source address range"
+        },
+        "src_port": {
+          "$ref": "#/definitions/Port",
+          "description": "Source service per [RFC6335]"
+        },
+        "dst_addr": {
+          "$ref": "#/definitions/IPv6Net",
+          "description": "IPv6 destination address range"
+        },
+        "dst_port": {
+          "$ref": "#/definitions/Port",
+          "description": "Destination service per [RFC6335]"
+        },
+        "protocol": {
+          "$ref": "#/definitions/L4_Protocol",
+          "description": "Layer 4 protocol (e.g., TCP) - see L4_Protocol section"
+        }
+      }
+    },
+    "IRI": {
+      "title": "OpenC2 IRI",
+      "description": "Internationalized Resource Identifier - [RFC3987]",
+      "type": "string",
+      "format": "iri"
+    },
+    "MAC_Addr": {
+      "title": "OpenC2 MAC Address",
+      "description": "Media Access Control / Extended Unique Identifier address - EUI-48 or EUI-64",
+      "type": "string",
+      "pattern": "^([0-9a-fA-F]{2}[:-]){5}[0-9a-fA-F]{2}$"
+    },
+    "URI": {
+      "title": "OpenC2 URI",
+      "type": "string",
+      "description": "Uniform Resource Identifier - [RFC3986]",
+      "format": "uri"
+    },
+    "DateTime": {
+      "title": "OpenC2 Date Time",
+      "type": "integer",
+      "description": "Date and Time - milliseconds since 00:00:00 UTC, 1 January 1970",
+      "minimum": 0
+    },
+    "Duration": {
+      "title": "OpenC2 Duration",
+      "type": "integer",
+      "description": "A length of time - number of milliseconds",
+      "minimum": 0
+    },
+    "Action_Targets": {
+      "title": "OpenC2 Action Target Pairs",
+      "type": "object",
+      "description": "Map of each action supported by this Actuator to the list of Targets applicable to the specific Action",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "patternProperties": {
+       "query": {
+          "type": "array",
+          "description": "List of Target fields, should be narrowed in practice",
+          "uniqueItems": true,
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "pattern": "^(features|(x-)?\\w+:\\w+)$"
+          }
+        },
+        "start": {
+          "type": "array",
+          "description": "List of Target fields, should be narrowed in practice",
+          "uniqueItems": true,
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "pattern": "^((x-)?\\w+:\\w+)$"
+          }
+        },
+        "stop": {
+          "type": "array",
+          "description": "List of Target fields, should be narrowed in practice",
+          "uniqueItems": true,
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "pattern": "^((x-)?\\w+:\\w+)$"
+          }
+        }
+      }
+    },
+    "nfm:Feature": {
+      "title": "OpenC2 Feature",
+      "type": "string",
+      "oneOf": [
+        {
+          "const": "versions",
+          "description": "List of OpenC2 Language versions supported by this Actuator"
+        },
+        {
+          "const": "profiles",
+          "description": "List of profiles supported by this Actuator"
+        },
+        {
+          "const": "pairs",
+          "description": "List of supported Actions and applicable Targets"
+        },
+        {
+          "const": "rate_limit",
+          "description": "Maximum number of Commands per minute supported by design or policy"
+        },
+        {
+          "const": "interfaces",
+          "description": "Promiscuous-capable network interfaces"
+        },
+        {
+          "const": "information_elements",
+          "description": "NetFlow/IPFIX Information Elements"
+        },
+        {
+          "const": "exports",
+          "description": "List of network agent export configuration"
+        },
+        {
+          "const": "export_options",
+          "description": "Options that help to configure exporting"
+        },
+        {
+          "const": "flow_format",
+          "description": "List of flow formats"
+        },
+        {
+          "const": "filters",
+          "description": "List of IP addresses to be filtered"
+        }
+      ]
+    },
+    "Hostname": {
+      "title": "OpenC2 Hostname",
+      "type": "string",
+      "description": "Internet host name as specified in [RFC1123]",
+      "format": "hostname"
+    },
+    "IDN_Hostname": {
+      "title": "OpenC2 Internationalized Hostname",
+      "type": "string",
+      "description": "Internationalized Internet host name as specified in [RFC5890], Section 2.3.2.3",
+      "format": "idn-hostname"
+    },
+    "L4_Protocol": {
+      "title": "OpenC2 layer four protocol",
+      "type": "string",
+      "description": "Value of the protocol (IPv4) or next header (IPv6) field in an IP packet. Any IANA value - [RFC5237]",
+      "oneOf": [
+        {
+          "const": "icmp",
+          "description": "Internet Control Message Protocol - [RFC0792]"
+        },
+        {
+          "const": "tcp",
+          "description": "Transmission Control Protocol - [RFC0793]"
+        },
+        {
+          "const": "udp",
+          "description": "User Datagram Protocol - [RFC0768]"
+        },
+        {
+          "const": "sctp",
+          "description": "Stream Control Transmission Protocol - [RFC4960]"
+        }
+      ]
+    },
+    "File": {
+      "title": "OpenC2 File",
+      "$comment": "Upgraded to require any one of these (or more), which is more useful",
+      "type": "object",
+      "properties": {
+        "name": {
+          "title": "The name of the file as defined in the file system",
+          "$ref": "#/definitions/Hostname"
+        },
+        "path": {
+          "title": "The absolute path to the location of the file in the file system",
+          "type": "string"
+        },
+        "hashes": {
+          "title": "One or more cryptographic hash codes of the file contents",
+          "$ref": "#/definitions/Hashes"
+        }
+      },
+      "minProperties": 1,
+      "additionalProperties": false
+    },
+
+    "Hashes": {
+      "title": "OpenC2 Hashes",
+      "$comment": "Upgrade to require at least one of (the spec allows it to be empty, but that is not useful)",
+      "type": "object",
+      "properties": {
+        "md5": {
+          "title": "MD5 hash as defined in RFC 1321",
+          "$ref": "#/definitions/Binary"
+        },
+        "sha1": {
+          "title": "SHA1 hash as defined in RFC 6234",
+          "$ref": "#/definitions/Binary"
+        },
+        "sha256": {
+          "title": "SHA256 hash as defined in RFC 6234",
+          "$ref": "#/definitions/Binary"
+        }
+      },
+      "minProperties": 1,
+      "additionalProperties": false
+    },
+    "Nsid": {
+      "title": "Namespace Identifier",
+      "type": "string",
+      "description": "A short identifier that refers to a namespace",
+      "minLength": 1,
+      "maxLength": 16
+    },
+    "Port": {
+      "title": "OpenC2 Port",
+      "type": "integer",
+      "description": "Transport Protocol Port Number - [RFC6335]",
+      "minimum": 0,
+      "maximum": 65535
+    },
+    "Response_Type": {
+      "title": "OpenC2 Response Type",
+      "type": "string",
+      "oneOf": [
+        {
+          "const": "none",
+          "description": "No response"
+        },
+        {
+          "const": "ack",
+          "description": "Respond when Command received"
+        },
+        {
+          "const": "status",
+          "description": "Respond with progress toward Command completion"
+        },
+        {
+          "const": "complete",
+          "description": "Respond when all aspects of Command completed"
+        }
+      ]
+    },
+    "Version": {
+      "title": "OpenC2 Version",
+      "type": "string",
+      "description": "Major.Minor version number",
+      "pattern": "^\\d+\\.\\d+$"
+    },
+    "Binary": {
+      "title": "OpenC2 Binary",
+      "type": "string",
+      "contentEncoding": "base64"
+    },
+    "Command_ID": {
+      "title": "OpenC2 Command Identifier",
+      "type": "string"
+    },
+    "nfm:FlowMonitor": {
+      "type": "object",
+      "description": "It describes the service environment, its connections and security capabilities",
+      "properties": {
+        "intefaces": {
+          "title": "intefaces",
+          "type": "array",
+          "description": "Interfaces capable of running monitoring agents",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/definitions/nfm:Interface"
+          }
+        },
+        "information_elements": {
+          "title": "information_elements",
+          "type": "array",
+          "description": "NetFlow/IPFIX Information Elements",
+          "items": {
+            "$ref": "#/definitions/nfm:IE"
+          }
+        },
+        "filter_v4": {
+          "title": "filter_v4",
+          "type": "array",
+          "description": "List of IPv4 addresses to be filtered",
+          "items": {
+            "$ref": "#/definitions/IPv4_Connection"
+          }
+        },
+        "filter_v6": {
+          "title": "filter_v6",
+          "type": "array",
+          "description": "List of IPv6 addresses to be filtered",
+          "items": {
+            "$ref": "#/definitions/IPv6_Connection"
+          }
+        }
+      }
+    },
+    "nfm:MonitorID":{
+      "title": "monitor_id",
+      "type": "string"
+    },
+    "nfm:Args": {
+      "title": "NFM Args Specifiers",
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 0,
+      "properties": { 
+        "exporter": {
+          "title": "exporter",
+          "description": "Configure the network agent",
+          "$ref": "#/definitions/nfm:Exporter"
+        },
+        "exporter_options": {
+          "title": "exporter_options",
+          "description": "Options that help to configure exporting",
+          "$ref": "#/definitions/nfm:ExportOptions"
+        }
+      }
+    },
+    "nfm:Actuator":{
+      "title": "NFM Actuator specifiers",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "asset_id":{
+          "type":"string",
+          "description": "identifier of the actuator"
+        }
+      }
+    },
+    "nfm:Response": {
+      "title": "NFM response types",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "interfaces": {
+          "title": "interfaces",
+          "type": "array",
+          "description": "Promiscuous-capable network interfaces",
+          "items": {
+            "$ref": "#/definitions/nfm:Interface"
+          }
+        },
+        "monitor_id": {
+          "title": "monitor_id",
+          "description": "PID of the monitoring agent",
+          "$ref": "#/definitions/nfm:MonitorID"
+        },
+        "information_elements": {
+          "title": "information_elements",
+          "type": "array",
+          "description": "NetFlow/IPFIX Information Elements",
+          "items": {
+            "$ref": "#/definitions/nfm:IE"
+          }
+        },
+        "exports": {
+          "title": "exports",
+          "type": "array",
+          "description": "List of network agent export configuration",
+          "items": {
+            "type": "string"
+          }
+        },
+        "export_options": {
+          "title": "export_options",
+          "type": "array",
+          "description": "Options that help to configure exporting",
+          "items": {
+            "type": "string"
+          }
+        },
+        "flow_format": {
+          "title": "flow_format",
+          "type": "array",
+          "description": "List of flow formats",
+          "items": {
+            "type": "string"
+          }
+        },
+        "filters": {
+          "title": "filters",
+          "type": "array",
+          "description": "List of IP addresses to be filtered",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "nfm:Exporter": {
+      "title": "Exporter",
+      "description": "Exporter configuration for NetFlow/IPFIX agents",
+      "type": "object",
+      "properties": {
+        "storage": {
+          "$ref": "#/definitions/File",
+          "description": "Select the location and filename to store logs and returns errors"
+        },
+        "collectors": {
+          "type": "array",
+          "description": "The system that receives and processes flow data from exporters",
+          "items": {
+            "$ref": "#/definitions/nfm:Collector"
+          }
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+
+    "nfm:Interface": {
+      "title": "Interface",
+      "description": "Details about a network interface capable of monitoring",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Internal mnemonical name of the interface"
+        },
+        "description": {
+          "type": "string",
+          "description": "Human-readable description of the interface"
+        },
+        "if_id": {
+          "type": "integer",
+          "description": "Internal interface index"
+        },
+        "ipv4_net": {
+          "type": "array",
+          "description": "List of IPv4 addresses assigned to that interface (including prefix)",
+          "items": {
+            "$ref": "#/definitions/IPv4Net"
+          }
+        },
+        "ipv6_net": {
+          "type": "array",
+          "description": "List of IPv6 addresses assigned to that interface (including prefix)",
+          "items": {
+            "$ref": "#/definitions/IPv6Net"
+          }
+        },
+        "mac_addr": {
+          "$ref": "#/definitions/MAC_Addr",
+          "description": "MAC Address of the interface"
+        },
+        "iface_type": {
+          "$ref": "#/definitions/nfm:IfaceType",
+          "description": "Type of L2 link"
+        },
+        "active": {
+          "type": "string",
+          "description": "Status of the link (1: Active/Up or 0: Inactive/Down)"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "nfm:ExportOptions": {
+      "title": "ExportOptions",
+      "description": "Options that help configure flow exporting behavior",
+      "type": "object",
+      "properties": {
+        "sampling": {
+          "type": "integer",
+          "description": "Sampling rate"
+        },
+        "aggregate": {
+          "type": "integer",
+          "description": "Aggregation mode"
+        },
+        "buffer": {
+          "type": "integer",
+          "description": "Collector UDP buffer"
+        },
+        "timeout": {
+          "type": "integer",
+          "description": "Collector UDP timeout"
+        },
+        "format": {
+          "$ref": "#/definitions/nfm:FlowFormat",
+          "description": "Format of the flow"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "nfm:Collector": {
+      "title": "Collector",
+      "description": "A system that receives and processes flow data from exporters",
+      "type": "object",
+      "properties": {
+        "address": {
+          "$ref": "#/definitions/IPv4Net",
+          "description": "IP address of the collector"
+        },
+        "port": {
+          "$ref": "#/definitions/Port",
+          "description": "Port of the collector"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+
+    "nfm:FlowFormat": {
+      "title": "Flow format",
+      "description": "Enumerated list of supported flow formats",
+      "type": "string",
+      "properties": {
+        "netflow5": {
+          "type": "string",
+          "description": "NetFlow v5"
+        },
+        "netflow9": {
+          "type": "string",
+          "description": "NetFlow v9"
+        },
+        "ipfix": {
+          "type": "string",
+          "description": "Ipfix"
+        },
+        "json": {
+          "type": "string",
+          "description": "Json"
+        },
+        "csv": {
+          "type": "string",
+          "description": "Csv"
+        }
+      }
+    },
+    "nfm:IfaceType": {
+      "title": "Interface Type",
+      "description": "Enumerated types of Layer 2 interfaces",
+      "type": "string",
+      "properties": {
+        "ether": {
+          "type": "string",
+          "description": "Standard Ethernet interface."
+        },
+        "bridge": {
+          "type": "string",
+          "description": "Virtual Layer 2 bridge."
+        },
+        "ipsec": {
+          "type": "string",
+          "description": "IPsec VPN tunnel interface."
+        },
+        "l2tp": {
+          "type": "string",
+          "description": "L2TP VPN tunnel interface."
+        },
+        "pptp": {
+          "type": "string",
+          "description": "PPTP VPN tunnel interface."
+        },
+        "ppp": {
+          "type": "string",
+          "description": "Point-to-Point Protocol link."
+        },
+        "pppoe": {
+          "type": "string",
+          "description": "PPP over Ethernet (DSL)."
+        },
+        "pppoa": {
+          "type": "string",
+          "description": "PPP over ATM (DSL)."
+        },
+        "ovn": {
+          "type": "string",
+          "description": "Open Virtual Network interface."
+        }
+      }
+    },
+    "nfm:IE": {
+      "title": "Information Element",
+      "description": "NetFlow/IPFIX Information Element",
+      "type": "string"
+    }
+  }
+}

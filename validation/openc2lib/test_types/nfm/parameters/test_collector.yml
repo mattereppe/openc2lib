@@ -1,0 +1,63 @@
+test_good_collector:
+  - address: "192.168.1.1"
+    port: 2055
+  - address: "10.0.0.2"
+    port: 6343
+  - address: "172.16.0.5"
+    port: 9999
+  - address: "192.0.2.1"
+    port: 5000
+  - address: "198.51.100.42"
+    port: 12345
+  - address: "203.0.113.10"
+    port: 4789
+  - address: "8.8.8.8"
+    port: 53
+  - address: "1.1.1.1"
+    port: 80
+  - address: "100.64.0.1"
+    port: 443
+  - address: "172.31.255.255"
+    port: 123
+  - address: "192.168.0.100"
+    port: 514
+  - address: "10.10.10.10"
+    port: 161
+  - address: "127.0.0.1"
+    port: 999
+  - address: "192.168.100.254"
+    port: 8080
+  - address: "169.254.0.1"
+    port: 22
+  - address: "192.168.50.50"
+    port: 4500
+  - address: "192.168.2.2"
+    port: 1700
+  - address: "10.1.1.1"
+    port: 2000
+  - address: "192.168.10.10"
+    port: 21
+  - address: "172.20.0.10"
+    port: 3306
+
+test_bad_collector:
+  - bad_address: "300.300.300.300"  # Invalid IP address
+    bad_port: 1234
+  - bad_address: "192.168.1.1"
+    bad_port: "notaport"  # Invalid port
+  - bad_address: "10.0.0.2"
+    bad_port: "invalidport"  # Invalid port type
+  - bad_address: ""
+    bad_port: 2055  # Invalid address
+  - bad_address: null
+    bad_port: 2055  # Null address
+  - bad_address: "192.168.1.256"  # Invalid octet
+    bad_port: 2055
+  - bad_address: "192.168.1.1"
+    bad_port: -1  # Negative port
+  - bad_address: "10.0.0.2"
+    bad_port: 70000  # Port too high
+  - bad_address: "localhost"  # Not a valid IP
+    bad_port: 2055
+  - bad_address: "abc.def.ghi.jkl"
+    bad_port: 1234  # Not an IP address

@@ -1,0 +1,29 @@
+valid_iface_types:
+  - name: "ether"
+    expected_value: 1
+  - name: "bridge"
+    expected_value: 2
+  - name: "ipsec"
+    expected_value: 3
+  - name: "i2tp"
+    expected_value: 4
+  - name: "pptp"
+    expected_value: 5
+  - name: "ppp"
+    expected_value: 6
+  - name: "pppoe"
+    expected_value: 7
+  - name: "pppoa"
+    expected_value: 8
+  - name: "ovn"
+    expected_value: 9
+
+invalid_iface_types:
+  - name: "ETHER"
+  - name: "Bridge"
+  - name: "vpn"
+  - name: "ethernet"
+  - name: "ipsec1"
+  - name: ""
+  - name: null
+  - name: "invalid"

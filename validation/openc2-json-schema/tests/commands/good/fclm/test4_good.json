@@ -1,0 +1,16 @@
+{
+    "action": "start",
+    "target": {
+        "x-fclm:monitor": {
+            "file": {
+                "path": "/var/log/*.log"
+            }
+        }
+    },
+    "args": {
+        "x-fclm": {}
+    },
+    "actuator": {
+        "x-fclm": {}
+    }
+}

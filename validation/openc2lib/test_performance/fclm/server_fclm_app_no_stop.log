@@ -1,0 +1,92 @@
+1745310037.378050 [[38;5;42m  INFO  [0m]werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+1745310037.378285 [[38;5;42m  INFO  [0m]werkzeug: [33mPress CTRL+C to quit[0m
+1745310037.378749 [[38;5;42m  INFO  [0m]werkzeug:  * Restarting with stat
+1745310037.730806 [[38;5;226mWARNING [0m]werkzeug:  * Debugger is active!
+1745310037.733682 [[38;5;42m  INFO  [0m]werkzeug:  * Debugger PIN: 885-270-589
+1745310044.237558 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: Received HTTP body: 
+{
+   "headers": {
+      "request_id": "1f146cc3-cc31-49f6-ad52-4ca503eb2343",
+      "created": 1745310044232,
+      "from": "producer2.example.net",
+      "to": [
+         "127.0.0.1"
+      ]
+   },
+   "body": {
+      "openc2": {
+         "request": {
+            "action": "start",
+            "target": {
+               "x-fclm:monitor": {
+                  "file": {
+                     "path": "/var/log/*.log"
+                  }
+               }
+            },
+            "args": {
+               "x-fclm": {
+                  "log_exporter": {
+                     "storage": {
+                        "path": "/var/log/filebeat/flows"
+                     },
+                     "collectors": [
+                        {
+                           "address": "192.1.1.6/32",
+                           "port": 1234,
+                           "format": "json"
+                        }
+                     ]
+                  },
+                  "import_controls": {
+                     "scan_frequency": 1000,
+                     "max_backoff": 10
+                  },
+                  "export_fields": [
+                     "timestamp",
+                     "metadata"
+                  ]
+               }
+            },
+            "actuator": {
+               "x-fclm": {
+                  "asset_id": "agent_x"
+               }
+            }
+         }
+      }
+   }
+}
+1745310044.240741 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: Received command: Message(content=Command(action=start, target=file, args={'log_exporter': Exporter(storage={'path': '/var/log/filebeat/flows'}, collectors=[Collector(address=192.1.1.6/32, port=1234, format=json)]), 'import_controls': ImportOptions({'scan_frequency': 1000, 'max_backoff': 10}), 'export_fields': ['timestamp', 'metadata']}, actuator=x-fclm(asset_id:agent_x), command_id=None), content_type='openc2', msg_type=<MessageType.command: 1>, status=None, request_id='1f146cc3-cc31-49f6-ad52-4ca503eb2343', created=1745310044232, from_='producer2.example.net', to=['127.0.0.1'], version='1.0', encoding=<class 'openc2lib.encoders.json.JSONEncoder'>)
+1745310044.241717 [[38;5;42m  INFO  [0m]openc2lib.core.consumer: Dispatching command to: <openc2lib.actuators.fclm.fclm_actuator_filebeat.FilebeatActuator object at 0x72c317956570>
+1745310044.242314 [[38;5;42m  INFO  [0m]openc2lib.actuators.fclm.fclm_file_monitor: Received command: Command(action=start, target=file, args={'log_exporter': Exporter(storage={'path': '/var/log/filebeat/flows'}, collectors=[Collector(address=192.1.1.6/32, port=1234, format=json)]), 'import_controls': ImportOptions({'scan_frequency': 1000, 'max_backoff': 10}), 'export_fields': ['timestamp', 'metadata']}, actuator=x-fclm(asset_id:agent_x), command_id=None)
+1745310044.266366 [[38;5;42m  INFO  [0m]openc2lib.actuators.fclm.fclm_actuator_filebeat: Filebeat configuration updated successfully.
+1745310044.266780 [[38;5;42m  INFO  [0m]openc2lib.actuators.fclm.utils.process_utils: Executing: /usr/share/filebeat/bin/filebeat -c /etc/filebeat/filebeat_Lambda_7382IZ.yml
+1745310047.271972 [[38;5;42m  INFO  [0m]openc2lib.actuators.fclm.handlers.response_handler: Monitor started
+1745310047.272841 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: Got response: Message(content={'status': <StatusCode.OK: 200>, 'status_text': 'Monitor started', 'results': {'monitor_id': 'Lambda_7382IZ'}}, content_type='openc2', msg_type=<MessageType.response: 2>, status=<StatusCode.OK: 200>, request_id='1f146cc3-cc31-49f6-ad52-4ca503eb2343', created=1745310047272, from_='testconsumer', to=['producer2.example.net'], version='1.0', encoding=None)
+1745310047.273825 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: Sending response:
+{
+   "headers": {
+      "request_id": "1f146cc3-cc31-49f6-ad52-4ca503eb2343",
+      "created": 1745310047272,
+      "from": "testconsumer",
+      "to": [
+         "producer2.example.net"
+      ]
+   },
+   "body": {
+      "openc2": {
+         "response": {
+            "status": 200,
+            "status_text": "Monitor started",
+            "results": {
+               "x-fclm": {
+                  "monitor_id": "Lambda_7382IZ"
+               }
+            }
+         }
+      }
+   }
+}
+1745310047.274306 [[38;5;42m  INFO  [0m]werkzeug: 127.0.0.1 - - [22/Apr/2025 10:20:47] "POST /.well-known/openc2 HTTP/1.1" 200 -

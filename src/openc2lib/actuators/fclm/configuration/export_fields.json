@@ -1,0 +1,165 @@
+{
+    "timestamp": {
+      "filebeat": "@timestamp"
+    },
+    "metadata": {
+      "filebeat": "@metadata"
+    },
+    "metadata beat": {
+      "filebeat": "@metadata.beat"
+    },
+    "metadata type": {
+      "filebeat": "@metadata.type"
+    },
+    "metadata version": {
+      "filebeat": "@metadata.version"
+    },
+    "agent id": {
+      "filebeat": "agent.id"
+    },
+    "agent name": {
+      "filebeat": "agent.name"
+    },
+    "agent type": {
+      "filebeat": "agent.type"
+    },
+    "agent version": {
+      "filebeat": "agent.version"
+    },
+    "ecs version": {
+      "filebeat": "ecs.version"
+    },
+    "host name": {
+      "filebeat": "host.name"
+    },
+    "host hostname": {
+      "filebeat": "host.hostname"
+    },
+    "host ip": {
+      "filebeat": "host.ip"
+    },
+    "host mac": {
+      "filebeat": "host.mac"
+    },
+    "host architecture": {
+      "filebeat": "host.architecture"
+    },
+    "host os platform": {
+      "filebeat": "host.os.platform"
+    },
+    "host os version": {
+      "filebeat": "host.os.version"
+    },
+    "host os family": {
+      "filebeat": "host.os.family"
+    },
+    "host os name": {
+      "filebeat": "host.os.name"
+    },
+    "host os kernel": {
+      "filebeat": "host.os.kernel"
+    },
+    "host os codename": {
+      "filebeat": "host.os.codename"
+    },
+    "input type": {
+      "filebeat": "input.type"
+    },
+    "log file path": {
+      "filebeat": "log.file.path"
+    },
+    "log file inode": {
+      "filebeat": "log.file.inode"
+    },
+    "log file device id": {
+      "filebeat": "log.file.device_id"
+    },
+    "log offset": {
+      "filebeat": "log.offset"
+    },
+    "message": {
+      "filebeat": "message"
+    },
+    "event module": {
+      "filebeat": "event.module"
+    },
+    "event dataset": {
+      "filebeat": "event.dataset"
+    },
+    "event category": {
+      "filebeat": "event.category"
+    },
+    "user name": {
+      "filebeat": "user.name"
+    },
+    "user id": {
+      "filebeat": "user.id"
+    },
+    "process name": {
+      "filebeat": "process.name"
+    },
+    "process pid": {
+      "filebeat": "process.pid"
+    },
+    "network source ip": {
+      "filebeat": "network.source.ip"
+    },
+    "network destination ip": {
+      "filebeat": "network.destination.ip"
+    },
+    "network source port": {
+      "filebeat": "network.source.port"
+    },
+    "network destination port": {
+      "filebeat": "network.destination.port"
+    },
+    "network protocol": {
+      "filebeat": "network.protocol"
+    },
+    "network type": {
+      "filebeat": "network.type"
+    },
+    "network direction": {
+      "filebeat": "network.direction"
+    },
+    "network bytes sent": {
+      "filebeat": "network.bytes_sent"
+    },
+    "network bytes received": {
+      "filebeat": "network.bytes_received"
+    },
+    "network interface name": {
+      "filebeat": "network.interface.name"
+    },
+    "network interface mac": {
+      "filebeat": "network.interface.mac"
+    },
+    "network interface ip": {
+      "filebeat": "network.interface.ip"
+    },
+    "cloud id": {
+      "filebeat": "cloud.id"
+    },
+    "cloud provider": {
+      "filebeat": "cloud.provider"
+    },
+    "cloud region": {
+      "filebeat": "cloud.region"
+    },
+    "cloud instance id": {
+      "filebeat": "cloud.instance.id"
+    },
+    "cloud machine type": {
+      "filebeat": "cloud.machine.type"
+    },
+    "cloud availability zone": {
+      "filebeat": "cloud.availability_zone"
+    },
+    "cloud account id": {
+      "filebeat": "cloud.account.id"
+    },
+    "cloud service": {
+      "filebeat": "cloud.service"
+    }
+  }
+  

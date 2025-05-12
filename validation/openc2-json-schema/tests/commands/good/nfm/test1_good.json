@@ -1,0 +1,20 @@
+{
+    "action": "query",
+    "target": {
+      "features": [
+        "information_elements",
+        "exports",
+        "interfaces"
+      ]
+    },
+    "args": {
+      "x-nfm": {},
+      "response_requested": "complete"
+    },
+    "actuator": {
+      "x-nfm": {
+        "asset_id": "probe_x"
+      }
+    }
+  }
+  

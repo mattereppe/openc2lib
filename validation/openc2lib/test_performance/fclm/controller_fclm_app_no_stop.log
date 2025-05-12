@@ -1,0 +1,83 @@
+1745310044.223669 [[38;5;42m  INFO  [0m]root: Creating Producer
+1745310044.232063 [[38;5;42m  INFO  [0m]root: Sending command: Command(action=start, target=file, args={'log_exporter': Exporter(storage={'path': '/var/log/filebeat/flows'}, collectors=[Collector(address=192.1.1.6/32, port=1234, format=json)]), 'import_controls': ImportOptions({'scan_frequency': 1000, 'max_backoff': 10}), 'export_fields': ['timestamp', 'metadata']}, actuator=x-fclm(asset_id:agent_x), command_id=None)
+1745310044.232723 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: Sending to http://127.0.0.1:8080/.well-known/openc2
+1745310044.232894 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP Request Content:
+{
+   "headers": {
+      "request_id": "1f146cc3-cc31-49f6-ad52-4ca503eb2343",
+      "created": 1745310044232,
+      "from": "producer2.example.net",
+      "to": [
+         "127.0.0.1"
+      ]
+   },
+   "body": {
+      "openc2": {
+         "request": {
+            "action": "start",
+            "target": {
+               "x-fclm:monitor": {
+                  "file": {
+                     "path": "/var/log/*.log"
+                  }
+               }
+            },
+            "args": {
+               "x-fclm": {
+                  "log_exporter": {
+                     "storage": {
+                        "path": "/var/log/filebeat/flows"
+                     },
+                     "collectors": [
+                        {
+                           "address": "192.1.1.6/32",
+                           "port": 1234,
+                           "format": "json"
+                        }
+                     ]
+                  },
+                  "import_controls": {
+                     "scan_frequency": 1000,
+                     "max_backoff": 10
+                  },
+                  "export_fields": [
+                     "timestamp",
+                     "metadata"
+                  ]
+               }
+            },
+            "actuator": {
+               "x-fclm": {
+                  "asset_id": "agent_x"
+               }
+            }
+         }
+      }
+   }
+}
+1745310047.275547 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP got response: <Response [200]>
+1745310047.277327 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP Response Content:
+{
+   "headers": {
+      "request_id": "1f146cc3-cc31-49f6-ad52-4ca503eb2343",
+      "created": 1745310047272,
+      "from": "testconsumer",
+      "to": [
+         "producer2.example.net"
+      ]
+   },
+   "body": {
+      "openc2": {
+         "response": {
+            "status": 200,
+            "status_text": "Monitor started",
+            "results": {
+               "x-fclm": {
+                  "monitor_id": "Lambda_7382IZ"
+               }
+            }
+         }
+      }
+   }
+}
+1745310047.277856 [[38;5;42m  INFO  [0m]root: Got response: Message(content={'status': <StatusCode.OK: 200>, 'status_text': 'Monitor started', 'results': {'monitor_id': 'Lambda_7382IZ'}}, content_type='openc2', msg_type=<MessageType.response: 2>, status=<StatusCode.OK: 200>, request_id='1f146cc3-cc31-49f6-ad52-4ca503eb2343', created=1745310047272, from_='testconsumer', to=['producer2.example.net'], version='1.0', encoding=<class 'openc2lib.encoders.json.JSONEncoder'>)

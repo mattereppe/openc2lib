@@ -1,0 +1,13 @@
+{
+  "action": "query",
+  "target": {
+    "features": "clicommandss"
+  },
+  "args": {
+    "x-rcli": {},
+    "response_requested": "complete"
+  },
+  "actuator": {
+    "x-rcli": {}
+  }
+}

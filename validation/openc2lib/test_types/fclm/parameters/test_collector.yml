@@ -1,0 +1,54 @@
+test_good_collectors:
+- address: "192.168.1.1"
+  port: 2055
+  format: "json"
+- address: "10.0.0.10"
+  port: 6343
+  format: "yaml"
+- address: "127.0.0.1"
+  port: 1234
+  format: "csv"
+- address: 
+  port: 9999
+  format: "json"
+- address: "172.16.0.5"
+  port: 
+  format: "yaml"
+- address: 
+  port: 
+  format: 
+
+test_bad_collectors:
+- address: "300.300.300.300"
+  port: 2055
+  format: "json"
+- address: "192.168.1.1"
+  port: -1
+  format: "json"
+- address: "10.0.0.1"
+  port: 65536
+  format: "json"
+- address: "192.168.1.1"
+  port: 2055
+  format: "xmlish"
+- address: "1234"
+  port: "port"
+  format: 999
+- address: {}
+  port: []
+  format: null
+- address: null
+  port: null
+  format: "INVALID"
+- address: "2001:db8::1"
+  port: "not_a_port"
+  format: "json"
+- address: "172.20.30.40"
+  port: "0"
+  format: "xml"
+- address: "fc00::2"
+  port: "invalid_port"
+  format: "yaml"
+- address: "203.0.113.1"
+  port: -5
+  format: "text"

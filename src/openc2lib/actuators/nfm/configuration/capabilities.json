@@ -1,0 +1,45 @@
+{
+    "probe_x" : {
+        "agent" : "nprobe",
+        "filters" : [
+            "source / destination",
+            "ipv4 / ipv6",
+            "port",
+            "protocol"
+        ],
+        "exports": [
+            "file",
+            "collector"
+        ],
+        "export_options" : [
+            "sampling",
+            "aggregate",
+            "buffer",
+            "timoeout"
+        ],
+        "flow_format" : [
+            "json",
+            "csv"
+        ]
+
+    },
+    "probe_y" : {
+        "agent" : "packetbeat",
+        "filters" : [
+            "source / destination",
+            "ipv4 / ipv6",
+            "port",
+            "protocol"
+        ],
+        "exports": [
+            "file"
+        ],
+        "export_options" : [
+            "sampling"
+        ],
+        "flow_format" : [
+            "json"
+        ]
+
+    }
+}

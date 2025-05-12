@@ -1,0 +1,19 @@
+{
+    "action": "start",
+    "target": {
+        "x-fclm:monitor": {
+            "files": {
+                "path": "invalid/path//to/file.log"
+            }
+        }
+    },
+    "args": {
+        "x-fclm": {},
+        "response_requested": "complete"
+    },
+    "actuator": {
+        "x-fclm": {
+            "asset_id": "agent_x"
+        }
+    }
+}

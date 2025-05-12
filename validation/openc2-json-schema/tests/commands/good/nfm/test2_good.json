@@ -1,0 +1,83 @@
+{
+    "action": "start",
+    "target": {
+      "x-nfm:monitor": {
+        "interfaces": [
+          {
+            "name": "ens33"
+          }
+        ],
+        "information_elements": [
+          "source ip",
+          "destination ip"
+        ],
+        "filter_v4": [
+          {
+            "src_addr": "192.168.1.0/24",
+            "dst_addr": "130.251.17.2/32"
+          },
+          {
+            "src_addr": "192.168.0.104/32",
+            "dst_addr": "130.251.17.2/32",
+            "protocol": "tcp"
+          },
+          {
+            "src_addr": "192.168.0.104/32",
+            "src_port": 54682,
+            "dst_addr": "130.251.17.110/32",
+            "dst_port": 443,
+            "protocol": "tcp"
+          },
+          {
+            "dst_addr": "130.251.17.2/32"
+          },
+          {
+            "dst_port": 53,
+            "protocol": "udp"
+          }
+        ],
+        "filter_v6": [
+          {
+            "src_addr": "2001:db8::1/128",
+            "dst_addr": "2001:db8::2/128",
+            "dst_port": 53,
+            "protocol": "udp"
+          },
+          {
+            "src_port": 44,
+            "dst_port": 53,
+            "protocol": "sctp"
+          },
+          {
+            "dst_addr": "::82fb:116e/128"
+          },
+          {
+            "src_addr": "2001:db8::1/128",
+            "src_port": 1234,
+            "dst_addr": "2001:db8::2/128",
+            "dst_port": 443,
+            "protocol": "tcp"
+          },
+          {
+            "dst_addr": "2001:db8::2/128",
+            "protocol": "icmp"
+          }
+        ]
+      }
+    },
+    "args": {
+      "x-nfm": {
+        "exporter": {
+          "storage": {
+            "path": "/flows"
+          }
+        }
+      }
+    },
+    "actuator": {
+      "x-nfm": {
+        "asset_id": "probe_y"
+      }
+    }
+  }
+  
