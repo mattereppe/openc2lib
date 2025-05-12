@@ -38,7 +38,7 @@ def main(iptables_parameters):
     # Args
 #    arg = slpf.Args({})
     # (response_requested)
-#    arg = oc2.Args({'response_requested': oc2.ResponseType.complete})
+    arg = oc2.Args({'response_requested': oc2.ResponseType.complete})
 #    arg = oc2.Args({'response_requested': oc2.ResponseType.ack})
     # (direction)
 #    arg = slpf.Args({'response_requested': oc2.ResponseType.complete, 'direction': slpf.Direction.ingress})
@@ -57,9 +57,9 @@ def main(iptables_parameters):
 #    arg = slpf.Args({'persistent': False})
 #    arg = slpf.Args({'persistent': 0})
     # (start_time) (stop_time) (duration) (with oc2.DateTime and just int)
-    arg = slpf.Args({'start_time': oc2.DateTime((time.time() + 10) * 1000)})
+#    arg = slpf.Args({'start_time': oc2.DateTime((time.time() + 10) * 1000)})
 #    arg = slpf.Args({'start_time': (time.time() + 20) * 1000})
-#    arg = slpf.Args({'stop_time': oc2.DateTime((time.time() + 30) * 1000)})
+#    arg = slpf.Args({'stop_time': oc2.DateTime((time.time() + 10) * 1000)})
 #    arg = slpf.Args({'duration': oc2.Duration(10000)})
 #    arg = slpf.Args({'duration': 10000})
 #    arg = slpf.Args({'start_time': oc2.DateTime((time.time() + 10) * 1000), 'stop_time': oc2.DateTime((time.time() + 30) * 1000)})
@@ -84,7 +84,7 @@ def main(iptables_parameters):
 #    cmd = oc2.Command(oc2.Actions.allow, oc2.IPv6Net("2001:0db8:85a3::/64"), arg, actuator=pf)
 
     # (allow IPv4Connection)
-#    cmd = oc2.Command(oc2.Actions.allow, oc2.IPv4Connection(src_addr=oc2.IPv4Net("172.19.0.1")), arg, actuator=pf)
+    cmd = oc2.Command(oc2.Actions.allow, oc2.IPv4Connection(src_addr=oc2.IPv4Net("172.19.0.1")), arg, actuator=pf)
 #    cmd = oc2.Command(oc2.Actions.allow, oc2.IPv4Connection(dst_addr=oc2.IPv4Net("172.19.0.1")), arg, actuator=pf)
 #    cmd = oc2.Command(oc2.Actions.allow, oc2.IPv4Connection(protocol=oc2.L4Protocol.tcp), arg, actuator=pf)
 #    cmd = oc2.Command(oc2.Actions.allow, oc2.IPv4Connection(src_addr=oc2.IPv4Net("172.19.0.1"), protocol=oc2.L4Protocol.tcp), arg, actuator=pf)
@@ -131,12 +131,12 @@ def main(iptables_parameters):
 
     # (Delete)
 
-#    cmd = oc2.Command(oc2.Actions.delete, slpf.RuleID(2), arg, actuator=pf)
+#    cmd = oc2.Command(oc2.Actions.delete, slpf.RuleID(1), arg, actuator=pf)
 
 #   ----------------------------------------------------------
 
     # (Update)
-    cmd = oc2.Command(oc2.Actions.update, oc2.File(name="new_iptables_rules.v4"), arg, actuator=pf)
+#    cmd = oc2.Command(oc2.Actions.update, oc2.File(name="new_iptables_rules.v4"), arg, actuator=pf)
 #    cmd = oc2.Command(oc2.Actions.update, oc2.File(name="new_iptables_rules.v6"), arg, actuator=pf)
 #    cmd = oc2.Command(oc2.Actions.update, oc2.File(name="new_iptables_rules.v6", path="/home/kali/Scrivania/openc2lib/applications/slpf", hashes=oc2.Hashes(hashes={'md5': oc2.Binaryx(bytes.fromhex('3e4d11990c706c9ccc787951026ccf82'))})), arg, actuator=pf)
 #    cmd = oc2.Command(oc2.Actions.update, oc2.File(name="new_iptables_rules.v6", path="/home/kali/Scrivania/openc2lib/applications/slpf", hashes=oc2.Hashes(hashes={'sha1': oc2.Binaryx(bytes.fromhex('504cd4900a2791dd07e0fef60623d2086e6e3705'))})), arg, actuator=pf)

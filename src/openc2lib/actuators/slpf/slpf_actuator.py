@@ -17,7 +17,7 @@ import atexit
 
 from .sql_database import SQLDatabase
 
-from openc2lib import ArrayOf,ActionTargets, TargetEnum, Nsid, Version,Actions, Command, Response, StatusCode, StatusCodeDescription, Features, ResponseType, Feature, IPv4Net, IPv4Connection , IPv6Net, IPv6Connection, DateTime, Duration, Binaryx
+from openc2lib import ArrayOf,ActionTargets, TargetEnum, Nsid, Version,Actions, Command, Response, StatusCode, StatusCodeDescription, Features, ResponseType, Feature, IPv4Net, IPv4Connection , IPv6Net, IPv6Connection, DateTime, Duration, Binaryx, L4Protocol, Port
 from openc2lib.core.actions import Actions
 import openc2lib.profiles.slpf as slpf 
 from openc2lib.profiles.slpf.data import DropProcess
@@ -426,7 +426,8 @@ class SLPFActuator:
                                    id=self.generate_unique_job_id(self.scheduler),
                                    misfire_grace_time=self.misfire_grace_time)
 
-            return Response(status=StatusCode.PROCESSING, status_text=StatusCodeDescription[StatusCode.PROCESSING])
+        #    return Response(status=StatusCode.PROCESSING, status_text=StatusCodeDescription[StatusCode.PROCESSING])
+            return Response(status=StatusCode.OK, status_text=StatusCodeDescription[StatusCode.OK])
         except ValueError as e:
             return Response(status=e.args[0], status_text=e.args[1])
         except KeyError as e:
@@ -588,29 +589,30 @@ class SLPFActuator:
         elif cmd_data['direction'] == slpf.Direction.both.name:
             direction = slpf.Direction.both
 
-        if cmd_data['target'] == 'IPv4Net' or cmd_data['target'] == 'IPv6Net':
+        if cmd_data['target'] == IPv4Net.__name__ or cmd_data['target'] == IPv6Net.__name__:
             if direction == slpf.Direction.ingress or direction == slpf.Direction.both:
                 addr = cmd_data['src_addr']
             elif direction == slpf.Direction.egress:
                 addr = cmd_data['dst_addr']
 
-        if cmd_data['target'] == 'IPv4Net':
+        if cmd_data['target'] == IPv4Net.__name__:
             target = IPv4Net(ipv4_net=addr)
-        elif cmd_data['target'] == 'IPv6Net':
+        elif cmd_data['target'] == IPv6Net.__name__:
             target = IPv6Net(ipv6_net=addr)
-        elif cmd_data['target'] == 'IPv4Connection':
+        elif cmd_data['target'] == IPv4Connection.__name__:
             target = IPv4Connection(protocol=cmd_data['protocol'],
                                     src_addr=cmd_data['src_addr'],
                                     src_port=cmd_data['src_port'],
                                     dst_addr=cmd_data['dst_addr'],
                                     dst_port=cmd_data['dst_port'])
-        elif cmd_data['target'] == 'IPv6Connection':
+        elif cmd_data['target'] == IPv6Connection.__name__:
             target = IPv6Connection(protocol=cmd_data['protocol'],
                                     src_addr=cmd_data['src_addr'],
                                     src_port=cmd_data['src_port'],
                                     dst_addr=cmd_data['dst_addr'],
                                     dst_port=cmd_data['dst_port'])
-
+        
+    #   Just needed args
         args = slpf.Args({'direction': direction})
         if drop_process:
             args['drop_process'] = drop_process
