@@ -1,7 +1,6 @@
 """ Skeleton `Actuator` for SLPF profile
 
     This module provides an example to create an `Actuator` for the SLPF profile.
-    It only answers to the request for available features.
 """
 
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -14,10 +13,11 @@ import time
 from datetime import datetime
 import threading
 import atexit
+import hashlib
 
 from .sql_database import SQLDatabase
 
-from openc2lib import ArrayOf,ActionTargets, TargetEnum, Nsid, Version,Actions, Command, Response, StatusCode, StatusCodeDescription, Features, ResponseType, Feature, IPv4Net, IPv4Connection , IPv6Net, IPv6Connection, DateTime, Duration, Binaryx, L4Protocol, Port
+from openc2lib import ArrayOf,ActionTargets, File, Nsid, Version,Actions, Command, Response, StatusCode, StatusCodeDescription, Features, ResponseType, Feature, IPv4Net, IPv4Connection , IPv6Net, IPv6Connection, DateTime, Duration, Binaryx, L4Protocol, Port
 from openc2lib.core.actions import Actions
 import openc2lib.profiles.slpf as slpf 
 from openc2lib.profiles.slpf.data import DropProcess
@@ -34,12 +34,41 @@ MY_IDS = {'hostname': None,
 
 # An implementation of the slpf profile. 
 class SLPFActuator:
-    """ Iptables SLPF implementation
+    """ `SLPF Actuator implementation`.
 
-        This class provides an implementation of the SLPF `Actuator` for iptables.
+        This class provides an implementation of the `SLPF Actuator`.
     """
 
-    def __init__(self,hostname, named_group, asset_id, asset_tuple, db_name, db_path, db_commands_table_name, db_jobs_table_name, misfire_grace_time):
+    def __init__(self,hostname, named_group, asset_id, asset_tuple, db_name, db_path, db_commands_table_name, db_jobs_table_name, misfire_grace_time, rule_files_path):
+        """ Initialization of the `SLPF Actuator`.
+
+            This method initializes a `sqlite3` database to store `allow` and `deny` OpenC2 commands as well as `APScheduler jobs` (for non executed scheduled commands in case of an SLPF Actuator `shutdown`),  
+            restores `persistent commands`, 
+            initializes an `APScheduler scheduler` for managing commands that are set to be executed at a specific `start time` or `stop time` and 
+            registers `slpf_exit()` method to be executed upon SLPF Actuator termination.
+
+            :param hostname: SLPF Actuator hostname.
+            :type hostname: str
+            :param named_group: SLPF Actuator group.
+            :type named_group: str
+            :param asset_id: SLPF Actuator asset id.
+            :type asset_id: str
+            :param asset_tuple: SLPF Actuator asset tuple.
+            :type asset_tuple: str
+            :param db_name: sqlite3 database name.
+            :type db_name: str
+            :param db_path: sqlite3 database path.
+            :type db_path: str
+            :param db_commands_table_name: Name of the `commands` table in the sqlite3 database.
+            :type db_commands_table_name: str
+            :param db_jobs_table_name: Name of the `APScheduler jobs` table in the sqlite3 database.
+            :type db_jobs_table_name: str
+            :param misfire_grace_time: Seconds after the designated runtime that the `APScheduler job` is still allowed to be run, because of a `shutdown`.
+            :type misfire_grace_time: int
+            :param rule_files_path: Path to update rule files.
+            :type rule_files_path: str
+        """
+        
         # Needed in development phase
         # otherwise werkzeug development server launches the function twice
         # that is bad for the scheduler
@@ -49,8 +78,11 @@ class SLPFActuator:
             MY_IDS['asset_id'] = asset_id
             MY_IDS['asset_tuple'] = asset_tuple
 
+            self.rule_files_path = rule_files_path
+
             try:
-#               Initializing database
+            #   Initializing database
+                logger.info("[SLPF] Initializing database")
                 self.db_path = db_path if db_path else os.path.dirname(os.path.abspath(__file__))
                 self.db_name = db_name if db_name else "slpf_commands.sqlite"
                 if not os.path.exists(self.db_path):
@@ -58,36 +90,113 @@ class SLPFActuator:
                 self.db_commands_table_name = db_commands_table_name if db_commands_table_name else "iptables_commands"
                 self.db_jobs_table_name = db_jobs_table_name if db_jobs_table_name else "iptables_jobs"         
                 self.db = SQLDatabase(os.path.join(self.db_path, self.db_name), self.db_commands_table_name, self.db_jobs_table_name)
-#               Restoring persistent commands
+            #   Checking SLPF mode
+                if self.db.is_empty():
+                    logger.info("[SLPF] FILE MODE")
+                else:
+                    logger.info("[SLPF] DB MODE")
+            #   Restoring persistent commands
+                logger.info("[SLPF] Restoring persistent commands")
                 self.restore_persistent_commands()                
-#               Initializing scheduler   
+            #   Initializing scheduler
+                logger.info("[SLPF] Initializing scheduler")
                 self.misfire_grace_time = misfire_grace_time # 1 day
                 self.scheduler = BackgroundScheduler()
                 self.scheduler.add_listener(lambda event: self.scheduler_listener(event), EVENT_JOB_EXECUTED | EVENT_JOB_ERROR)
                 self.restore_persistent_jobs()
                 self.scheduler.start()
-#               Registering exit function
+            #   Registering exit function
                 atexit.register(self.slpf_exit)
+                logger.info("[SLPF] Initialization executed successfully")
             except Exception as e:
+                logger.info("[SLPF] Initialization error: %s", str(e))
                 raise e
             
-
     def execute_allow_command(self, target, direction):
+        """ Implementation of `allow` action
+
+            Each Actuator must override this method in order to implement the allow action.
+
+            :param target: The target of the allow action.
+            :type target: IPv4Net/IPv6Net/IPv4Connection/IPv6Connection
+            :param direction: Specifies whether to allow incoming traffic, outgoing traffic or both for the specified target.
+            :type direction: Direction
+        """
         pass
 
     def execute_deny_command(self, target, direction, drop_process):
+        """ Implementation of `deny` action
+
+            Each Actuator must override this method in order to implement the deny action.
+
+            :param target: The target of the deny action.
+            :type target: IPv4Net/IPv6Net/IPv4Connection/IPv6Connection
+            :param direction: Specifies whether to deny incoming traffic, outgoing traffic or both for the specified target.
+            :type direction: Direction
+            :param drop_process: Specifies how to handle denied packets: 
+                                `none` drop the packet and do not send any notification to the source of the packet,
+                                `reject` drop the packet and send an ICMP host unreachable (or equivalent) to the source of the packet,
+                                `false_ack` drop the packet and send a false acknowledgment.
+            :type drop_process: DropProcess
+        """
+        pass
+
+    def validate_action_target_args(self, action, target, args):
+        """ This method should be implemented if an Actuator does not support some `SLPF Target`, does not implement some `SLPF features` 
+            or has to perform some `checks` before executing an action (e.g: check if the file extension of an update target is supported).
+            
+            Possibles `action` values are `allow`, `deny` and `update` (since query and delete action are already fully validated).
+
+            This method should validates `Target` and `Args` of an `allow` action for a specific Actuator.
+            
+            This method should validates `Target` and `Args` of a `deny` action for a specific Actuator.
+            
+            This method should validates `Target` of an `update` action for a specific Actuator, since `Args` are already fully validated.
+
+            :param action: The action to validate.
+            :type action: Actions
+            :param target: The target of the action to validate.
+            :type target: IPv4Net/IPv6Net/IPv4Connection/IPv6Connection/File
+            :param args: The `Args` of the action to validate. 
+                        Contains the `direction` argument in case of `allow` action, 
+                        `direction` and `drop_process` arguments in case of `deny` action
+                        and has a `None` value in case of `update` action.
+            :type args: slpf.Args
+        """
         pass
 
     def execute_delete_command(self, command_to_delete):
+        """ Implementation of `delete` action
+
+            Each Actuator must override this method in order to implement the delete action.
+
+            :param command_to_delete: The OpenC2 `Command` to delete.
+            :type command_to_delete: Command
+        """
         pass
 
-    def execute_update_command(self, name, path=None, hashes=None):
+    def execute_update_command(self, name, path):
+        """ Implementation of `update` action
+
+            Each Actuator must override this method in order to implement the update action.
+
+            :param name: The `name` of the target file.
+            :type name: str
+            :param path: The `path` of the target file.
+            :type path: str
+        """
         pass
 
     def save_persistent_commands(self):
+        """ Each Actuator must override this method in order to `save` all setted commands. """
         pass
 
     def restore_persistent_commands(self):
+        """ Each Actuator must override this method in order to `restore` all commands saved with `save_persistent_commands()`. """
+        pass
+
+    def clean_actuator_rules(self):
+        """ Each Actuator must override this method in order to `delete` all setted commands. """
         pass
       
 
@@ -146,10 +255,12 @@ class SLPFActuator:
         
 
     def query(self, cmd):
-        """ Query action
+        """ `Query` action
 
             This method implements the `query` action.
+
             :param cmd: The `Command` including `Target` and optional `Args`.
+            :type cmd: Command
             :return: A `Response` including the result of the query and appropriate status code and messages.
         """
         
@@ -203,69 +314,102 @@ class SLPFActuator:
 
 
     def allow(self, cmd):
+        """ `Allow` action
+
+            This method implements the `allow` action.
+
+            :param cmd: The `Command` including `Target` and optional `Args`.
+            :type cmd: Command
+            :return: A `Response` including the result of the allow command and appropriate status code and messages.
+        """
+
         try:
-            return self.allow_deny_handler(self.execute_allow_command.__name__, cmd)
+            return self.allow_deny_handler(cmd)
         except Exception as e:
             return self.__servererror(cmd, e)
 
 
     def deny(self, cmd):
+        """ `Deny` action
+
+            This method implements the `deny` action.
+            
+            :param cmd: The `Command` including `Target` and optional `Args`.
+            :type cmd: Command
+            :return: A `Response` including the result of the deny command and appropriate status code and messages.
+        """
+
         try:
-            return self.allow_deny_handler(self.execute_deny_command.__name__, cmd)           
+            return self.allow_deny_handler(cmd)           
         except Exception as e:
             return self.__servererror(cmd, e)
-
-
-    # args[0]: the function to be executed (allow/deny)
-    # args[1]: rule number assigned to this rule
-    def allow_deny_execution_handler(self, *args, **kwargs):
-        try:
-            function = getattr(self, args[0])
-            function(**kwargs)
-        #    args[0](**kwargs)
-        except Exception as e:
-            command_action = Actions.allow if args[0].__name__ == self.execute_allow_command.__name__ else Actions.deny
-            e.arg = { 'command_action': command_action,
-                    'rule_number': args[1]}
-            raise e
         
 
-    def allow_deny_handler(self, function_to_execute, cmd):
+    def allow_deny_handler(self, cmd):
+        """ This method manages the execution of `allow` and `deny` commands.
+
+            Validates and manages allow and deny `Target` and `Args`, 
+            sets the SLPF Actuator in `db mode` (database rules in use) iff database is empty, 
+            inserts the command in the `database` 
+            and sets the allow or deny action to be executed at a specific `start` and/or `stop time`.
+
+            :param cmd: The `Command` including `Target` and optional `Args`.
+            :type cmd: Command
+            :return: A `Response` including the result of the allow or deny command and appropriate status code and messages.
+        """
+
         try:
             action = cmd.action
             target = cmd.target.getObj()
             args = cmd.args
 
+        #   Validating target
+            if type(target) != IPv4Net and type(target) != IPv6Net and type(target) != IPv4Connection and type(target) != IPv6Connection:
+                raise TypeError("Invalid target type")
+            if type(target) == IPv4Connection or type(target) == IPv6Connection:
+                if target.protocol and target.protocol != L4Protocol.tcp and target.protocol != L4Protocol.udp and target.protocol != L4Protocol.sctp:
+                    if target.src_port or target.dst_port:
+                        raise ValueError(StatusCode.BADREQUEST, "Source/Destination port not supported with provided protocol")
+
         #   Validating args
-            if ( ('response_requested' in args and args['response_requested'].__class__ != ResponseType)
-                or ('insert_rule' in args and args['insert_rule'].__class__ != slpf.RuleID)
-                or ('direction' in args and args['direction'].__class__ != slpf.Direction)
-                or ('persistent' in args and args['persistent'].__class__ != bool)
-                or ('drop_process' in args and args['drop_process'].__class__ != DropProcess)
-                or ('start_time' in args and args['start_time'].__class__ != DateTime)
-                or ('stop_time' in args and args['stop_time'].__class__ != DateTime)
-                or ('duration' in args and args['duration'].__class__ != Duration)):
-                    raise KeyError
+            if ( ('response_requested' in args and type(args['response_requested']) != ResponseType)
+                or ('insert_rule' in args and type(args['insert_rule']) != slpf.RuleID)
+                or ('direction' in args and type(args['direction']) != slpf.Direction)
+                or ('persistent' in args and type(args['persistent']) != bool)
+                or ('drop_process' in args and type(args['drop_process']) != DropProcess)
+                or ('start_time' in args and type(args['start_time']) != DateTime)
+                or ('stop_time' in args and type(args['stop_time']) != DateTime)
+                or ('duration' in args and type(args['duration']) != Duration)):
+                    tmp_str = "Invalid allow argument type" if action == Actions.allow else "Invalid deny argument type"
+                    raise TypeError(tmp_str)
 
             if 'insert_rule' in args:
                 if args['response_requested'] != ResponseType.complete:
-                        raise KeyError
+                        raise ValueError(StatusCode.BADREQUEST, "Response requested must be complete with insert rule argument")
                 if self.db.find_command(args['insert_rule']):
                     raise ValueError(StatusCode.NOTIMPLEMENTED, "Rule number currently in use")
 
             if ('start_time' in args) and ('stop_time' in args): 
                 if 'duration' in args:
-                    raise KeyError
+                    raise ValueError(StatusCode.BADREQUEST, "Only two arguments between start time, stop time and duration can be specified")
                 if args['start_time'] > args['stop_time']:
-                    raise KeyError
+                    raise ValueError(StatusCode.BADREQUEST, "Start time greater than stop time")
             if'stop_time' in args and (args['stop_time'] < time.time() * 1000):
-                raise KeyError  
+                raise ValueError(StatusCode.BADREQUEST, "Stop time already expired")
        
         #   Setting default args values
             if not 'direction' in args:
                 args['direction'] = slpf.Direction.both
             if action == Actions.deny and not 'drop_process' in args:
                 args['drop_process'] = DropProcess.none
+
+        #   Validating action, target, args for specific implementation
+            temp_args = {'direction': args['direction']}
+            if 'drop_process' in args:
+                temp_args['drop_process'] = args['drop_process']
+            self.validate_action_target_args(action=action,
+                                             target=target,
+                                             args=temp_args)
 
         #   Calculating start/stop time
             if 'start_time' in args:
@@ -281,23 +425,29 @@ class SLPFActuator:
                 if 'duration' in args:
                     args['stop_time'] = (args['start_time']*1000 + args['duration']) / 1000
 
+        #   Setting SLPF Actuator in db mode (if database is empty)
+        #   Clear all rules in specific implementation
+        #   Starting to use db rules
+            if self.db.is_empty():
+                logger.info("[SLPF] DB MODE setted") 
+                logger.info("[SLPF] Cleaning " + self.__class__.__name__ + " rules") 
+                self.clean_actuator_rules()
+
         #   Generating job ids
-            job_ids = {'start_job_id': self.generate_unique_job_id(self.scheduler)}
-            job_ids['stop_job_id'] = self.generate_unique_job_id(self.scheduler) if 'stop_time' in args else None
+            job_ids = {'start_job_id': self.generate_unique_job_id()}
+            job_ids['stop_job_id'] = self.generate_unique_job_id() if 'stop_time' in args else None
             job_ids['my_id'] = job_ids['start_job_id']
 
         #   Inserting commands in db   
+            logger.info("[SLPF] Inserting command in database")
             rule_number = self.db_handler(action, target, args, job_ids)
 
         #   Managing the scheduler    
-            temp_args = {'direction': args['direction']}
-            if 'drop_process' in args:
-                temp_args['drop_process'] = args['drop_process']
             start_time = datetime.fromtimestamp(args['start_time'])            
-            self.scheduler.add_job(self.allow_deny_execution_handler,
+            self.scheduler.add_job(self.allow_deny_execution_wrapper,
                                    'date',
                                    next_run_time=start_time,
-                                   args=[function_to_execute, rule_number],
+                                   args=[action, rule_number],
                                    kwargs={'target': target, **temp_args},
                                    id=job_ids['my_id'],
                                    misfire_grace_time=self.misfire_grace_time)
@@ -315,24 +465,60 @@ class SLPFActuator:
             
             res = slpf.Results(rule_number=slpf.RuleID(rule_number))
             return Response(status=StatusCode.OK, status_text=StatusCodeDescription[StatusCode.OK], results=res)
+        except TypeError as e:
+            return Response(status=StatusCode.BADREQUEST, status_text=str(e))
         except ValueError as e:
             return Response(status=e.args[0], status_text=e.args[1])
-        except KeyError as e:
-            return Response(status=StatusCode.BADREQUEST, status_text="Invalid allow/deny argument")
         except Exception as e:
             return Response(status=StatusCode.INTERNALERROR, status_text="Rule not updated")
 
 
+    def allow_deny_execution_wrapper(self, *args, **kwargs):
+        """ This method is a wrapper for the execution of `allow` and `deny` commands for a specific `SLPF Actuator implementation`.
+
+            :param args: Contains the `Action` to be executed (allow or deny) and the `rule number` assigned to this rule.
+            :type args: list
+            :param kwargs: A dictionary of arguments for the execution of the specific implementation of allow or deny command.
+            :type kwargs: dict
+        """
+
+        try:
+        #   Executing allow/deny command for specific implementation
+            function = self.execute_allow_command if args[0] == Actions.allow else self.execute_deny_command
+            function(**kwargs)
+            logger.info("[SLPF] %s action executed successfully", args[0].__repr__().capitalize())
+        except Exception as e:
+            logger.info("[SLPF] Execution error for %s action: %s", args[0].__repr__().capitalize(), str(e))
+            e.arg = { 'command_action': args[0], 'rule_number': args[1]}
+            raise e
+
+
     def delete(self, cmd):
+        """ `Delete` action
+
+            This method implements the `delete` action: 
+            validates and manages delete `Target` and `Args`, 
+            gets the `command` with a specific `rule number` from the `database` and recontructs it as an `OpenC2 Command`. 
+            Finally sets the delete action to be executed at a specific `start time`.
+
+            :param cmd: The `Command` including `Target` and optional `Args`.
+            :type cmd: Command
+            :return: A `Response` including the result of the delete command and appropriate status code and messages.
+        """
+
         target = cmd.target.getObj()
         args = cmd.args
         rule_number = int(target)
 
         try:
+        #   Validating target
+            if type(target) != slpf.RuleID:
+                raise TypeError("Invalid target type")    
+
         #   Validating args
-            if ( ('response_requested' in args and args['response_requested'].__class__ != ResponseType)
-                or ('start_time' in args and args['start_time'].__class__ != DateTime)):
-                raise KeyError
+            if ( ('response_requested' in args and type(args['response_requested']) != ResponseType)
+                or ('start_time' in args and type(args['start_time']) != DateTime)):
+                raise TypeError("Invalid delete argument type")
             
         #   Calculating start time
             start_time = args['start_time'] / 1000 if 'start_time' in args else time.time()
@@ -345,7 +531,7 @@ class SLPFActuator:
         #   Managing the scheduler 
             job_ids = {'start_job_id': cmd_data['start_job_id'],
                        'stop_job_id': cmd_data['stop_job_id'],
-                       'my_id': self.generate_unique_job_id(self.scheduler)}             
+                       'my_id': self.generate_unique_job_id()}             
             self.scheduler.add_job(self.delete_handler,
                                    'date',
                                    next_run_time=start_time,
@@ -354,100 +540,195 @@ class SLPFActuator:
                                    misfire_grace_time=self.misfire_grace_time)
             
             return Response(status=StatusCode.OK, status_text=StatusCodeDescription[StatusCode.OK])
-        except KeyError as e:
-            return Response(status=StatusCode.BADREQUEST, status_text="Invalid delete argument")
+        except TypeError as e:
+            return Response(status=StatusCode.BADREQUEST, status_text=str(e))
         except Exception as e:
             return Response(status=StatusCode.INTERNALERROR, status_text="Firewall rule not removed or updated")
         
 
     def delete_handler(self, command_to_delete, rule_number, job_ids=None):
+        """ This method manages the execution of `delete` command.
+
+            Cancels scheduled `jobs` such as the execution of the command that needs to be deleted if `start time` not expired yet
+            or the annulment of the command that needs to be deleted if `stop time` is present and not expired yet. 
+            Finally executes the `delete` command for a specific `SLPF Actuator implementation` and 
+            deletes the command from the `database`.
+
+            This method can be executed by a `delete` command, an `allow` or `deny` command with a certain `stop time` and from `slpf_exit()` method at SLPF Actuator `shutdown`. 
+            In this last case `job_ids` parameter has a `None` value.
+
+            :param command_to_delete: The command to delete.
+            :type command_to_delete: Command
+            :param rule_number: Rule number of the command to delete.
+            :type rule_number: RuleID
+            :param job_ids: Contains information about `apscheduler job ids`: 
+                            `start_job_id` is the id of the job responsible to activate, at a certain `start time`, the OpenC2 allow or deny command, 
+                            `stop_job_id` is the id of the job responsible to deactivate, at a certain `stop time`, the OpenC2 allow or deny command. 
+                            `my_id` is the id of the job that is executing this function.
+            :type job_ids: dict
+        """
+
         try:
-            # In slpf_exit job_ids not passed as an argument
+            # In slpf_exit() job_ids has a None value
             if job_ids:
                 if job_ids['stop_job_id']:
                     if self.scheduler.get_job(job_ids['stop_job_id']):
+                    #   Removing stop job if present
                         self.scheduler.remove_job(job_ids['stop_job_id'])
                     else:
                         if job_ids['my_id'] and job_ids['my_id'] != job_ids['stop_job_id']:
                             return
                 if self.scheduler.get_job(job_ids['start_job_id']):
+                #   Removing start job if present
+                #   If start job still present in the scheduler the command is not set yet in the specific implementation, only in the database
                     self.scheduler.remove_job(job_ids['start_job_id'])
                 else:
+                #   if start job is not present in the scheduler we have to remove the command from the specific implementation
                     self.execute_delete_command(command_to_delete)
-        
+
+        #   Deleting command from database
+            logger.info("[SLPF] Deleting command from database")
             self.db.delete_command(rule_number)
+            logger.info("[SLPF] Delete action executed successfully")
         except Exception as e:
+            logger.info("[SLPF] Execution error for delete action: %s", str(e))
             e.arg = { 'command_action': Actions.delete }
             raise e
 
 
     def update(self, cmd):
+        """ `Update` action
+
+            This method implements the `update` action: 
+            validates and manages update `Target` and `Args` and 
+            sets the update action to be executed at a specific `start time`.
+
+            :param cmd: The `Command` including `Target` and optional `Args`.
+            :type cmd: Command
+            :return: A `Response` including the result of the delete command and appropriate status code and messages.
+        """
         try:
             target = cmd.target.getObj()
             args = cmd.args
 
-        #   Validating args                
+        #   Validating target
+            if type(target) != File:
+                raise TypeError("Invalid target type")
+                            
             if not 'name' in target or not target['name']:
-                raise KeyError
-            if target['name'].__class__ != str:
-                raise KeyError
+                raise ValueError(StatusCode.BADREQUEST, "Target file name must be specified")
+            if type(target['name']) != str:
+                raise TypeError("Invalid update argument type")
             
-            abs_path = target['name'] if not 'path' in target else os.path.join(target['path'], target['name'])
-            
-            if 'path' in target: 
-                if target['path'].__class__ != str:
-                    raise KeyError
+            if 'path' in target and type(target['path']) != str: 
+                raise TypeError("Invalid update argument type")
+            path = target['path'] if 'path' in target else self.rule_files_path
+            abs_path = os.path.join(path, target['name'])
             if not os.path.exists(abs_path):
                 raise ValueError(StatusCode.INTERNALERROR, "Cannot access file")
 
             if 'hashes' in target:
-                if 'md5' in target['hashes'] and target['hashes']['md5'].__class__ != Binaryx:
-                    raise KeyError
-                if 'sha1' in target['hashes'] and target['hashes']['sha1'].__class__ != Binaryx:
-                    raise KeyError
-                if 'sha256' in target['hashes'] and target['hashes']['sha256'].__class__ != Binaryx:
-                    raise KeyError
+                if 'md5' in target['hashes'] and type(target['hashes']['md5']) != Binaryx:
+                    raise TypeError("Invalid update argument type")
+                if 'sha1' in target['hashes'] and type(target['hashes']['sha1']) != Binaryx:
+                    raise TypeError("Invalid update argument type")
+                if 'sha256' in target['hashes'] and type(target['hashes']['sha256']) != Binaryx:
+                    raise TypeError("Invalid update argument type")
                 
+#               Checking hashes
+                md5_hash = hashlib.md5() if 'md5' in target['hashes'] else None
+                sha1_hash = hashlib.sha1() if 'sha1' in target['hashes'] else None
+                sha256_hash = hashlib.sha256() if 'sha256' in target['hashes'] else None
+
+                with open(abs_path, "rb") as f:
+                    for chunk in iter(lambda: f.read(4096), b""):
+                        if md5_hash:
+                            md5_hash.update(chunk)
+                        if sha1_hash:
+                            sha1_hash.update(chunk)
+                        if sha256_hash:
+                            sha256_hash.update(chunk)
+
+                if md5_hash and Binaryx(md5_hash.hexdigest()).__str__() != target['hashes']['md5'].__str__():
+                    raise ValueError(StatusCode.BADREQUEST, "Invalid md5 hash value")
+                if sha1_hash and Binaryx(sha1_hash.hexdigest()).__str__() != target['hashes']['sha1'].__str__():
+                    raise ValueError(StatusCode.BADREQUEST, "Invalid sha1 hash value")
+                if sha256_hash and Binaryx(sha256_hash.hexdigest()).__str__() != target['hashes']['sha256'].__str__():
+                    raise ValueError(StatusCode.BADREQUEST, "Invalid sha256 hash value")
+
+        #   Validating args        
             if 'response_requested' in args: 
-                if args['response_requested'].__class__ != ResponseType or args['response_requested'] == ResponseType.status:
-                    raise KeyError
-            if 'start_time' in args and args['start_time'].__class__ != DateTime:
-                raise KeyError
+                if type(args['response_requested']) != ResponseType:
+                    raise TypeError("Invalid update argument type")
+                if args['response_requested'] == ResponseType.status:
+                    raise ValueError(StatusCode.BADREQUEST, "Response requested cannot be set to status")
+            if 'start_time' in args and type(args['start_time']) != DateTime:
+                raise TypeError("Invalid update argument type")
+            
+        #   Validating action, target for specific implementation
+            self.validate_action_target_args(action=cmd.action,
+                                             target=target,
+                                             args=None)
 
         #   Calculating start time
             start_time = args['start_time'] / 1000 if 'start_time' in args else time.time()
             start_time = datetime.fromtimestamp(start_time)
 
         #   Managing the scheduler 
-            self.scheduler.add_job(self.execute_update_command_wrapper,
+            self.scheduler.add_job(self.update_handler,
                                    'date',
                                    next_run_time=start_time,
-                                   kwargs=target,
-                                   id=self.generate_unique_job_id(self.scheduler),
+                                   kwargs={'name': target['name'], 'path': path},
+                                   id=self.generate_unique_job_id(),
                                    misfire_grace_time=self.misfire_grace_time)
 
         #    return Response(status=StatusCode.PROCESSING, status_text=StatusCodeDescription[StatusCode.PROCESSING])
             return Response(status=StatusCode.OK, status_text=StatusCodeDescription[StatusCode.OK])
+        except TypeError as e:
+            return Response(status=StatusCode.BADREQUEST, status_text=str(e))
         except ValueError as e:
             return Response(status=e.args[0], status_text=e.args[1])
-        except KeyError as e:
-            return Response(status=StatusCode.BADREQUEST, status_text="Invalid update argument")
         except Exception as e:
             return Response(status=StatusCode.INTERNALERROR, status_text="File not updated")
 
         
-#   To manage update exceptions
-    def execute_update_command_wrapper(self, **kwargs):
+    def update_handler(self, **kwargs):
+        """ This method manages the execution of `update` command.
+
+            Sets `SLPF Actuator` in `file mode` (file rules in use) removing all scheduled commands from the scheduler and all rules from the database and 
+            executes the `update` command for a specific `SLPF Actuator implementation`
+
+            :param kwargs: A list of arguments for the execution of the specific implementation of update command.
+            :type kwargs: dict
+        """
+
         try:
+        #   Setting SLPF Actuator in file mode
+        #   Clear all rules in database, starting to use file rules
+            logger.info("[SLPF] FILE MODE") 
+        #   Cleaning scheduler
+            self.scheduler.remove_all_jobs()
+        #   Cleaning database: SLPF Actuator now in file mode, al rules managed by file
+            self.db.clean_db()
+        #   Executing update command for specific implementation
             self.execute_update_command(**kwargs)
+            logger.info("[SLPF] Update action executed successfully")
         except Exception as e:
+            logger.info("[SLPF] Execution error for update action: %s", str(e))
             e.arg = { 'command_action': Actions.update }
             raise e
           
 
     def slpf_exit(self):
+        """ This method handles SLPF Actuator `shutdown`.
+
+            Deletes non persistent commands from the database, 
+            saves persistent commands and scheduled jobs if SLPF Actuator in db mode and 
+            turns off the scheduler.
+        """
         try:
-#           Deleting non persistent commands            
+#           Deleting non persistent commands    
+            logger.info("[SLPF] Deleting non persistent commands")        
             non_persistent_commands = self.db.get_non_persistent_comands()           
             for command in non_persistent_commands:
                 job_ids = {'start_job_id': command['start_job_id'],
@@ -456,26 +737,41 @@ class SLPFActuator:
                                     rule_number=command['rule_number'],
                                     job_ids=job_ids)
 
-            self.save_persistent_commands()
+        #   Saves persistent commands only if SLPF Actuator is in db mode (there are commands in the database)
+        #   If SLPF Actuator is in file mode (empty database, rules managed by file) there is no need to save persistent commands
+            if not self.db.is_empty():
+                logger.info("[SLPF] DB MODE") 
+    #           Saving persistent commands           
+                logger.info("[SLPF] Saving persistent commands")  
+                self.save_persistent_commands()
+    #           Saving persistent jobs
+                logger.info("[SLPF] Saving persistent scheduled commands")  
+                persistent_jobs = self.scheduler.get_jobs()
+                if persistent_jobs:
+                    for job in persistent_jobs:
+                        self.db.insert_job(id=job.id,
+                                          func_name=job.func.__name__,
+                                           next_run_time=job.next_run_time.strftime('%Y-%m-%d %H:%M:%S.%f')[:-3],
+                                           args=job.args,
+                                           kwargs=job.kwargs)                
+            else:
+                logger.info("[SLPF] FILE MODE") 
 
-#           Saving persistent jobs
-            persistent_jobs = self.scheduler.get_jobs()
-            if persistent_jobs:
-                for job in persistent_jobs:
-                    self.db.insert_job(id=job.id,
-                                       func_name=job.func.__name__,
-                                       next_run_time=job.next_run_time.strftime('%Y-%m-%d %H:%M:%S.%f')[:-3],
-                                       args=job.args,
-                                       kwargs=job.kwargs)
 #           Shutdown scheduler
-            threading.Thread(target=self.scheduler.shutdown).start()       
+            threading.Thread(target=self.scheduler.shutdown).start()
+            logger.info("[SLPF] Shutdown")       
         except Exception as e:
-            print("HEREEEEEE")
-            print("------->", str(e))
+            logger.info("[SLPF] Shutdown error: %s", str(e)) 
             raise e
 
 
     def scheduler_listener(self, event):
+        """ This method handles success or exceptions of scheduled `apscheduler jobs`.
+
+            :param event: An event triggered by the execution of a job (success or exception).
+            :type event: apscheduler.events.JobExecutionEvent
+        """
+
         try:
             if event.exception:
                 # allow/deny case
@@ -485,22 +781,17 @@ class SLPFActuator:
                         raise
                     if command_action == Actions.allow or command_action == Actions.deny:
                         self.db.delete_command(event.exception.arg.get('rule_number'))
-                #        return Response(status=StatusCode.INTERNALERROR, status_text="Rule not updated")
-
                     elif command_action == Actions.delete:
-                #        return Response(status=StatusCode.INTERNALERROR, status_text="Firewall rule not removed or updated")
                         pass
                     elif command_action == Actions.update:
-                #        return Response(status=StatusCode.INTERNALERROR, status_text="File not updated")
                         pass
-            else:
-        #        return Response(status=StatusCode.OK, status_text=StatusCodeDescription[StatusCode.OK])
-                pass
         except Exception as e:
             raise e
 
 
     def restore_persistent_jobs(self):
+        """ This method restores scheduled `apscheduler jobs` not executed yet. """
+
         try:
             persistent_jobs = self.db.get_jobs()
             for job in persistent_jobs:    
@@ -516,21 +807,37 @@ class SLPFActuator:
             raise e
         
 
-    def generate_unique_job_id(self, scheduler):
+    def generate_unique_job_id(self):
+        """ This method generates an unique id for a `apscheduler jobs` that has to be scheduled. """
+
         while True:
             job_id = str(uuid.uuid4())
-            if not scheduler.get_job(job_id):
+            if not self.scheduler.get_job(job_id):
                 return job_id
 
 
-    def db_handler(self, action, target, args, job_ids):     
+    def db_handler(self, action, target, args, job_ids):
+        """ This method handles insertion of commands in the database.
+
+            :param action: Command `Action` to be inserted.
+            :type action: Actions
+            :param target: Command `Target` to be inserted.
+            :type target: IPv4Net/IPv6Net/IPv4Connection/IPv6Connection
+            :param args: Command `Args` to be inserted.
+            :type args: slpf.Args
+            :param job_ids: Contains information about `apscheduler job ids`: 
+                            `start_job_id` is the id of the job responsible to activate, at a certain `start time`, the OpenC2 allow or deny command, 
+                            `stop_job_id` is the id of the job responsible to deactivate, at a certain `stop time`, the OpenC2 allow or deny command. 
+            :type job_ids: dict
+        """
+
         try:
             src = None
             src_port = None
             dst = None
             dst_port = None
             prot = None
-            if isinstance(target, IPv4Connection) or isinstance(target, IPv6Connection):
+            if type(target) == IPv4Connection or type(target) == IPv6Connection:
                 if target.src_addr:
                     src = target.src_addr.__str__()
                 if target.dst_addr:
@@ -541,11 +848,8 @@ class SLPFActuator:
                     src_port = target.src_port
                 if target.dst_port:
                     dst_port = target.dst_port
-            elif isinstance(target, IPv4Net) or isinstance(target, IPv6Net):
-                if args['direction'] == slpf.Direction.ingress or args['direction'] == slpf.Direction.both:
-                    src = target.__str__()
-                if args['direction'] == slpf.Direction.egress or args['direction'] == slpf.Direction.both:
-                    dst = target.__str__()
+            elif type(target) == IPv4Net or type(target) == IPv6Net:
+                dst = target.__str__()
 
             rule_number = self.db.insert_command(insert_rule=args['insert_rule'] if 'insert_rule' in args else None,
                                                 action=action.__repr__(),
@@ -568,6 +872,12 @@ class SLPFActuator:
             
 
     def reconstruct_command(self, cmd_data):
+        """ This method reconstruct an `OpenC2 Command` from `database data`.
+
+            :param cmd_data: Database data of a specific command.
+            :type cmd_data: dict
+        """
+
         if cmd_data['action'] == Actions.allow.name:
             action = Actions.allow
         elif cmd_data['action'] == Actions.deny.name:

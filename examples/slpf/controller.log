@@ -1,0 +1,1270 @@
+1747650529.950340 [[38;5;42m  INFO  [0m]root: Creating Producer
+1747650529.950481 [[38;5;42m  INFO  [0m]root: Sending command: Command(action=allow, target=172.19.0.0/24, args={'response_requested': <ResponseType.complete: 3>}, actuator=slpf(hostname:firewall,named_group:firewalls,asset_id:iptables), command_id=None)
+1747650529.950675 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: Sending to http://127.0.0.1:8080/.well-known/openc2
+1747650529.950732 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP Request Content:
+{
+   "headers": {
+      "request_id": "cacb973f-99af-4daf-8354-1fc95e64a0fc",
+      "created": 1747650529950,
+      "from": "producer.example.net",
+      "to": [
+         "127.0.0.1"
+      ]
+   },
+   "body": {
+      "openc2": {
+         "request": {
+            "action": "allow",
+            "target": {
+               "ipv4_net": "172.19.0.0/24"
+            },
+            "args": {
+               "response_requested": "complete"
+            },
+            "actuator": {
+               "slpf": {
+                  "hostname": "firewall",
+                  "named_group": "firewalls",
+                  "asset_id": "iptables"
+               }
+            }
+         }
+      }
+   }
+}
+1747650530.018735 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP got response: <Response [200]>
+1747650530.022019 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP Response Content:
+{
+   "headers": {
+      "request_id": "cacb973f-99af-4daf-8354-1fc95e64a0fc",
+      "created": 1747650530017,
+      "from": "testconsumer",
+      "to": [
+         "producer.example.net"
+      ]
+   },
+   "body": {
+      "openc2": {
+         "response": {
+            "status": 200,
+            "status_text": "OK",
+            "results": {
+               "slpf": {
+                  "rule_number": 1
+               }
+            }
+         }
+      }
+   }
+}
+1747650530.022412 [[38;5;42m  INFO  [0m]root: Got response: Message(content={'status': <StatusCode.OK: 200>, 'status_text': 'OK', 'results': {'rule_number': 1}}, content_type='openc2', msg_type=<MessageType.response: 2>, status=<StatusCode.OK: 200>, request_id='cacb973f-99af-4daf-8354-1fc95e64a0fc', created=1747650530017, from_='testconsumer', to=['producer.example.net'], version='1.0', encoding=<class 'openc2lib.encoders.json.JSONEncoder'>)
+1747651036.487829 [[38;5;42m  INFO  [0m]root: Creating Producer
+1747651036.487974 [[38;5;42m  INFO  [0m]root: Sending command: Command(action=update, target={'name': 'new_iptables_rules.v6'}, args={'response_requested': <ResponseType.complete: 3>}, actuator=slpf(hostname:firewall,named_group:firewalls,asset_id:iptables), command_id=None)
+1747651036.488149 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: Sending to http://127.0.0.1:8080/.well-known/openc2
+1747651036.488202 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP Request Content:
+{
+   "headers": {
+      "request_id": "c96b590a-f110-4ba7-8b14-b991e1765230",
+      "created": 1747651036488,
+      "from": "producer.example.net",
+      "to": [
+         "127.0.0.1"
+      ]
+   },
+   "body": {
+      "openc2": {
+         "request": {
+            "action": "update",
+            "target": {
+               "file": {
+                  "name": "new_iptables_rules.v6"
+               }
+            },
+            "args": {
+               "response_requested": "complete"
+            },
+            "actuator": {
+               "slpf": {
+                  "hostname": "firewall",
+                  "named_group": "firewalls",
+                  "asset_id": "iptables"
+               }
+            }
+         }
+      }
+   }
+}
+1747651036.491151 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP got response: <Response [200]>
+1747651036.491849 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP Response Content:
+{
+   "headers": {
+      "request_id": "c96b590a-f110-4ba7-8b14-b991e1765230",
+      "created": 1747651036490,
+      "from": "testconsumer",
+      "to": [
+         "producer.example.net"
+      ]
+   },
+   "body": {
+      "openc2": {
+         "response": {
+            "status": 200,
+            "status_text": "OK"
+         }
+      }
+   }
+}
+1747651036.492148 [[38;5;42m  INFO  [0m]root: Got response: Message(content={'status': <StatusCode.OK: 200>, 'status_text': 'OK'}, content_type='openc2', msg_type=<MessageType.response: 2>, status=<StatusCode.OK: 200>, request_id='c96b590a-f110-4ba7-8b14-b991e1765230', created=1747651036490, from_='testconsumer', to=['producer.example.net'], version='1.0', encoding=<class 'openc2lib.encoders.json.JSONEncoder'>)
+1747651314.547804 [[38;5;42m  INFO  [0m]root: Creating Producer
+1747651314.548006 [[38;5;42m  INFO  [0m]root: Sending command: Command(action=allow, target=172.19.0.0/24, args={'response_requested': <ResponseType.complete: 3>}, actuator=slpf(hostname:firewall,named_group:firewalls,asset_id:iptables), command_id=None)
+1747651314.548279 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: Sending to http://127.0.0.1:8080/.well-known/openc2
+1747651314.548345 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP Request Content:
+{
+   "headers": {
+      "request_id": "0f30e288-40f9-4730-82c9-e45f2feb89d8",
+      "created": 1747651314548,
+      "from": "producer.example.net",
+      "to": [
+         "127.0.0.1"
+      ]
+   },
+   "body": {
+      "openc2": {
+         "request": {
+            "action": "allow",
+            "target": {
+               "ipv4_net": "172.19.0.0/24"
+            },
+            "args": {
+               "response_requested": "complete"
+            },
+            "actuator": {
+               "slpf": {
+                  "hostname": "firewall",
+                  "named_group": "firewalls",
+                  "asset_id": "iptables"
+               }
+            }
+         }
+      }
+   }
+}
+1747651314.594664 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP got response: <Response [200]>
+1747651314.595409 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP Response Content:
+{
+   "headers": {
+      "request_id": "0f30e288-40f9-4730-82c9-e45f2feb89d8",
+      "created": 1747651314593,
+      "from": "testconsumer",
+      "to": [
+         "producer.example.net"
+      ]
+   },
+   "body": {
+      "openc2": {
+         "response": {
+            "status": 200,
+            "status_text": "OK",
+            "results": {
+               "slpf": {
+                  "rule_number": 1
+               }
+            }
+         }
+      }
+   }
+}
+1747651314.595665 [[38;5;42m  INFO  [0m]root: Got response: Message(content={'status': <StatusCode.OK: 200>, 'status_text': 'OK', 'results': {'rule_number': 1}}, content_type='openc2', msg_type=<MessageType.response: 2>, status=<StatusCode.OK: 200>, request_id='0f30e288-40f9-4730-82c9-e45f2feb89d8', created=1747651314593, from_='testconsumer', to=['producer.example.net'], version='1.0', encoding=<class 'openc2lib.encoders.json.JSONEncoder'>)
+1747651478.109828 [[38;5;42m  INFO  [0m]root: Creating Producer
+1747651478.109986 [[38;5;42m  INFO  [0m]root: Sending command: Command(action=allow, target=172.19.0.0/24, args={'insert_rule': 25, 'response_requested': <ResponseType.complete: 3>}, actuator=slpf(hostname:firewall,named_group:firewalls,asset_id:iptables), command_id=None)
+1747651478.110195 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: Sending to http://127.0.0.1:8080/.well-known/openc2
+1747651478.110251 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP Request Content:
+{
+   "headers": {
+      "request_id": "b44d58a5-589f-4005-853b-afd8217e4df1",
+      "created": 1747651478110,
+      "from": "producer.example.net",
+      "to": [
+         "127.0.0.1"
+      ]
+   },
+   "body": {
+      "openc2": {
+         "request": {
+            "action": "allow",
+            "target": {
+               "ipv4_net": "172.19.0.0/24"
+            },
+            "args": {
+               "slpf": {
+                  "insert_rule": 25
+               },
+               "response_requested": "complete"
+            },
+            "actuator": {
+               "slpf": {
+                  "hostname": "firewall",
+                  "named_group": "firewalls",
+                  "asset_id": "iptables"
+               }
+            }
+         }
+      }
+   }
+}
+1747651478.113087 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP got response: <Response [501]>
+1747651478.113731 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP Response Content:
+{
+   "headers": {
+      "request_id": "b44d58a5-589f-4005-853b-afd8217e4df1",
+      "created": 1747651478112,
+      "from": "testconsumer",
+      "to": [
+         "producer.example.net"
+      ]
+   },
+   "body": {
+      "openc2": {
+         "response": {
+            "status": 501,
+            "status_text": "Rule number currently in use"
+         }
+      }
+   }
+}
+1747651478.114011 [[38;5;42m  INFO  [0m]root: Got response: Message(content={'status': <StatusCode.NOTIMPLEMENTED: 501>, 'status_text': 'Rule number currently in use'}, content_type='openc2', msg_type=<MessageType.response: 2>, status=<StatusCode.NOTIMPLEMENTED: 501>, request_id='b44d58a5-589f-4005-853b-afd8217e4df1', created=1747651478112, from_='testconsumer', to=['producer.example.net'], version='1.0', encoding=<class 'openc2lib.encoders.json.JSONEncoder'>)
+1747651536.658394 [[38;5;42m  INFO  [0m]root: Creating Producer
+1747651536.658547 [[38;5;42m  INFO  [0m]root: Sending command: Command(action=allow, target=172.19.0.0/24, args={'insert_rule': 25, 'response_requested': <ResponseType.complete: 3>}, actuator=slpf(hostname:firewall,named_group:firewalls,asset_id:iptables), command_id=None)
+1747651536.658749 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: Sending to http://127.0.0.1:8080/.well-known/openc2
+1747651536.658807 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP Request Content:
+{
+   "headers": {
+      "request_id": "dda8ea64-e4e2-4299-8088-e81b0363e3f9",
+      "created": 1747651536658,
+      "from": "producer.example.net",
+      "to": [
+         "127.0.0.1"
+      ]
+   },
+   "body": {
+      "openc2": {
+         "request": {
+            "action": "allow",
+            "target": {
+               "ipv4_net": "172.19.0.0/24"
+            },
+            "args": {
+               "slpf": {
+                  "insert_rule": 25
+               },
+               "response_requested": "complete"
+            },
+            "actuator": {
+               "slpf": {
+                  "hostname": "firewall",
+                  "named_group": "firewalls",
+                  "asset_id": "iptables"
+               }
+            }
+         }
+      }
+   }
+}
+1747651536.664338 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP got response: <Response [200]>
+1747651536.665042 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP Response Content:
+{
+   "headers": {
+      "request_id": "dda8ea64-e4e2-4299-8088-e81b0363e3f9",
+      "created": 1747651536662,
+      "from": "testconsumer",
+      "to": [
+         "producer.example.net"
+      ]
+   },
+   "body": {
+      "openc2": {
+         "response": {
+            "status": 200,
+            "status_text": "OK",
+            "results": {
+               "slpf": {
+                  "rule_number": 25
+               }
+            }
+         }
+      }
+   }
+}
+1747651536.665337 [[38;5;42m  INFO  [0m]root: Got response: Message(content={'status': <StatusCode.OK: 200>, 'status_text': 'OK', 'results': {'rule_number': 25}}, content_type='openc2', msg_type=<MessageType.response: 2>, status=<StatusCode.OK: 200>, request_id='dda8ea64-e4e2-4299-8088-e81b0363e3f9', created=1747651536662, from_='testconsumer', to=['producer.example.net'], version='1.0', encoding=<class 'openc2lib.encoders.json.JSONEncoder'>)
+1747651545.603578 [[38;5;42m  INFO  [0m]root: Creating Producer
+1747651545.603733 [[38;5;42m  INFO  [0m]root: Sending command: Command(action=allow, target=172.19.0.0/24, args={'insert_rule': 25, 'response_requested': <ResponseType.complete: 3>}, actuator=slpf(hostname:firewall,named_group:firewalls,asset_id:iptables), command_id=None)
+1747651545.603934 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: Sending to http://127.0.0.1:8080/.well-known/openc2
+1747651545.604007 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP Request Content:
+{
+   "headers": {
+      "request_id": "3bf078bc-7df1-4fd8-963f-fcc124981cf2",
+      "created": 1747651545603,
+      "from": "producer.example.net",
+      "to": [
+         "127.0.0.1"
+      ]
+   },
+   "body": {
+      "openc2": {
+         "request": {
+            "action": "allow",
+            "target": {
+               "ipv4_net": "172.19.0.0/24"
+            },
+            "args": {
+               "slpf": {
+                  "insert_rule": 25
+               },
+               "response_requested": "complete"
+            },
+            "actuator": {
+               "slpf": {
+                  "hostname": "firewall",
+                  "named_group": "firewalls",
+                  "asset_id": "iptables"
+               }
+            }
+         }
+      }
+   }
+}
+1747651545.606328 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP got response: <Response [501]>
+1747651545.607277 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP Response Content:
+{
+   "headers": {
+      "request_id": "3bf078bc-7df1-4fd8-963f-fcc124981cf2",
+      "created": 1747651545605,
+      "from": "testconsumer",
+      "to": [
+         "producer.example.net"
+      ]
+   },
+   "body": {
+      "openc2": {
+         "response": {
+            "status": 501,
+            "status_text": "Rule number currently in use"
+         }
+      }
+   }
+}
+1747651545.607590 [[38;5;42m  INFO  [0m]root: Got response: Message(content={'status': <StatusCode.NOTIMPLEMENTED: 501>, 'status_text': 'Rule number currently in use'}, content_type='openc2', msg_type=<MessageType.response: 2>, status=<StatusCode.NOTIMPLEMENTED: 501>, request_id='3bf078bc-7df1-4fd8-963f-fcc124981cf2', created=1747651545605, from_='testconsumer', to=['producer.example.net'], version='1.0', encoding=<class 'openc2lib.encoders.json.JSONEncoder'>)
+1747651597.798501 [[38;5;42m  INFO  [0m]root: Creating Producer
+1747651597.798646 [[38;5;42m  INFO  [0m]root: Sending command: Command(action=update, target={'name': 'ne_iptables_rules.v4'}, args={'response_requested': <ResponseType.complete: 3>}, actuator=slpf(hostname:firewall,named_group:firewalls,asset_id:iptables), command_id=None)
+1747651597.798831 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: Sending to http://127.0.0.1:8080/.well-known/openc2
+1747651597.798892 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP Request Content:
+{
+   "headers": {
+      "request_id": "85d53e0d-49a1-487a-a6e3-17c3bf48293a",
+      "created": 1747651597798,
+      "from": "producer.example.net",
+      "to": [
+         "127.0.0.1"
+      ]
+   },
+   "body": {
+      "openc2": {
+         "request": {
+            "action": "update",
+            "target": {
+               "file": {
+                  "name": "ne_iptables_rules.v4"
+               }
+            },
+            "args": {
+               "response_requested": "complete"
+            },
+            "actuator": {
+               "slpf": {
+                  "hostname": "firewall",
+                  "named_group": "firewalls",
+                  "asset_id": "iptables"
+               }
+            }
+         }
+      }
+   }
+}
+1747651597.801399 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP got response: <Response [500]>
+1747651597.802001 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP Response Content:
+{
+   "headers": {
+      "request_id": "85d53e0d-49a1-487a-a6e3-17c3bf48293a",
+      "created": 1747651597800,
+      "from": "testconsumer",
+      "to": [
+         "producer.example.net"
+      ]
+   },
+   "body": {
+      "openc2": {
+         "response": {
+            "status": 500,
+            "status_text": "Cannot access file"
+         }
+      }
+   }
+}
+1747651597.802237 [[38;5;42m  INFO  [0m]root: Got response: Message(content={'status': <StatusCode.INTERNALERROR: 500>, 'status_text': 'Cannot access file'}, content_type='openc2', msg_type=<MessageType.response: 2>, status=<StatusCode.INTERNALERROR: 500>, request_id='85d53e0d-49a1-487a-a6e3-17c3bf48293a', created=1747651597800, from_='testconsumer', to=['producer.example.net'], version='1.0', encoding=<class 'openc2lib.encoders.json.JSONEncoder'>)
+1747651607.209259 [[38;5;42m  INFO  [0m]root: Creating Producer
+1747651607.209413 [[38;5;42m  INFO  [0m]root: Sending command: Command(action=update, target={'name': 'new_iptables_rules.v5'}, args={'response_requested': <ResponseType.complete: 3>}, actuator=slpf(hostname:firewall,named_group:firewalls,asset_id:iptables), command_id=None)
+1747651607.209622 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: Sending to http://127.0.0.1:8080/.well-known/openc2
+1747651607.209684 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP Request Content:
+{
+   "headers": {
+      "request_id": "01efabcc-a3a9-4168-ad73-e48c2028953a",
+      "created": 1747651607209,
+      "from": "producer.example.net",
+      "to": [
+         "127.0.0.1"
+      ]
+   },
+   "body": {
+      "openc2": {
+         "request": {
+            "action": "update",
+            "target": {
+               "file": {
+                  "name": "new_iptables_rules.v5"
+               }
+            },
+            "args": {
+               "response_requested": "complete"
+            },
+            "actuator": {
+               "slpf": {
+                  "hostname": "firewall",
+                  "named_group": "firewalls",
+                  "asset_id": "iptables"
+               }
+            }
+         }
+      }
+   }
+}
+1747651607.212276 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP got response: <Response [500]>
+1747651607.212953 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP Response Content:
+{
+   "headers": {
+      "request_id": "01efabcc-a3a9-4168-ad73-e48c2028953a",
+      "created": 1747651607211,
+      "from": "testconsumer",
+      "to": [
+         "producer.example.net"
+      ]
+   },
+   "body": {
+      "openc2": {
+         "response": {
+            "status": 500,
+            "status_text": "Cannot access file"
+         }
+      }
+   }
+}
+1747651607.213223 [[38;5;42m  INFO  [0m]root: Got response: Message(content={'status': <StatusCode.INTERNALERROR: 500>, 'status_text': 'Cannot access file'}, content_type='openc2', msg_type=<MessageType.response: 2>, status=<StatusCode.INTERNALERROR: 500>, request_id='01efabcc-a3a9-4168-ad73-e48c2028953a', created=1747651607211, from_='testconsumer', to=['producer.example.net'], version='1.0', encoding=<class 'openc2lib.encoders.json.JSONEncoder'>)
+1747652377.248836 [[38;5;42m  INFO  [0m]root: Creating Producer
+1747652377.249022 [[38;5;42m  INFO  [0m]root: Sending command: Command(action=update, target={'name': 'server.log'}, args={'response_requested': <ResponseType.complete: 3>}, actuator=slpf(hostname:firewall,named_group:firewalls,asset_id:iptables), command_id=None)
+1747652377.249202 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: Sending to http://127.0.0.1:8080/.well-known/openc2
+1747652377.249257 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP Request Content:
+{
+   "headers": {
+      "request_id": "fd188c4b-fad0-4671-8c93-8ce223d3a82a",
+      "created": 1747652377249,
+      "from": "producer.example.net",
+      "to": [
+         "127.0.0.1"
+      ]
+   },
+   "body": {
+      "openc2": {
+         "request": {
+            "action": "update",
+            "target": {
+               "file": {
+                  "name": "server.log"
+               }
+            },
+            "args": {
+               "response_requested": "complete"
+            },
+            "actuator": {
+               "slpf": {
+                  "hostname": "firewall",
+                  "named_group": "firewalls",
+                  "asset_id": "iptables"
+               }
+            }
+         }
+      }
+   }
+}
+1747652377.251761 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP got response: <Response [400]>
+1747652377.252426 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP Response Content:
+{
+   "headers": {
+      "request_id": "fd188c4b-fad0-4671-8c93-8ce223d3a82a",
+      "created": 1747652377251,
+      "from": "testconsumer",
+      "to": [
+         "producer.example.net"
+      ]
+   },
+   "body": {
+      "openc2": {
+         "response": {
+            "status": 400,
+            "status_text": "File not supported"
+         }
+      }
+   }
+}
+1747652377.252702 [[38;5;42m  INFO  [0m]root: Got response: Message(content={'status': <StatusCode.BADREQUEST: 400>, 'status_text': 'File not supported'}, content_type='openc2', msg_type=<MessageType.response: 2>, status=<StatusCode.BADREQUEST: 400>, request_id='fd188c4b-fad0-4671-8c93-8ce223d3a82a', created=1747652377251, from_='testconsumer', to=['producer.example.net'], version='1.0', encoding=<class 'openc2lib.encoders.json.JSONEncoder'>)
+1747737222.808846 [[38;5;42m  INFO  [0m]root: Creating Producer
+1747737222.810351 [[38;5;42m  INFO  [0m]root: Sending command: Command(action=allow, target=IPv4Connection(src=172.19.0.1/32, dst=None, protocol=None, src_port=None, st_port=None), args={'response_requested': <ResponseType.complete: 3>}, actuator=slpf(hostname:firewall,named_group:firewalls,asset_id:iptables), command_id=None)
+1747737222.810572 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: Sending to http://127.0.0.1:8080/.well-known/openc2
+1747737222.810649 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP Request Content:
+{
+   "headers": {
+      "request_id": "196cb2c7-355c-496a-ba4c-84fdfa9a6484",
+      "created": 1747737222810,
+      "from": "producer.example.net",
+      "to": [
+         "127.0.0.1"
+      ]
+   },
+   "body": {
+      "openc2": {
+         "request": {
+            "action": "allow",
+            "target": {
+               "ipv4_connection": {
+                  "src_addr": "172.19.0.1/32"
+               }
+            },
+            "args": {
+               "response_requested": "complete"
+            },
+            "actuator": {
+               "slpf": {
+                  "hostname": "firewall",
+                  "named_group": "firewalls",
+                  "asset_id": "iptables"
+               }
+            }
+         }
+      }
+   }
+}
+1747737222.856066 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP got response: <Response [200]>
+1747737222.859208 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP Response Content:
+{
+   "headers": {
+      "request_id": "196cb2c7-355c-496a-ba4c-84fdfa9a6484",
+      "created": 1747737222855,
+      "from": "testconsumer",
+      "to": [
+         "producer.example.net"
+      ]
+   },
+   "body": {
+      "openc2": {
+         "response": {
+            "status": 200,
+            "status_text": "OK",
+            "results": {
+               "slpf": {
+                  "rule_number": 1
+               }
+            }
+         }
+      }
+   }
+}
+1747737222.859619 [[38;5;42m  INFO  [0m]root: Got response: Message(content={'status': <StatusCode.OK: 200>, 'status_text': 'OK', 'results': {'rule_number': 1}}, content_type='openc2', msg_type=<MessageType.response: 2>, status=<StatusCode.OK: 200>, request_id='196cb2c7-355c-496a-ba4c-84fdfa9a6484', created=1747737222855, from_='testconsumer', to=['producer.example.net'], version='1.0', encoding=<class 'openc2lib.encoders.json.JSONEncoder'>)
+1747737342.432669 [[38;5;42m  INFO  [0m]root: Creating Producer
+1747737342.432810 [[38;5;42m  INFO  [0m]root: Sending command: Command(action=update, target={'name': 'new_iptables_rules.v4'}, args={'response_requested': <ResponseType.complete: 3>}, actuator=slpf(hostname:firewall,named_group:firewalls,asset_id:iptables), command_id=None)
+1747737342.432984 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: Sending to http://127.0.0.1:8080/.well-known/openc2
+1747737342.433054 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP Request Content:
+{
+   "headers": {
+      "request_id": "8eaf05fd-920a-4bd3-9f7d-a5b534b0e30a",
+      "created": 1747737342432,
+      "from": "producer.example.net",
+      "to": [
+         "127.0.0.1"
+      ]
+   },
+   "body": {
+      "openc2": {
+         "request": {
+            "action": "update",
+            "target": {
+               "file": {
+                  "name": "new_iptables_rules.v4"
+               }
+            },
+            "args": {
+               "response_requested": "complete"
+            },
+            "actuator": {
+               "slpf": {
+                  "hostname": "firewall",
+                  "named_group": "firewalls",
+                  "asset_id": "iptables"
+               }
+            }
+         }
+      }
+   }
+}
+1747737342.436128 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP got response: <Response [200]>
+1747737342.436776 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP Response Content:
+{
+   "headers": {
+      "request_id": "8eaf05fd-920a-4bd3-9f7d-a5b534b0e30a",
+      "created": 1747737342435,
+      "from": "testconsumer",
+      "to": [
+         "producer.example.net"
+      ]
+   },
+   "body": {
+      "openc2": {
+         "response": {
+            "status": 200,
+            "status_text": "OK"
+         }
+      }
+   }
+}
+1747737342.437098 [[38;5;42m  INFO  [0m]root: Got response: Message(content={'status': <StatusCode.OK: 200>, 'status_text': 'OK'}, content_type='openc2', msg_type=<MessageType.response: 2>, status=<StatusCode.OK: 200>, request_id='8eaf05fd-920a-4bd3-9f7d-a5b534b0e30a', created=1747737342435, from_='testconsumer', to=['producer.example.net'], version='1.0', encoding=<class 'openc2lib.encoders.json.JSONEncoder'>)
+1747737445.781573 [[38;5;42m  INFO  [0m]root: Creating Producer
+1747737445.781776 [[38;5;42m  INFO  [0m]root: Sending command: Command(action=allow, target=IPv4Connection(src=172.19.0.1/32, dst=None, protocol=None, src_port=None, st_port=None), args={'response_requested': <ResponseType.complete: 3>}, actuator=slpf(hostname:firewall,named_group:firewalls,asset_id:iptables), command_id=None)
+1747737445.781978 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: Sending to http://127.0.0.1:8080/.well-known/openc2
+1747737445.782035 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP Request Content:
+{
+   "headers": {
+      "request_id": "77008131-835d-4108-b596-341c54a03f24",
+      "created": 1747737445781,
+      "from": "producer.example.net",
+      "to": [
+         "127.0.0.1"
+      ]
+   },
+   "body": {
+      "openc2": {
+         "request": {
+            "action": "allow",
+            "target": {
+               "ipv4_connection": {
+                  "src_addr": "172.19.0.1/32"
+               }
+            },
+            "args": {
+               "response_requested": "complete"
+            },
+            "actuator": {
+               "slpf": {
+                  "hostname": "firewall",
+                  "named_group": "firewalls",
+                  "asset_id": "iptables"
+               }
+            }
+         }
+      }
+   }
+}
+1747737445.815727 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP got response: <Response [200]>
+1747737445.816527 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP Response Content:
+{
+   "headers": {
+      "request_id": "77008131-835d-4108-b596-341c54a03f24",
+      "created": 1747737445814,
+      "from": "testconsumer",
+      "to": [
+         "producer.example.net"
+      ]
+   },
+   "body": {
+      "openc2": {
+         "response": {
+            "status": 200,
+            "status_text": "OK",
+            "results": {
+               "slpf": {
+                  "rule_number": 1
+               }
+            }
+         }
+      }
+   }
+}
+1747737445.816816 [[38;5;42m  INFO  [0m]root: Got response: Message(content={'status': <StatusCode.OK: 200>, 'status_text': 'OK', 'results': {'rule_number': 1}}, content_type='openc2', msg_type=<MessageType.response: 2>, status=<StatusCode.OK: 200>, request_id='77008131-835d-4108-b596-341c54a03f24', created=1747737445814, from_='testconsumer', to=['producer.example.net'], version='1.0', encoding=<class 'openc2lib.encoders.json.JSONEncoder'>)
+1747739051.162154 [[38;5;42m  INFO  [0m]root: Creating Producer
+1747739051.162344 [[38;5;42m  INFO  [0m]root: Sending command: Command(action=allow, target=IPv4Connection(src=172.19.0.1/32, dst=None, protocol=None, src_port=None, st_port=None), args={'response_requested': <ResponseType.complete: 3>}, actuator=slpf(hostname:firewall,named_group:firewalls,asset_id:iptables), command_id=None)
+1747739051.162543 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: Sending to http://127.0.0.1:8080/.well-known/openc2
+1747739051.162609 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP Request Content:
+{
+   "headers": {
+      "request_id": "53292217-93e7-47e7-8197-99ee780cd19a",
+      "created": 1747739051162,
+      "from": "producer.example.net",
+      "to": [
+         "127.0.0.1"
+      ]
+   },
+   "body": {
+      "openc2": {
+         "request": {
+            "action": "allow",
+            "target": {
+               "ipv4_connection": {
+                  "src_addr": "172.19.0.1/32"
+               }
+            },
+            "args": {
+               "response_requested": "complete"
+            },
+            "actuator": {
+               "slpf": {
+                  "hostname": "firewall",
+                  "named_group": "firewalls",
+                  "asset_id": "iptables"
+               }
+            }
+         }
+      }
+   }
+}
+1747739051.166414 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP got response: <Response [200]>
+1747739051.167116 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP Response Content:
+{
+   "headers": {
+      "request_id": "53292217-93e7-47e7-8197-99ee780cd19a",
+      "created": 1747739051165,
+      "from": "testconsumer",
+      "to": [
+         "producer.example.net"
+      ]
+   },
+   "body": {
+      "openc2": {
+         "response": {
+            "status": 200,
+            "status_text": "OK",
+            "results": {
+               "slpf": {
+                  "rule_number": 2
+               }
+            }
+         }
+      }
+   }
+}
+1747739051.167411 [[38;5;42m  INFO  [0m]root: Got response: Message(content={'status': <StatusCode.OK: 200>, 'status_text': 'OK', 'results': {'rule_number': 2}}, content_type='openc2', msg_type=<MessageType.response: 2>, status=<StatusCode.OK: 200>, request_id='53292217-93e7-47e7-8197-99ee780cd19a', created=1747739051165, from_='testconsumer', to=['producer.example.net'], version='1.0', encoding=<class 'openc2lib.encoders.json.JSONEncoder'>)
+1747739134.595493 [[38;5;42m  INFO  [0m]root: Creating Producer
+1747739134.595692 [[38;5;42m  INFO  [0m]root: Sending command: Command(action=allow, target=IPv4Connection(src=172.19.0.3/32, dst=172.19.0.4/32, protocol=tcp, src_port=8080, st_port=8080), args={'response_requested': <ResponseType.complete: 3>}, actuator=slpf(hostname:firewall,named_group:firewalls,asset_id:iptables), command_id=None)
+1747739134.595913 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: Sending to http://127.0.0.1:8080/.well-known/openc2
+1747739134.595972 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP Request Content:
+{
+   "headers": {
+      "request_id": "b4d1e1c6-bf36-4d20-b67f-7f913e470027",
+      "created": 1747739134595,
+      "from": "producer.example.net",
+      "to": [
+         "127.0.0.1"
+      ]
+   },
+   "body": {
+      "openc2": {
+         "request": {
+            "action": "allow",
+            "target": {
+               "ipv4_connection": {
+                  "src_addr": "172.19.0.3/32",
+                  "src_port": 8080,
+                  "dst_addr": "172.19.0.4/32",
+                  "dst_port": 8080,
+                  "protocol": "tcp"
+               }
+            },
+            "args": {
+               "response_requested": "complete"
+            },
+            "actuator": {
+               "slpf": {
+                  "hostname": "firewall",
+                  "named_group": "firewalls",
+                  "asset_id": "iptables"
+               }
+            }
+         }
+      }
+   }
+}
+1747739134.600267 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP got response: <Response [200]>
+1747739134.601019 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP Response Content:
+{
+   "headers": {
+      "request_id": "b4d1e1c6-bf36-4d20-b67f-7f913e470027",
+      "created": 1747739134599,
+      "from": "testconsumer",
+      "to": [
+         "producer.example.net"
+      ]
+   },
+   "body": {
+      "openc2": {
+         "response": {
+            "status": 200,
+            "status_text": "OK",
+            "results": {
+               "slpf": {
+                  "rule_number": 3
+               }
+            }
+         }
+      }
+   }
+}
+1747739134.601362 [[38;5;42m  INFO  [0m]root: Got response: Message(content={'status': <StatusCode.OK: 200>, 'status_text': 'OK', 'results': {'rule_number': 3}}, content_type='openc2', msg_type=<MessageType.response: 2>, status=<StatusCode.OK: 200>, request_id='b4d1e1c6-bf36-4d20-b67f-7f913e470027', created=1747739134599, from_='testconsumer', to=['producer.example.net'], version='1.0', encoding=<class 'openc2lib.encoders.json.JSONEncoder'>)
+1747739196.008096 [[38;5;42m  INFO  [0m]root: Creating Producer
+1747739196.008261 [[38;5;42m  INFO  [0m]root: Sending command: Command(action=deny, target=172.19.0.0/24, args={'response_requested': <ResponseType.complete: 3>}, actuator=slpf(hostname:firewall,named_group:firewalls,asset_id:iptables), command_id=None)
+1747739196.008464 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: Sending to http://127.0.0.1:8080/.well-known/openc2
+1747739196.008524 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP Request Content:
+{
+   "headers": {
+      "request_id": "65e5c8a1-a575-4185-8710-62feede1087f",
+      "created": 1747739196008,
+      "from": "producer.example.net",
+      "to": [
+         "127.0.0.1"
+      ]
+   },
+   "body": {
+      "openc2": {
+         "request": {
+            "action": "deny",
+            "target": {
+               "ipv4_net": "172.19.0.0/24"
+            },
+            "args": {
+               "response_requested": "complete"
+            },
+            "actuator": {
+               "slpf": {
+                  "hostname": "firewall",
+                  "named_group": "firewalls",
+                  "asset_id": "iptables"
+               }
+            }
+         }
+      }
+   }
+}
+1747739196.013638 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP got response: <Response [200]>
+1747739196.014356 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP Response Content:
+{
+   "headers": {
+      "request_id": "65e5c8a1-a575-4185-8710-62feede1087f",
+      "created": 1747739196012,
+      "from": "testconsumer",
+      "to": [
+         "producer.example.net"
+      ]
+   },
+   "body": {
+      "openc2": {
+         "response": {
+            "status": 200,
+            "status_text": "OK",
+            "results": {
+               "slpf": {
+                  "rule_number": 4
+               }
+            }
+         }
+      }
+   }
+}
+1747739196.014727 [[38;5;42m  INFO  [0m]root: Got response: Message(content={'status': <StatusCode.OK: 200>, 'status_text': 'OK', 'results': {'rule_number': 4}}, content_type='openc2', msg_type=<MessageType.response: 2>, status=<StatusCode.OK: 200>, request_id='65e5c8a1-a575-4185-8710-62feede1087f', created=1747739196012, from_='testconsumer', to=['producer.example.net'], version='1.0', encoding=<class 'openc2lib.encoders.json.JSONEncoder'>)
+1747745850.695275 [[38;5;42m  INFO  [0m]root: Creating Producer
+1747745850.695452 [[38;5;42m  INFO  [0m]root: Sending command: Command(action=allow, target=IPv4Connection(src=172.19.0.1/32, dst=None, protocol=None, src_port=None, st_port=None), args={'response_requested': <ResponseType.complete: 3>}, actuator=slpf(hostname:firewall,named_group:firewalls,asset_id:iptables), command_id=None)
+1747745850.695649 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: Sending to http://127.0.0.1:8080/.well-known/openc2
+1747745850.695725 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP Request Content:
+{
+   "headers": {
+      "request_id": "68f39ee2-4fb3-4ebf-a3ce-1ee9991cf067",
+      "created": 1747745850695,
+      "from": "producer.example.net",
+      "to": [
+         "127.0.0.1"
+      ]
+   },
+   "body": {
+      "openc2": {
+         "request": {
+            "action": "allow",
+            "target": {
+               "ipv4_connection": {
+                  "src_addr": "172.19.0.1/32"
+               }
+            },
+            "args": {
+               "response_requested": "complete"
+            },
+            "actuator": {
+               "slpf": {
+                  "hostname": "firewall",
+                  "named_group": "firewalls",
+                  "asset_id": "iptables"
+               }
+            }
+         }
+      }
+   }
+}
+1747745850.700041 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP got response: <Response [200]>
+1747745850.700796 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP Response Content:
+{
+   "headers": {
+      "request_id": "68f39ee2-4fb3-4ebf-a3ce-1ee9991cf067",
+      "created": 1747745850699,
+      "from": "testconsumer",
+      "to": [
+         "producer.example.net"
+      ]
+   },
+   "body": {
+      "openc2": {
+         "response": {
+            "status": 200,
+            "status_text": "OK",
+            "results": {
+               "slpf": {
+                  "rule_number": 5
+               }
+            }
+         }
+      }
+   }
+}
+1747745850.701125 [[38;5;42m  INFO  [0m]root: Got response: Message(content={'status': <StatusCode.OK: 200>, 'status_text': 'OK', 'results': {'rule_number': 5}}, content_type='openc2', msg_type=<MessageType.response: 2>, status=<StatusCode.OK: 200>, request_id='68f39ee2-4fb3-4ebf-a3ce-1ee9991cf067', created=1747745850699, from_='testconsumer', to=['producer.example.net'], version='1.0', encoding=<class 'openc2lib.encoders.json.JSONEncoder'>)
+1747745872.297667 [[38;5;42m  INFO  [0m]root: Creating Producer
+1747745872.297854 [[38;5;42m  INFO  [0m]root: Sending command: Command(action=allow, target=IPv4Connection(src=172.19.0.1/32, dst=None, protocol=None, src_port=None, st_port=None), args={'start_time': 1747745882297}, actuator=slpf(hostname:firewall,named_group:firewalls,asset_id:iptables), command_id=None)
+1747745872.298064 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: Sending to http://127.0.0.1:8080/.well-known/openc2
+1747745872.298130 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP Request Content:
+{
+   "headers": {
+      "request_id": "d8c02277-8cb4-4ca7-97a6-364c0d2c5df2",
+      "created": 1747745872297,
+      "from": "producer.example.net",
+      "to": [
+         "127.0.0.1"
+      ]
+   },
+   "body": {
+      "openc2": {
+         "request": {
+            "action": "allow",
+            "target": {
+               "ipv4_connection": {
+                  "src_addr": "172.19.0.1/32"
+               }
+            },
+            "args": {
+               "slpf": {},
+               "start_time": 1747745882297
+            },
+            "actuator": {
+               "slpf": {
+                  "hostname": "firewall",
+                  "named_group": "firewalls",
+                  "asset_id": "iptables"
+               }
+            }
+         }
+      }
+   }
+}
+1747745872.302240 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP got response: <Response [200]>
+1747745872.302928 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP Response Content:
+{
+   "headers": {
+      "request_id": "d8c02277-8cb4-4ca7-97a6-364c0d2c5df2",
+      "created": 1747745872301,
+      "from": "testconsumer",
+      "to": [
+         "producer.example.net"
+      ]
+   },
+   "body": {
+      "openc2": {
+         "response": {
+            "status": 200,
+            "status_text": "OK",
+            "results": {
+               "slpf": {
+                  "rule_number": 6
+               }
+            }
+         }
+      }
+   }
+}
+1747745872.303194 [[38;5;42m  INFO  [0m]root: Got response: Message(content={'status': <StatusCode.OK: 200>, 'status_text': 'OK', 'results': {'rule_number': 6}}, content_type='openc2', msg_type=<MessageType.response: 2>, status=<StatusCode.OK: 200>, request_id='d8c02277-8cb4-4ca7-97a6-364c0d2c5df2', created=1747745872301, from_='testconsumer', to=['producer.example.net'], version='1.0', encoding=<class 'openc2lib.encoders.json.JSONEncoder'>)
+1748255731.640383 [[38;5;42m  INFO  [0m]root: Creating Producer
+1748255871.680849 [[38;5;42m  INFO  [0m]root: Creating Producer
+1748255871.681002 [[38;5;42m  INFO  [0m]root: Sending command: Command(action=allow, target=172.19.0.0/24, args={'start_time': 1748255881680}, actuator=slpf(hostname:firewall,named_group:firewalls,asset_id:iptables), command_id=None)
+1748255871.681213 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: Sending to http://127.0.0.1:8080/.well-known/openc2
+1748255871.681285 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP Request Content:
+{
+   "headers": {
+      "request_id": "4ad529fd-1d07-4997-b9c2-c58c1f5a745b",
+      "created": 1748255871681,
+      "from": "producer.example.net",
+      "to": [
+         "127.0.0.1"
+      ]
+   },
+   "body": {
+      "openc2": {
+         "request": {
+            "action": "allow",
+            "target": {
+               "ipv4_net": "172.19.0.0/24"
+            },
+            "args": {
+               "slpf": {},
+               "start_time": 1748255881680
+            },
+            "actuator": {
+               "slpf": {
+                  "hostname": "firewall",
+                  "named_group": "firewalls",
+                  "asset_id": "iptables"
+               }
+            }
+         }
+      }
+   }
+}
+1748255871.733976 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP got response: <Response [200]>
+1748255871.737164 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP Response Content:
+{
+   "headers": {
+      "request_id": "4ad529fd-1d07-4997-b9c2-c58c1f5a745b",
+      "created": 1748255871733,
+      "from": "testconsumer",
+      "to": [
+         "producer.example.net"
+      ]
+   },
+   "body": {
+      "openc2": {
+         "response": {
+            "status": 200,
+            "status_text": "OK",
+            "results": {
+               "slpf": {
+                  "rule_number": 1
+               }
+            }
+         }
+      }
+   }
+}
+1748255871.737444 [[38;5;42m  INFO  [0m]root: Got response: Message(content={'status': <StatusCode.OK: 200>, 'status_text': 'OK', 'results': {'rule_number': 1}}, content_type='openc2', msg_type=<MessageType.response: 2>, status=<StatusCode.OK: 200>, request_id='4ad529fd-1d07-4997-b9c2-c58c1f5a745b', created=1748255871733, from_='testconsumer', to=['producer.example.net'], version='1.0', encoding=<class 'openc2lib.encoders.json.JSONEncoder'>)
+1748256120.053191 [[38;5;42m  INFO  [0m]root: Creating Producer
+1748256120.053361 [[38;5;42m  INFO  [0m]root: Sending command: Command(action=allow, target=172.19.0.0/24, args={'start_time': 1748256130053}, actuator=slpf(hostname:firewall,named_group:firewalls,asset_id:iptables), command_id=None)
+1748256120.053555 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: Sending to http://127.0.0.1:8080/.well-known/openc2
+1748256120.053616 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP Request Content:
+{
+   "headers": {
+      "request_id": "e2aee59a-9d60-4675-9c50-84152d282ab3",
+      "created": 1748256120053,
+      "from": "producer.example.net",
+      "to": [
+         "127.0.0.1"
+      ]
+   },
+   "body": {
+      "openc2": {
+         "request": {
+            "action": "allow",
+            "target": {
+               "ipv4_net": "172.19.0.0/24"
+            },
+            "args": {
+               "slpf": {},
+               "start_time": 1748256130053
+            },
+            "actuator": {
+               "slpf": {
+                  "hostname": "firewall",
+                  "named_group": "firewalls",
+                  "asset_id": "iptables"
+               }
+            }
+         }
+      }
+   }
+}
+1748256120.057969 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP got response: <Response [200]>
+1748256120.058745 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP Response Content:
+{
+   "headers": {
+      "request_id": "e2aee59a-9d60-4675-9c50-84152d282ab3",
+      "created": 1748256120057,
+      "from": "testconsumer",
+      "to": [
+         "producer.example.net"
+      ]
+   },
+   "body": {
+      "openc2": {
+         "response": {
+            "status": 200,
+            "status_text": "OK",
+            "results": {
+               "slpf": {
+                  "rule_number": 2
+               }
+            }
+         }
+      }
+   }
+}
+1748256120.059100 [[38;5;42m  INFO  [0m]root: Got response: Message(content={'status': <StatusCode.OK: 200>, 'status_text': 'OK', 'results': {'rule_number': 2}}, content_type='openc2', msg_type=<MessageType.response: 2>, status=<StatusCode.OK: 200>, request_id='e2aee59a-9d60-4675-9c50-84152d282ab3', created=1748256120057, from_='testconsumer', to=['producer.example.net'], version='1.0', encoding=<class 'openc2lib.encoders.json.JSONEncoder'>)
+1748256153.539012 [[38;5;42m  INFO  [0m]root: Creating Producer
+1748256153.539195 [[38;5;42m  INFO  [0m]root: Sending command: Command(action=allow, target=IPv4Connection(src=172.19.0.1/32, dst=None, protocol=None, src_port=None, st_port=None), args={'start_time': 1748256163539}, actuator=slpf(hostname:firewall,named_group:firewalls,asset_id:iptables), command_id=None)
+1748256153.539394 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: Sending to http://127.0.0.1:8080/.well-known/openc2
+1748256153.539452 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP Request Content:
+{
+   "headers": {
+      "request_id": "b7e7192c-9a9b-45de-8fbd-5af436586f32",
+      "created": 1748256153539,
+      "from": "producer.example.net",
+      "to": [
+         "127.0.0.1"
+      ]
+   },
+   "body": {
+      "openc2": {
+         "request": {
+            "action": "allow",
+            "target": {
+               "ipv4_connection": {
+                  "src_addr": "172.19.0.1/32"
+               }
+            },
+            "args": {
+               "slpf": {},
+               "start_time": 1748256163539
+            },
+            "actuator": {
+               "slpf": {
+                  "hostname": "firewall",
+                  "named_group": "firewalls",
+                  "asset_id": "iptables"
+               }
+            }
+         }
+      }
+   }
+}
+1748256153.543918 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP got response: <Response [200]>
+1748256153.544667 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP Response Content:
+{
+   "headers": {
+      "request_id": "b7e7192c-9a9b-45de-8fbd-5af436586f32",
+      "created": 1748256153542,
+      "from": "testconsumer",
+      "to": [
+         "producer.example.net"
+      ]
+   },
+   "body": {
+      "openc2": {
+         "response": {
+            "status": 200,
+            "status_text": "OK",
+            "results": {
+               "slpf": {
+                  "rule_number": 3
+               }
+            }
+         }
+      }
+   }
+}
+1748256153.544943 [[38;5;42m  INFO  [0m]root: Got response: Message(content={'status': <StatusCode.OK: 200>, 'status_text': 'OK', 'results': {'rule_number': 3}}, content_type='openc2', msg_type=<MessageType.response: 2>, status=<StatusCode.OK: 200>, request_id='b7e7192c-9a9b-45de-8fbd-5af436586f32', created=1748256153542, from_='testconsumer', to=['producer.example.net'], version='1.0', encoding=<class 'openc2lib.encoders.json.JSONEncoder'>)
+1748256262.277623 [[38;5;42m  INFO  [0m]root: Creating Producer
+1748256262.277813 [[38;5;42m  INFO  [0m]root: Sending command: Command(action=allow, target=IPv4Connection(src=172.19.0.1/32, dst=None, protocol=None, src_port=None, st_port=None), args={'start_time': 1748256272277}, actuator=slpf(hostname:firewall,named_group:firewalls,asset_id:iptables), command_id=None)
+1748256262.278015 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: Sending to http://127.0.0.1:8080/.well-known/openc2
+1748256262.278132 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP Request Content:
+{
+   "headers": {
+      "request_id": "9a5677da-d3b3-4e77-a353-41f6527214a5",
+      "created": 1748256262277,
+      "from": "producer.example.net",
+      "to": [
+         "127.0.0.1"
+      ]
+   },
+   "body": {
+      "openc2": {
+         "request": {
+            "action": "allow",
+            "target": {
+               "ipv4_connection": {
+                  "src_addr": "172.19.0.1/32"
+               }
+            },
+            "args": {
+               "slpf": {},
+               "start_time": 1748256272277
+            },
+            "actuator": {
+               "slpf": {
+                  "hostname": "firewall",
+                  "named_group": "firewalls",
+                  "asset_id": "iptables"
+               }
+            }
+         }
+      }
+   }
+}
+1748256262.333428 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP got response: <Response [200]>
+1748256262.334131 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP Response Content:
+{
+   "headers": {
+      "request_id": "9a5677da-d3b3-4e77-a353-41f6527214a5",
+      "created": 1748256262332,
+      "from": "testconsumer",
+      "to": [
+         "producer.example.net"
+      ]
+   },
+   "body": {
+      "openc2": {
+         "response": {
+            "status": 200,
+            "status_text": "OK",
+            "results": {
+               "slpf": {
+                  "rule_number": 1
+               }
+            }
+         }
+      }
+   }
+}
+1748256262.334393 [[38;5;42m  INFO  [0m]root: Got response: Message(content={'status': <StatusCode.OK: 200>, 'status_text': 'OK', 'results': {'rule_number': 1}}, content_type='openc2', msg_type=<MessageType.response: 2>, status=<StatusCode.OK: 200>, request_id='9a5677da-d3b3-4e77-a353-41f6527214a5', created=1748256262332, from_='testconsumer', to=['producer.example.net'], version='1.0', encoding=<class 'openc2lib.encoders.json.JSONEncoder'>)

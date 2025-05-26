@@ -21,9 +21,13 @@ logger.setLevel(logging.INFO)
 stdout_handler = logging.StreamHandler()
 stdout_handler.setLevel(logging.INFO)
 stdout_handler.setFormatter(oc2.LogFormatter(datetime=True,name=True))
-hdls = [ stdout_handler ]
 # Add both handlers to the logger
 logger.addHandler(stdout_handler)
+# Add file logger
+file_handler = logging.FileHandler("server.log")
+file_handler.setLevel(logging.INFO)
+file_handler.setFormatter(oc2.LogFormatter(datetime=True,name=True, datefmt='%t'))
+logger.addHandler(file_handler)
 
 def main():
     try:
@@ -51,6 +55,11 @@ def main():
                       iptables_rules_path = element['iptables_rules_path'],
                       iptables_rules_v4_filename = element['iptables_rules_v4_filename'],
                       iptables_rules_v6_filename = element['iptables_rules_v6_filename'],
+                      iptables_input_chain_name = element['iptables_input_chain_name'],
+                      iptables_output_chain_name = element['iptables_output_chain_name'],
+                      iptables_forward_chain_name = element['iptables_forward_chain_name'],
+                      iptables_cmd = element['iptables_cmd'],
+                      ip6tables_cmd = element['ip6tables_cmd'],
                       misfire_grace_time = element["misfire_grace_time"]
                 )
             else:

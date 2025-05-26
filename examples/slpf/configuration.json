@@ -9,15 +9,19 @@
             "ip": "127.0.0.1",
             "port": 8080,
             "endpoint": "/.well-known/openc2",
-            "db_path": "./",
+            "db_path": "/home/kali/Scrivania/openc2lib/examples/slpf",
             "db_name": "slpf_commands.sqlite",
             "db_commands_table_name": "iptables_commands",
             "db_jobs_table_name": "iptables_jobs",
-            "iptables_rules_path": "./",
+            "iptables_rules_path": "/home/kali/Scrivania/openc2lib/examples/slpf",
             "iptables_rules_v4_filename": "iptables_rules.v4",
             "iptables_rules_v6_filename": "iptables_rules.v6",
-            "misfire_grace_time": 86400,
-            "file_enviroment_variables": ""
+            "iptables_input_chain_name": "INPUT_OC2",
+            "iptables_output_chain_name": "OUTPUT_OC2",
+            "iptables_forward_chain_name": "FORWARD_OC2",
+            "iptables_cmd": "sudo iptables",
+            "ip6tables_cmd": "sudo ip6tables",
+            "misfire_grace_time": 86400
         }
     ],
     "consumer": {
