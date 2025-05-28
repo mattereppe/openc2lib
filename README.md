@@ -50,14 +50,14 @@ python3 -m venv .oc2-env
 pip install -r requirements.txt
 ```
 
-## Usage 
+### Usage 
 
 A few scripts are available in the `examples` folder of the repository for sending a simple commmand from a controller to a remote server (hosting the actuator). 
 
 Basic usage consists in instantiating the `Provider` and `Consumer` classes that implements the OpenC2 _Provider_ and _Consumer_ role, respectively. This includes the creation of a protocol stack, namely the serialization format and transfer protocol. The `Consumer` also loads the available _Actuators_. Note that in the otupy implementation, the security services and transport protocols are already embedded in each specific transfer protocol.
 
 
-### Create the Server
+#### Create the Server
 
 A `Server` instantiates and runs the OpenC2 `Consumer`.
 
@@ -90,7 +90,7 @@ Finally, start the server:
  consumer.run()
 ```
 
-### Create the Controller
+#### Create the Controller
 
 A `Controller` instantiates an OpenC2 `Producer` and to use it to control a remote security function. Note that the `Producer` is totally unaware of the concrete actuators and its implementation.
 ```
