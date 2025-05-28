@@ -2,19 +2,20 @@
 
 ## Description
 
-otupy (/'əʊtu:paɪ/) is an open-source implementation of the OpenC2 language written in Python. It is explicitly designed with flexibility and extensibility in mind, meaning that additional profiles and actuators can be added without impacting the core library itself. For this reason, otupy is particullary suited for:
+otupy (/'əʊtu:paɪ/) is an open-source implementation of the OpenC2 language written in Python. It is particullary suited for:
 - developers that are looking for a common interface to control their remote cybersecurity functions;
 - researchers that design new profiles for cybersecurity functions;
 - system integrators that need a common language for their cybersecurity frameworks. 
 
-Usage and extension of otupy have a shallow learning curve because data structures are explicitly designed to follow the language specification. Differently from many other implementations publicly available, introducing new transfer protocols, new message encoding formats, new profiles, and new implementations of actuators does not require modification to the core package; these extensions are easily to introduce because they largely reflect the language specification, hence minimal comprehension of the otupy is required to getting started.
-
-otupy currently provides:
-- the implementation of the core functions that implement the OpenC2 Architecture and Language Specification;
-- an implementation of the json encoder;
+The otupy framework is build around a pluggable and powerful core library, designed with flexibility and extensibility in mind. Profiles, transfer protocols, serialization formats, and actuators can be easily added without impacting the core library itself. The framework currently includes:
+- the core library that  implements the OpenC2 Architecture and Language Specification;
+- json serialization;
 - an implementation of the HTTP transfer protocol;
 - the definition of the SLPF profile;
 - a dumb implementation of an actuator for the SLPF profile.
+- 
+Usage and extension of otupy have a shallow learning curve because data structures are explicitly designed to follow the language specification.
+
 
 ## Getting started
 
