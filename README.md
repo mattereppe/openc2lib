@@ -36,7 +36,7 @@ Otupy is available as source code and Python package.
 
 Install it and its dependencies from TestPyPi:
 ```
-pip install -i https://test.pypi.org/simple/ otupy
+pip install -i https://test.pypi.org/simple/otupy
 ```
 
 Alternatively, dowload it from github:
