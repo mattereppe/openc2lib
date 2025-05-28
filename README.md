@@ -9,7 +9,7 @@ otupy (/'əʊtu:paɪ/) is an open-source implementation of the OpenC2 language w
 
 Usage and extension of otupy have a shallow learning curve because data structures are explicitly designed to follow the language specification. Differently from many other implementations publicly available, introducing new transfer protocols, new message encoding formats, new profiles, and new implementations of actuators does not require modification to the core package; these extensions are easily to introduce because they largely reflect the language specification, hence minimal comprehension of the otupy is required to getting started.
 
-The otupy currently provides:
+otupy currently provides:
 - the implementation of the core functions that implement the OpenC2 Architecture and Language Specification;
 - an implementation of the json encoder;
 - an implementation of the HTTP transfer protocol;
