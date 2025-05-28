@@ -119,7 +119,7 @@ resp = p.sendcmd(cmd)
 A more useful implementation of a _Controller_ would also include the business logic to update rules on specific events (even by specific input from the user).
 
 
-# Advanced usage
+## Advanced usage
 
 See the full documentation available from [readthedocs.io](https://otupy.readthedocs.io).
 
