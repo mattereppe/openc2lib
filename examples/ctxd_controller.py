@@ -6,17 +6,17 @@ import logging
 import os
 import sys
 
-import openc2lib as oc2
+import otupy as oc2
 
-from openc2lib.encoders.json import JSONEncoder
-from openc2lib.transfers.http import HTTPTransfer
-import openc2lib.profiles.ctxd as ctxd
-from openc2lib.profiles.ctxd.data.name import Name
-from openc2lib.types.base.array_of import ArrayOf
-from openc2lib.core.register import Register
-from openc2lib.types.base.choice import Choice
-from openc2lib.types.data.hostname import Hostname
-from openc2lib.types.base.array import Array
+from otupy.encoders.json import JSONEncoder
+from otupy.transfers.http import HTTPTransfer
+import otupy.profiles.ctxd as ctxd
+from otupy.profiles.ctxd.data.name import Name
+from otupy.types.base.array_of import ArrayOf
+from otupy.core.register import Register
+from otupy.types.base.choice import Choice
+from otupy.types.data.hostname import Hostname
+from otupy.types.base.array import Array
 
 logger = logging.getLogger()
 # Ask for 4 levels of logging: INFO, WARNING, ERROR, CRITICAL

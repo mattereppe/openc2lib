@@ -6,15 +6,15 @@ import logging
 import sys
 import datetime
 
-import openc2lib as oc2
+import otupy as oc2
 
 
-from openc2lib.encoders.json import JSONEncoder
-from openc2lib.transfers.http import HTTPTransfer
-from openc2lib.actuators.mokup_slpf_actuator import MokupSlpfActuator
-import openc2lib.profiles.slpf as slpf
-import openc2lib.profiles.dumb as dumb
-from openc2lib.actuators.dumb_actuator import DumbActuator
+from otupy.encoders.json import JSONEncoder
+from otupy.transfers.http import HTTPTransfer
+from otupy.actuators.mokup_slpf_actuator import MokupSlpfActuator
+import otupy.profiles.slpf as slpf
+import otupy.profiles.dumb as dumb
+from otupy.actuators.dumb_actuator import DumbActuator
 
 #logging.basicConfig(filename='consumer.log',level=logging.DEBUG)
 #logging.basicConfig(stream=sys.stdout,level=logging.DEBUG)

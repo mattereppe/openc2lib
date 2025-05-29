@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="170.27mm"
+   height="39.801998mm"
+   viewBox="-2 -2 185.51475 43.365585"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.3.2 (091e20e, 2023-11-25)"
+   sodipodi:docname="architecture.svg"
+   inkscape:export-filename="architecture.png"
+   inkscape:export-xdpi="600"
+   inkscape:export-ydpi="600"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     inkscape:zoom="1.886996"
+     inkscape:cx="342.34307"
+     inkscape:cy="73.397082"
+     inkscape:window-width="1512"
+     inkscape:window-height="916"
+     inkscape:window-x="0"
+     inkscape:window-y="38"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer1"
+     showgrid="false" />
+  <defs
+     id="defs1">
+    <marker
+       style="overflow:visible"
+       id="ArrowWideHeavy"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="Wide, heavy arrow"
+       markerWidth="2"
+       markerHeight="2"
+       viewBox="0 0 1 1"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         style="fill:context-stroke;fill-rule:evenodd;stroke:none"
+         d="m 1,0 -3,3 h -2 l 3,-3 -3,-3 h 2 z"
+         id="path3" />
+    </marker>
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-10.318743,-19.220235)">
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.264583;stroke-opacity:1;-inkscape-stroke:none;paint-order:markers fill stroke"
+       id="rect1-8"
+       width="35.383095"
+       height="21.038595"
+       x="107.97973"
+       y="32.99234" />
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.264583;stroke-opacity:1;-inkscape-stroke:none;paint-order:markers fill stroke"
+       id="rect1-8-0"
+       width="35.383095"
+       height="21.038595"
+       x="45.886208"
+       y="32.99234" />
+    <text
+       xml:space="preserve"
+       style="font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.52778px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Bold Italic';stroke-width:0.264583"
+       x="107.51326"
+       y="31.557894"
+       id="text2"><tspan
+         sodipodi:role="line"
+         id="tspan2"
+         style="font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.52778px;font-family:Arial;-inkscape-font-specification:'Arial Bold Italic';stroke-width:0.264583"
+         x="107.51326"
+         y="31.557894">Consumer</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.52778px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Bold Italic';stroke-width:0.264583"
+       x="45.610943"
+       y="31.559961"
+       id="text2-9"><tspan
+         sodipodi:role="line"
+         id="tspan2-9"
+         style="font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.52778px;font-family:Arial;-inkscape-font-specification:'Arial Bold Italic';stroke-width:0.264583"
+         x="45.610943"
+         y="31.559961">Producer</tspan></text>
+    <g
+       id="g4">
+      <rect
+         style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.264583;stroke-opacity:1;-inkscape-stroke:none;paint-order:markers fill stroke"
+         id="rect2"
+         width="19.126007"
+         height="5.0205736"
+         x="121.92822"
+         y="35.144016" />
+      <text
+         xml:space="preserve"
+         style="font-style:italic;font-size:3.175px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Italic';stroke-width:0.264583"
+         x="123.11105"
+         y="38.896255"
+         id="text3"><tspan
+           sodipodi:role="line"
+           id="tspan3"
+           style="font-size:3.175px;stroke-width:0.264583"
+           x="123.11105"
+           y="38.896255">Actuator X</tspan></text>
+    </g>
+    <g
+       id="g5"
+       transform="translate(-0.31404114)">
+      <rect
+         style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.264583;stroke-opacity:1;-inkscape-stroke:none;paint-order:markers fill stroke"
+         id="rect2-1"
+         width="19.126007"
+         height="5.0205736"
+         x="122.24226"
+         y="41.257229" />
+      <text
+         xml:space="preserve"
+         style="font-style:italic;font-size:3.175px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Italic';stroke-width:0.264583"
+         x="123.45007"
+         y="45.009468"
+         id="text3-4"><tspan
+           sodipodi:role="line"
+           id="tspan3-7"
+           style="font-size:3.175px;stroke-width:0.264583"
+           x="123.45007"
+           y="45.009468">Actuator Y</tspan></text>
+    </g>
+    <text
+       xml:space="preserve"
+       style="font-style:italic;font-size:4.93889px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Italic';stroke-width:0.264583"
+       x="48.480923"
+       y="-131.2872"
+       id="text4"
+       transform="rotate(90)"><tspan
+         sodipodi:role="line"
+         id="tspan4"
+         style="font-size:4.93889px;stroke-width:0.264583"
+         x="48.480923"
+         y="-131.2872">...</tspan></text>
+    <g
+       id="g6"
+       transform="translate(5.8208336)">
+      <rect
+         style="fill:#f5f5f5;fill-opacity:1;stroke:#000000;stroke-width:0.264583;stroke-opacity:1;-inkscape-stroke:none;paint-order:markers fill stroke"
+         id="rect5"
+         width="22.712112"
+         height="9.8020716"
+         x="162.81004"
+         y="32.992344" />
+      <text
+         xml:space="preserve"
+         style="font-style:italic;font-size:3.175px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Italic';stroke-width:0.264583"
+         x="164.33052"
+         y="36.952011"
+         id="text5"><tspan
+           sodipodi:role="line"
+           id="tspan5"
+           style="font-size:3.175px;stroke-width:0.264583"
+           x="164.33052"
+           y="36.952011">Security</tspan><tspan
+           sodipodi:role="line"
+           style="font-size:3.175px;stroke-width:0.264583"
+           x="164.33052"
+           y="40.920761"
+           id="tspan6">Function X</tspan></text>
+    </g>
+    <g
+       id="g7"
+       transform="translate(5.8208336,0.12472248)">
+      <rect
+         style="fill:#f5f5f5;fill-opacity:1;stroke:#000000;stroke-width:0.264583;stroke-opacity:1;-inkscape-stroke:none;paint-order:markers fill stroke"
+         id="rect5-7"
+         width="22.712112"
+         height="9.8020716"
+         x="148.92365"
+         y="44.104141" />
+      <text
+         xml:space="preserve"
+         style="font-style:italic;font-size:3.175px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Italic';stroke-width:0.264583"
+         x="150.44412"
+         y="48.063808"
+         id="text5-7"><tspan
+           sodipodi:role="line"
+           id="tspan5-4"
+           style="font-size:3.175px;stroke-width:0.264583"
+           x="150.44412"
+           y="48.063808">Security</tspan><tspan
+           sodipodi:role="line"
+           style="font-size:3.175px;stroke-width:0.264583"
+           x="150.44412"
+           y="52.032558"
+           id="tspan6-4">Function Y</tspan></text>
+    </g>
+    <g
+       id="g8">
+      <rect
+         style="fill:#f5f5f5;fill-opacity:1;stroke:#000000;stroke-width:0.264583;stroke-opacity:1;-inkscape-stroke:none;paint-order:markers fill stroke"
+         id="rect5-7-0"
+         width="22.712112"
+         height="9.8020716"
+         x="10.451035"
+         y="35.321877" />
+      <text
+         xml:space="preserve"
+         style="font-style:italic;font-size:3.175px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Italic';stroke-width:0.264583"
+         x="11.971512"
+         y="41.398212"
+         id="text5-7-8"><tspan
+           sodipodi:role="line"
+           style="font-size:3.175px;stroke-width:0.264583"
+           x="11.971512"
+           y="41.398212"
+           id="tspan6-4-0">Controller</tspan></text>
+    </g>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#ArrowWideHeavy)"
+       d="m 141.10524,37.29569 h 26.00814"
+       id="path7"
+       sodipodi:nodetypes="cc" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#ArrowWideHeavy)"
+       d="m 141.10524,43.562656 h 6.88215 v 5.208632 h 5.25965"
+       id="path8"
+       sodipodi:nodetypes="cccc" />
+    <path
+       style="font-variation-settings:normal;opacity:1;vector-effect:none;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;marker-end:url(#ArrowWideHeavy);stop-color:#000000;stop-opacity:1"
+       d="M 33.282435,37.77384 H 45.287197"
+       id="path9"
+       sodipodi:nodetypes="cc" />
+    <path
+       id="rect9"
+       style="opacity:1;vector-effect:none;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.264583px;paint-order:markers fill stroke"
+       d="m 105.55169,34.582401 v 1.99626 H 78.416607 v 3.107821 l 27.135083,-2e-6 v 1.996262 l 3.55017,-3.550171 z"
+       sodipodi:nodetypes="cccccccc" />
+    <path
+       id="rect9-2"
+       style="vector-effect:none;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.264583px;paint-order:markers fill stroke"
+       d="m 83.641425,46.092298 v 1.99626 h 27.135085 v 3.107821 l -27.135085,-2e-6 v 1.996262 l -3.55017,-3.550171 z"
+       sodipodi:nodetypes="cccccccc" />
+    <text
+       xml:space="preserve"
+       style="font-style:italic;font-size:3.175px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Italic';stroke-width:0.264583"
+       x="83.198082"
+       y="35.144016"
+       id="text10"><tspan
+         sodipodi:role="line"
+         id="tspan10"
+         style="font-size:3.175px;stroke-width:0.264583"
+         x="83.198082"
+         y="35.144016">Command</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:italic;font-size:3.175px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Italic';stroke-width:0.264583"
+       x="91.32663"
+       y="46.858685"
+       id="text11"><tspan
+         sodipodi:role="line"
+         id="tspan11"
+         style="font-size:3.175px;stroke-width:0.264583"
+         x="91.32663"
+         y="46.858685">Response</tspan></text>
+    <rect
+       style="font-variation-settings:normal;opacity:1;fill:none;fill-opacity:1;stroke:#6d6d6d;stroke-width:0.265;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:1.06, 0.265;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers fill stroke"
+       id="rect11"
+       width="109.97447"
+       height="34.665867"
+       x="40.403667"
+       y="23.429346" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.52777px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial Bold';stroke-width:0.264583"
+       x="42.55534"
+       y="21.755819"
+       id="text12"><tspan
+         sodipodi:role="line"
+         id="tspan12"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Arial;-inkscape-font-specification:'Arial Bold';stroke-width:0.264583"
+         x="42.55534"
+         y="21.755819">otupy</tspan></text>
+  </g>
+</svg>

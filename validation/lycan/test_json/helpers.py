@@ -13,11 +13,11 @@ sys.path.insert(0, "profiles/")
 #import esm
 #import digits
 #import digits_and_chars
-#import openc2lib.profiles.slpf
+#import otupy.profiles.slpf
 
 
 #def create_command(string = None, file= None):
-#	""" Create an openc2lib command from a json string or file. 
+#	""" Create an otupy command from a json string or file. 
 #		
 #		It expects the command in a string; alternatively, the file containing the json can be given by
 #		specifying its keyword. If both are given, the string is used. """
@@ -46,7 +46,7 @@ def load_files(cmd_path):
 	return cmds_files
 
 def load_json(path):
-	""" Load an openc2lib command/response from a json string or file. 
+	""" Load an otupy command/response from a json string or file. 
 		
 		It expects the command in a string; alternatively, the file containing the json can be given by
 		specifying its keyword. If both are given, the string is used. """

@@ -6,12 +6,12 @@ import logging
 import sys
 import ssl
 
-import openc2lib as oc2
+import otupy as oc2
 
-from openc2lib.encoders.json import JSONEncoder
-from openc2lib.transfers.http  import HTTPSTransfer
+from otupy.encoders.json import JSONEncoder
+from otupy.transfers.http  import HTTPSTransfer
 
-import openc2lib.profiles.slpf as slpf
+import otupy.profiles.slpf as slpf
 
 
 #logging.basicConfig(filename='openc2.log',level=logging.DEBUG)

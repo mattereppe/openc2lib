@@ -79,7 +79,7 @@ def test_decoding(cmd):
 @pytest.mark.parametrize("cmd", load_json(command_path_good) )
 @pytest.mark.dependency(name="test_encoding", depends=["test_decoding"])
 def test_encoding(cmd):
-	""" Test 'good' commands can be successfully encoded by openc2lib
+	""" Test 'good' commands can be successfully encoded by otupy
 
 		The test decodes 'good' commands, and then create again the json. Finally, the original
 		and created json are compared. A number of fixes are applied to account for different

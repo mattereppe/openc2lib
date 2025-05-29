@@ -5,12 +5,12 @@
 import logging
 import sys
 import sqlite3
-import openc2lib as oc2
+import otupy as oc2
 
-from openc2lib.encoders.json import JSONEncoder
-from openc2lib.transfers.http import HTTPTransfer
-from openc2lib.actuators.iptables_actuator import IptablesActuator
-import openc2lib.profiles.slpf as slpf
+from otupy.encoders.json import JSONEncoder
+from otupy.transfers.http import HTTPTransfer
+from otupy.actuators.iptables_actuator import IptablesActuator
+import otupy.profiles.slpf as slpf
 
 #logging.basicConfig(filename='consumer.log',level=logging.DEBUG)
 logging.basicConfig(stream=sys.stdout,level=logging.INFO)

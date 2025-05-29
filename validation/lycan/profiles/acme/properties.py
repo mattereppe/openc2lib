@@ -39,7 +39,8 @@ class UuidProperty(openc2.properties.Property):
     "x-acme",
     [
         ("firewall_status", openc2.properties.StringProperty()),
-        ("container_id", openc2.properties.StringProperty()),
+#("container_id", openc2.properties.StringProperty()),
+        ("container_id", UuidProperty()),
 #        ("features", openc2.properties.EnumProperty(allowed=["versions", "profiles", "schema"])),
         ("features", openc2.properties.ListProperty(
 					openc2.properties.EnumProperty(

@@ -1,0 +1,53 @@
+5.6 VM
+======
+
+It describes a Virtual Machine.
+
+Type: VM (Record)
+
+.. list-table::
+   :widths: 3 4 4 3 40
+   :header-rows: 1
+
+   * - ID
+     - Name
+     - Type
+     - #
+     - Description
+   * - 1
+     - description
+     - String
+     - 1
+     - Generic description of the VM.
+   * - 2
+     - id
+     - String
+     - 1
+     - ID of the VM.
+   * - 3
+     - hostname
+     - Hostname
+     - 1
+     - Hostname of the VM.
+   * - 4
+     - os
+     - OS
+     - 1
+     - Operating System of the VM.
+
+Sample VM object represented in JSON Format:
+
+.. code:: json
+
+   {
+     "description": "vm",
+     "id": "123456",
+     "hostname": "My-virtualbox",
+     "os": {
+       "name": "ubuntu",
+       "version": "22.04.3",
+       "family": "debian",
+       "type": "linux"
+     }
+   }
+

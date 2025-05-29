@@ -105,17 +105,18 @@ letters, and let the choice to the application.]
 Commands:
 ---------
 
-Test-deconding: 0 failures. However, there are 4 IP addresses not compliant with RFCs.
-
-Test-encoding: 3 failures:
-	- slpf_rule is re-encoded as string ('1234') instead of integer (1234)
-	- x-acme:features is not encoded according to its definition.
-		It is encoded as 
+Test-deconding: 2 failures. However, there are 4 IP addresses not compliant with RFCs.
+	- 
+	- x-acme:features is not decoded according to its definition. <<< NOT REPORTED WITH PYTEST!!! This is only visible after encoding
+		It is decoded as 
 			"x-acme:feature": [ ] 
 		instead of 
 			"x-acme:features": { "features": [] }
 		(I think the second definition is correct because it does not consider the specific semantic
 		 that the "feature" word may have, and it is the encoding of other objects, like x-acme:container)
+
+Test-encoding: 3 failures:
+	- slpf_rule is re-encoded as string ('1234') instead of integer (1234)
 [	- multiple profiles inside the actuator are not re-encoded:
 			{'slpf': {'asset_id': '123456'}, 'x-acme': {'endpoint_id': '567890'}}}
 		(the output only includes the 'slpf' part)	

@@ -6,12 +6,12 @@ import logging
 import sys
 #sys.path.insert(0,'/Users/matteo/Progetti/OpenC2/openc2/src')
 
-import openc2lib as oc2
+import otupy as oc2
 
-from openc2lib.encoders.json_encoder import JSONEncoder
-from openc2lib.transfers.http_transfer import HTTPTransfer
+from otupy.encoders.json_encoder import JSONEncoder
+from otupy.transfers.http_transfer import HTTPTransfer
 
-import openc2lib.profiles.slpf as slpf
+import otupy.profiles.slpf as slpf
 
 
 #logging.basicConfig(filename='openc2.log',level=logging.DEBUG)
@@ -53,7 +53,7 @@ def main():
 
 #p.sendcmd(Command(Actions.query,DomainName("cqw")),consumers=["tnt-lab.unige.it"])
 #p.sendcmd(Command(Actions.stop,EmailAddress("1486518253@qq.com")),consumers=["tnt-lab.unige.it"])
-#p.sendcmd(Command(Actions.restart,IRI("https://www.openc2lib.org")),consumers=["tnt-lab.unige.it"])
+#p.sendcmd(Command(Actions.restart,IRI("https://www.otupy.org")),consumers=["tnt-lab.unige.it"])
 #
 #file_target = File(name="example.txt", hashes={"md5": "d41d8cd98f00b204e9800998ecf8427e"})
 #p.sendcmd(Command(Actions.query, file_target), consumers=["tnt-lab.unige.it"])
