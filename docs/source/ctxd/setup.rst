@@ -1,4 +1,4 @@
-openc2lib: Running the Context Discovery Actuator Profile in a Real Case Scenario
+otupy: Running the Context Discovery Actuator Profile in a Real Case Scenario
 =================================================================================
 
 1. Description
@@ -43,30 +43,30 @@ To run the Docker actuator, the following Python library is needed:
 3.1 Configuration File
 ^^^^^^^^^^^^^^^^^^^^^^
 
-In the file ``openc2lib/applications/ctxd/configuration.json`` at the position ``consumer["ip"], consumer["port"], consumer["endpoint"]`` are specified all the useful parameters to run the consumer. The default encoder format is JSON while the transfer protocol is HTTP.
+In the file ``otupy/applications/ctxd/configuration.json`` at the position ``consumer["ip"], consumer["port"], consumer["endpoint"]`` are specified all the useful parameters to run the consumer. The default encoder format is JSON while the transfer protocol is HTTP.
 
 3.2 Setting up the Consumer
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-1. The consumer, in order to connect to OpenStack, is able to retrieve the environment variables of the running system or it is possible to insert the full path of the configuration file into the file ``openc2lib/applications/ctxd/configuration.json`` in the field ``["clusters"][]["file_enviroment_variables"]``.
+1. The consumer, in order to connect to OpenStack, is able to retrieve the environment variables of the running system or it is possible to insert the full path of the configuration file into the file ``otupy/applications/ctxd/configuration.json`` in the field ``["clusters"][]["file_enviroment_variables"]``.
 
-2. Specify the namespaces of interest in the file ``openc2lib/applications/ctxd/configuration.json`` and the field is ``["clusters"][]["namespace"]``. If no namespaces are specified, all namespaces will be displayed.
+2. Specify the namespaces of interest in the file ``otupy/applications/ctxd/configuration.json`` and the field is ``["clusters"][]["namespace"]``. If no namespaces are specified, all namespaces will be displayed.
 
-3. The consumer, in order to connect to Kubernetes, will use by default the configuration file contained in ``~/.kube/config``. It is also possible to specify the configuration file into ``openc2lib/applications/ctxd/configuration.json`` in the field ``["clusters"][]["config_file"]``.
+3. The consumer, in order to connect to Kubernetes, will use by default the configuration file contained in ``~/.kube/config``. It is also possible to specify the configuration file into ``otupy/applications/ctxd/configuration.json`` in the field ``["clusters"][]["config_file"]``.
 
-4. Specify the Kubernetes context into the file ``openc2lib/applications/ctxd/configuration.json`` in the field ``["clusters"][]["kube_context"]``. If not specified, the function uses the current context in the kubeconfig file.
+4. Specify the Kubernetes context into the file ``otupy/applications/ctxd/configuration.json`` in the field ``["clusters"][]["kube_context"]``. If not specified, the function uses the current context in the kubeconfig file.
 
 5. It is possible to add Kubernetes, OpenStack and Docker elements to ``["clusters"][]`` but the ``type`` field must be equal to "kubernetes", "openstack" or "docker".
 
-6. The consumer parameters (asset_id, hostname, ip, port, protocol, endpoint, transfer, encoding) in the file ``openc2lib/applications/ctxd/configuration.json`` in the field ``["clusters"][]`` allow to specify how to connect to the consumer that is running Kubernetes, OpenStack or Docker. Transfer and encoding must be in numeric format. To know which integer to use, see ``/openc2lib/docs/CTXD documentation.md`` file, specifically paragraphs 5.19 and 5.20.
+6. The consumer parameters (asset_id, hostname, ip, port, protocol, endpoint, transfer, encoding) in the file ``otupy/applications/ctxd/configuration.json`` in the field ``["clusters"][]`` allow to specify how to connect to the consumer that is running Kubernetes, OpenStack or Docker. Transfer and encoding must be in numeric format. To know which integer to use, see ``/otupy/docs/CTXD documentation.md`` file, specifically paragraphs 5.19 and 5.20.
 
-7. To connect to the MongoDB database, the file ``openc2lib/applications/ctxd/configuration.json`` in the field ``["mongodb"][]`` allows specifying the parameters useful for the connection. It is possible to connect to the MongoDB database without username and password.
+7. To connect to the MongoDB database, the file ``otupy/applications/ctxd/configuration.json`` in the field ``["mongodb"][]`` allows specifying the parameters useful for the connection. It is possible to connect to the MongoDB database without username and password.
 
 8. Run the consumer:
 
 .. code-block:: bash
 
-    python openc2lib/applications/ctxd/ctxd_consumers.py
+    python otupy/applications/ctxd/ctxd_consumers.py
 
 4. Running the Producer
 -----------------------
@@ -78,7 +78,7 @@ Run the producer:
 
 .. code-block:: bash
 
-    python openc2lib/applications/ctxd/ctxd_producer.py
+    python otupy/applications/ctxd/ctxd_producer.py
 
 No configuration files are associated with the producer.
 

@@ -52,7 +52,7 @@ Getting started
 Advanced usage
 --------------
 
-Advanced usage of the openc2lib requires knowledge of its data
+Advanced usage of ``otupy`` requires knowledge of its data
 structures and functions. Data structures are very straightforward to
 learn, because they strictly follow the definition and requirements in
 the common Language Specification and Profile extensions. 
