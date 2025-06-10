@@ -1,0 +1,28 @@
+{
+    "action": "start",
+    "target": {
+        "x-fclm:monitor": {
+            "file": {
+                "path": "/var/log/*.log"
+            }
+        }
+    },
+    "args": {
+        "x-fclm": {
+            "log_exporter": {
+                "storages": {
+                    "path": "/tmp/logs"
+                }
+            },
+            "import_controls": {
+                "scan_frequency": 1000,
+                "max_backoff": 10
+            }
+        }
+    },
+    "actuator": {
+        "x-fclm": {
+            "asset_id": "agent_z"
+        }
+    }
+}

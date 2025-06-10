@@ -1,0 +1,45 @@
+test_good_exporters:
+- storage: { name: "flows.json", path: "/var/logs" }
+  collectors:
+    - address: "192.168.1.1"
+      port: 2055
+      format: "json"
+- storage: { name: "backup.yaml", path: "/opt/flows" }
+  collectors:
+    - address: "10.0.0.2"
+      port: 6343
+      format: "yaml"
+    - address: "172.16.0.5"
+      port: 9999
+      format: "csv"
+- storage:
+  collectors:
+    - address: "192.168.1.5"
+      port: 2055
+      format: "json"
+- storage: { name: "export.flow", path: "/tmp" }
+  collectors: 
+- storage: { name: "export.log", path: "/tmp" }
+  collectors: []
+test_bad_exporters:
+- storage: 
+  collectors: 
+- storage: 42
+  collectors: 
+- storage: { name: "data.txt", path: "/logs" }
+  collectors:
+    - address: "300.300.300.300"
+      port: 1234
+      format: "json"
+- storage: { name: "data.txt", path: "/logs" }
+  collectors:
+    - address: "192.168.1.1"
+      port: "notaport"
+      format: "json"
+- storage: { name: "data.txt", path: "/logs" }
+  collectors:
+    - address: "192.168.1.1"
+      port: 2055
+      format: "INVALID"
+- storage: { name: "export", path: "/flow" }
+  collectors: 123

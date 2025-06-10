@@ -1,0 +1,19 @@
+test_good_monitor_id_target:
+  - monitor_id: "agent-001"
+  - monitor_id: "monitor42"
+  - monitor_id: "filebeat-main"
+  - monitor_id: "log-collector"
+  - monitor_id: "agent01"
+  - monitor_id: "sensor-xyz"
+  - monitor_id: "netflow-collector"
+  - monitor_id: "packetbeat-01"
+  - monitor_id: "security-monitor-007"
+  - monitor_id: "server-abc"
+
+test_bad_monitor_id_target:
+  - bad_monitor_id: 12345        # Integer
+  - bad_monitor_id: 12.34        # Float
+  - bad_monitor_id: True         # Boolean
+  - bad_monitor_id: []           # List
+  - bad_monitor_id: {}           # Dictionary
+  - bad_monitor_id: null         # None

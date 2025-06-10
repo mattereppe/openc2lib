@@ -1,0 +1,57 @@
+#!../.oc2-env/bin/python3
+# Example to use the OpenC2 library
+#
+import hashlib
+import logging
+import sys
+import time
+import openc2lib as oc2
+from openc2lib.types.data.uri import  URI
+from openc2lib.types.targets.file import File
+
+from openc2lib.encoders.json import JSONEncoder
+from openc2lib.transfers.http import HTTPTransfer
+
+import openc2lib.profiles.rcli as rcli
+
+# logging.basicConfig(filename='openc2.log',level=logging.DEBUG)
+'''logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+logger = logging.getLogger('openc2producer')'''
+logger = logging.getLogger()
+# Ask for 4 levels of logging: INFO, WARNING, ERROR, CRITICAL
+logger.setLevel(logging.INFO)
+# Create stdout handler for logging to the console 
+stdout_handler = logging.StreamHandler()
+stdout_handler.setLevel(logging.DEBUG)
+stdout_handler.setFormatter(oc2.LogFormatter(datetime=True,name=True))
+
+hdls = [ stdout_handler ]
+# Add both handlers to the logger
+logger.addHandler(stdout_handler)
+# Add file logger
+file_handler = logging.FileHandler("controller_rcli_query_features.log")
+file_handler.setLevel(logging.INFO)
+file_handler.setFormatter(oc2.LogFormatter(datetime=True,name=True, datefmt='%t'))
+logger.addHandler(file_handler)
+
+oc2.Feature.extend("clicommands",5)
+def main():
+    logger.info("Creating Producer")
+    p = oc2.Producer("producer.example.net",
+                     JSONEncoder(),
+                     HTTPTransfer("127.0.0.1",
+                                  8080))
+
+    pf = rcli.Specifiers({})
+    arg = rcli.Args({'response_requested': oc2.ResponseType.complete})
+
+    cmd = oc2.Command(oc2.Actions.query, oc2.Features([oc2.Feature.clicommands]), arg, actuator=pf)
+
+    logger.info("Sending command: %s", cmd)
+    resp = p.sendcmd(cmd)
+    logger.info("Got response: %s", resp)
+
+
+
+if __name__ == '__main__':
+    main()

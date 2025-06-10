@@ -1,0 +1,15 @@
+{
+    "action": "stop",
+    "target": {
+        "x-fclm:monitor_id1": "Omega_1014WT"
+    },
+    "args": {
+        "x-fclm": {},
+        "response_requested": "complete"
+    },
+    "actuator": {
+        "x-fclm": {
+            "asset_id": "agent_x"
+        }
+    }
+}

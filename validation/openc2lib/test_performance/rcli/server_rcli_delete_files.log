@@ -1,0 +1,65 @@
+1745310812.421022 [[38;5;42m  INFO  [0m]werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+1745310812.421202 [[38;5;42m  INFO  [0m]werkzeug: [33mPress CTRL+C to quit[0m
+1745310812.421653 [[38;5;42m  INFO  [0m]werkzeug:  * Restarting with stat
+1745310812.664481 [[38;5;226mWARNING [0m]werkzeug:  * Debugger is active!
+1745310812.667045 [[38;5;42m  INFO  [0m]werkzeug:  * Debugger PIN: 885-270-589
+1745310817.653730 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: Received HTTP body: 
+{
+   "headers": {
+      "request_id": "d5f4f4e8-2bcf-498b-a459-fcc95de6704d",
+      "created": 1745310817649,
+      "from": "producer.example.net",
+      "to": [
+         "127.0.0.1"
+      ]
+   },
+   "body": {
+      "openc2": {
+         "request": {
+            "action": "delete",
+            "target": {
+               "x-rcli:files": [
+                  {
+                     "path": "/opt/hani/tmacp/fcd/a",
+                     "name": "acxzcsxs.txt"
+                  }
+               ]
+            },
+            "args": {
+               "x-rcli": {}
+            },
+            "actuator": {
+               "x-rcli": {}
+            }
+         }
+      }
+   }
+}
+1745310817.654284 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: Received command: Message(content=Command(action=delete, target=[{'path': '/opt/hani/tmacp/fcd/a', 'name': 'acxzcsxs.txt'}], args={}, actuator=x-rcli(), command_id=None), content_type='openc2', msg_type=<MessageType.command: 1>, status=None, request_id='d5f4f4e8-2bcf-498b-a459-fcc95de6704d', created=1745310817649, from_='producer.example.net', to=['127.0.0.1'], version='1.0', encoding=<class 'openc2lib.encoders.json.JSONEncoder'>)
+1745310817.654661 [[38;5;42m  INFO  [0m]openc2lib.core.consumer: Dispatching command to: <openc2lib.actuators.rcli.rcli_actuator.RCLIActuator object at 0x73fc9ecaa600>
+1745310817.655964 [[38;5;42m  INFO  [0m]openc2lib.actuators.rcli.rcli_actuator: Received command for processing: Command(action=delete, target=[{'path': '/opt/hani/tmacp/fcd/a', 'name': 'acxzcsxs.txt'}], args={}, actuator=x-rcli(), command_id=None)
+1745310817.656586 [[38;5;42m  INFO  [0m]openc2lib.actuators.rcli.actions.delete: Deleting action with command: Command(action=delete, target=[{'path': '/opt/hani/tmacp/fcd/a', 'name': 'acxzcsxs.txt'}], args={}, actuator=x-rcli(), command_id=None)
+1745310817.659376 [[38;5;42m  INFO  [0m]openc2lib.actuators.rcli.handlers.response_handler: OK
+1745310817.659549 [[38;5;42m  INFO  [0m]openc2lib.actuators.rcli.rcli_actuator: Response generated: {'status': <StatusCode.OK: 200>, 'status_text': 'OK'}
+1745310817.659699 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: Got response: Message(content={'status': <StatusCode.OK: 200>, 'status_text': 'OK'}, content_type='openc2', msg_type=<MessageType.response: 2>, status=<StatusCode.OK: 200>, request_id='d5f4f4e8-2bcf-498b-a459-fcc95de6704d', created=1745310817659, from_='testconsumer', to=['producer.example.net'], version='1.0', encoding=None)
+1745310817.659959 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: Sending response:
+{
+   "headers": {
+      "request_id": "d5f4f4e8-2bcf-498b-a459-fcc95de6704d",
+      "created": 1745310817659,
+      "from": "testconsumer",
+      "to": [
+         "producer.example.net"
+      ]
+   },
+   "body": {
+      "openc2": {
+         "response": {
+            "status": 200,
+            "status_text": "OK"
+         }
+      }
+   }
+}
+1745310817.660390 [[38;5;42m  INFO  [0m]werkzeug: 127.0.0.1 - - [22/Apr/2025 10:33:37] "POST /.well-known/openc2 HTTP/1.1" 200 -

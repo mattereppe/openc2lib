@@ -1,0 +1,94 @@
+test_good_import_options:
+  - options:
+      scan_frequency: 10
+      clean_inactive: 10
+      max_backoff: 10
+      close_inactive: 10
+      ignore_older: 10
+  - options:
+      scan_frequency: 30
+      clean_inactive: 30
+      max_backoff: 30
+      close_inactive: 30
+      ignore_older: 30
+  - options:
+      scan_frequency: 60
+      clean_inactive: 60
+      max_backoff: 60
+      close_inactive: 60
+      ignore_older: 60
+  - options:
+      scan_frequency: 100
+      clean_inactive: 100
+      max_backoff: 100
+      close_inactive: 100
+      ignore_older: 100
+  - options:
+      scan_frequency: 5
+      clean_inactive: 5
+      max_backoff: 5
+      close_inactive: 5
+      ignore_older: 5
+  - options:
+      scan_frequency: 15
+      clean_inactive: 15
+      max_backoff: 15
+      close_inactive: 15
+      ignore_older: 15
+  - options:
+      scan_frequency: 25
+      clean_inactive: 25
+      max_backoff: 25
+      close_inactive: 25
+      ignore_older: 25
+  - options:
+      scan_frequency: 75
+      clean_inactive: 75
+      max_backoff: 75
+      close_inactive: 75
+      ignore_older: 75
+  - options:
+      scan_frequency: 120
+      clean_inactive: 120
+      max_backoff: 120
+      close_inactive: 120
+      ignore_older: 120
+  - options:
+      scan_frequency: 180
+      clean_inactive: 180.5
+      max_backoff: 180
+      close_inactive: 180
+      ignore_older: true
+
+test_bad_import_options:
+  - bad_options:
+      scan_frequency: "10m"  # not a Duration
+  - bad_options:
+      max_backoff: "not-a-duration"  # invalid duration format
+  - bad_options:
+      scan_frequency: "5s"  # should be a numeric duration (integer)
+  - bad_options:
+      ignore_older: -10  # negative value for duration
+  - bad_options:
+      close_inactive: "string"  # invalid type (should be duration)
+  - bad_options:
+      max_backoff: [10]  # list instead of scalar value
+  - bad_options:
+      scan_frequency: null  # null value
+  - bad_options:
+      scan_frequency: {}  # empty dictionary instead of integer
+  - bad_options:
+      clean_inactive: []  # empty list instead of integer
+  - bad_options:
+      scan_frequency: "one hundred"  # non-numeric string
+  - bad_options:
+      max_backoff: "10,20,30"  # comma-separated string instead of single value
+  - bad_options:
+      close_inactive: 10,20  # tuple instead of duration
+  - bad_options:
+      clean_inactive: "10 hours"  # string with units (should be numeric)
+  - bad_options:
+      ignore_older: {}  # empty dictionary instead of duration
+  - bad_options:
+      max_backoff: "0s"  # zero with unit string instead of numeric value
+

@@ -1,0 +1,245 @@
+{
+    "timestamp": {
+      "packetbeat": "@timestamp"
+    },
+    "metadata beat": {
+      "packetbeat": "@metadata.beat"
+    },
+    "metadata type": {
+      "packetbeat": "@metadata.type"
+    },
+    "metadata version": {
+      "packetbeat": "@metadata.version"
+    },
+    "type": {
+      "packetbeat": "type"
+    },
+    "ecs version": {
+      "packetbeat": "ecs.version"
+    },
+    "event start": {
+      "packetbeat": "event.start"
+    },
+    "event end": {
+      "packetbeat": "event.end"
+    },
+    "event duration": {
+      "packetbeat": "event.duration"
+    },
+    "event category": {
+      "packetbeat": "event.category"
+    },
+    "event action": {
+      "packetbeat": "event.action"
+    },
+    "host name": {
+      "packetbeat": "host.name"
+    },
+    "host hostname": {
+      "packetbeat": "host.hostname"
+    },
+    "host ip": {
+      "packetbeat": "host.ip"
+    },
+    "host mac": {
+      "packetbeat": "host.mac"
+    },
+    "host os": {
+      "packetbeat": "host.os"
+    },
+    "host id": {
+      "packetbeat": "host.id"
+    },
+    "host containerized": {
+      "packetbeat": "host.containerized"
+    },
+    "agent name": {
+      "packetbeat": "agent.name"
+    },
+    "agent version": {
+      "packetbeat": "agent.version"
+    },
+    "agent id": {
+      "packetbeat": "agent.id"
+    },
+    "flow id": {
+      "packetbeat": "flow.id"
+    },
+    "flow final": {
+      "packetbeat": "flow.final"
+    },
+    "network transport": {
+      "packetbeat": "network.transport"
+    },
+    "network community id": {
+      "packetbeat": "network.community_id"
+    },
+    "network bytes": {
+      "packetbeat": "network.bytes"
+    },
+    "network packets": {
+      "packetbeat": "network.packets"
+    },
+    "network type": {
+      "packetbeat": "network.type"
+    },
+    "source ip": {
+      "nprobe": "%IPV4_SRC_ADDR",
+      "packetbeat": "source.ip"
+    },
+    "source port": {
+      "nprobe": "%L4_SRC_PORT",
+      "packetbeat": "source.port"
+    },
+    "source bytes": {
+      "nprobe": "%IN_BYTES",
+      "packetbeat": "source.bytes"
+    },
+    "source packets": {
+      "nprobe": "%IN_PKTS",
+      "packetbeat": "source.packets"
+    },
+    "destination ip": {
+      "nprobe": "%IPV4_DST_ADDR",
+      "packetbeat": "destination.ip"
+    },
+    "destination port": {
+      "nprobe": "%L4_DST_PORT",
+      "packetbeat": "destination.port"
+    },
+    "destination bytes": {
+      "nprobe": "%OUT_BYTES",
+      "packetbeat": "destination.bytes"
+    },
+    "destination packets": {
+      "nprobe": "%OUT_PKTS",
+      "packetbeat": "destination.packets"
+    },
+    "ipv4 source address": {
+      "nprobe": "%IPV4_SRC_ADDR"
+    },
+    "ipv4 destination address": {
+      "nprobe": "%IPV4_DST_ADDR"
+    },
+    "ipv6 source address": {
+      "nprobe": "%IPV6_SRC_ADDR"
+    },
+    "ipv6 destination address": {
+      "nprobe": "%IPV6_DST_ADDR"
+    },
+    "protocol": {
+      "nprobe": "%PROTOCOL"
+    },
+    "icmp type": {
+      "nprobe": "%ICMP_TYPE"
+    },
+    "icmp code": {
+      "nprobe": "%ICMP_IPV4_CODE"
+    },
+    "mpls label 1": {
+      "nprobe": "%MPLS_LABEL_1"
+    },
+    "mpls label 2": {
+      "nprobe": "%MPLS_LABEL_2"
+    },
+    "sampling algorithm": {
+      "nprobe": "%SAMPLING_ALGORITHM"
+    },
+    "sampling interval": {
+      "nprobe": "%SAMPLING_INTERVAL"
+    },
+    "sampling size": {
+      "nprobe": "%SAMPLING_SIZE"
+    },
+    "sampling population": {
+      "nprobe": "%SAMPLING_POPULATION"
+    },
+    "total bytes exported": {
+      "nprobe": "%TOTAL_BYTES_EXP"
+    },
+    "total packets exported": {
+      "nprobe": "%TOTAL_PKTS_EXP"
+    },
+    "total flows exported": {
+      "nprobe": "%TOTAL_FLOWS_EXP"
+    },
+    "min ttl": {
+      "nprobe": "%MIN_TTL"
+    },
+    "max ttl": {
+      "nprobe": "%MAX_TTL"
+    },
+    "src vlan": {
+      "nprobe": "%SRC_VLAN"
+    },
+    "dst vlan": {
+      "nprobe": "%DST_VLAN"
+    },
+    "src mac": {
+      "nprobe": "%IN_SRC_MAC"
+    },
+    "dst mac": {
+      "nprobe": "%OUT_DST_MAC"
+    },
+    "ingress vrfid": {
+      "nprobe": "%INGRESS_VRFID"
+    },
+    "flow duration ms": {
+      "nprobe": "%FLOW_DURATION_MILLISECONDS"
+    },
+    "flow duration us": {
+      "nprobe": "%FLOW_DURATION_MICROSECONDS"
+    },
+    "last switched": {
+      "nprobe": "%LAST_SWITCHED"
+    },
+    "first switched": {
+      "nprobe": "%FIRST_SWITCHED"
+    },
+    "flow start sec": {
+      "nprobe": "%FLOW_START_SEC"
+    },
+    "flow end sec": {
+      "nprobe": "%FLOW_END_SEC"
+    },
+    "flow start ms": {
+      "nprobe": "%FLOW_START_MILLISECONDS"
+    },
+    "flow end ms": {
+      "nprobe": "%FLOW_END_MILLISECONDS"
+    },
+    "flow start us": {
+      "nprobe": "%FLOW_START_MICROSECONDS"
+    },
+    "flow end us": {
+      "nprobe": "%FLOW_END_MICROSECONDS"
+    },
+    "bi-flow direction": {
+      "nprobe": "%BIFLOW_DIRECTION"
+    },
+    "nat originating address realm": {
+      "nprobe": "%NAT_ORIGINATING_ADDRESS_REALM"
+    },
+    "nat event": {
+      "nprobe": "%NAT_EVENT"
+    },
+    "firewall event": {
+      "nprobe": "%FIREWALL_EVENT"
+    },
+    "ipfix sampling algorithm": {
+      "nprobe": "%IPFIX_SAMPLING_ALGORITHM"
+    },
+    "sampled packet size": {
+      "nprobe": "%SAMPLED_PACKET_SIZE"
+    },
+    "sampled packet id": {
+      "nprobe": "%SAMPLED_PACKET_ID"
+    },
+    "exporter ipv4 address": {
+      "nprobe": "%EXPORTER_IPV4_ADDRESS"
+    },
+    "exporter ipv6 address": {
+      "nprobe": "%EXPORTER_IPV6_ADDRESS"
+    }
+  }
+  

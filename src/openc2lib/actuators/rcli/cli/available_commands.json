@@ -1,0 +1,10 @@
+{
+    "ls": {"flags": ["-a", "-l"], "allow_path": true},
+    "cd": {"flags": [], "allow_path": true},
+    "python": {"flags": [], "allow_path": true},
+    "node": {"flags": [], "allow_path": true},
+    "systemctl": {"flags": ["start", "stop", "restart"], "allow_path": false},
+    "ps": {"flags": ["aux"], "allow_path": false},
+    "kill": {"flags": ["-9"], "allow_path": false},
+    "code": {"flags": [], "allow_path": true}
+}

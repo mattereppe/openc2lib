@@ -1,0 +1,43 @@
+{
+    "action": "start",
+    "target": {
+      "x-nfm:monitor": {
+        "interfaces": [
+          {
+            "name": "ens33"
+          }
+        ],
+        "information_elements": [
+          "source ip",
+          "destination ip"
+        ],
+        "filter_v4": [],
+        "filter_v6": []
+      }
+    },
+    "args": {
+      "x-nfm": {
+        "exporter": {
+          "storage": {
+            "path": "/flows"
+          },
+          "collectors": [
+            {
+              "address": "192.168.1.0/32",
+              "port": 5213
+            },
+            {
+              "address": "192.168.2.0/32",
+              "port": 5213
+            }
+          ]
+        }
+      }
+    },
+    "actuator": {
+      "x-nfm": {
+        "asset_id": "probe_x"
+      }
+    }
+  }
+  

@@ -1,0 +1,36 @@
+test_good_exporter:
+  - storage:
+      name: "flows.json"
+      path: "/var/logs"
+    collectors:
+      - address: "192.168.1.1"
+        port: 2055
+  - storage:
+      name: "backup.yaml"
+      path: "/opt/flows"
+    collectors:
+      - address: "10.0.0.2"
+        port: 6343
+      - address: "172.16.0.5"
+        port: 9999
+  - storage:
+      name: "export.flow"
+      path: "/tmp"
+    collectors: []
+
+test_bad_exporter:
+  - storage: 
+      name: "data.txt"
+      path: "/logs"
+    collectors:
+      - address: "300.300.300.300"
+        port: 1234
+        format: "netflow5"
+  - storage: 
+      name: "invalid_storage.txt"
+      path: "/flow"
+    collectors: 1  # collectors defined, but empty
+  - storage: 
+      name: "export.txt"
+      path: "/flow"
+    collectors: 'null'  # collectors defined, but empty

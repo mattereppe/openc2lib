@@ -1,0 +1,17 @@
+{
+  "action": "stop",
+  "target": {
+    "x-rcli:processes": [
+      {
+        "pid": "notanumber"
+      }
+    ]
+  },
+  "args": {
+    "x-rcli": {},
+    "response_requested": "complete"
+  },
+  "actuator": {
+    "x-rcli": {}
+  }
+}

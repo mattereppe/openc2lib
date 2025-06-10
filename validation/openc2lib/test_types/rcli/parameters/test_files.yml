@@ -1,0 +1,45 @@
+valid_files:
+  - name: "file1.txt"
+    path: "/var/log/file1.txt"
+    hashes:
+      md5: "BD0F6D2EBC329F2E8724953683098DFF"
+
+  - name: "file2.txt"
+    path: "/var/log/file2.txt"
+    hashes:
+      sha1: "AABBCCDDEEFF00112233445566778899AABBCCDD"
+
+  - name: "file3.txt"
+    path: "/var/log/file3.txt"
+    hashes:
+      sha256: "11223344556677889900AABBCCDDEEFF00112233445566778899AABBCCDDEEFF"
+
+invalid_files:
+  # Invalid because md5 is an integer
+  - name: "bad_file1.txt"
+    path: "/var/log/bad_file1.txt"
+    hashes:
+      md5: 1234567890123456  # Invalid type (should be string)
+
+  # Invalid because sha1 is null
+  - name: "bad_file2.txt"
+    path: "/var/log/bad_file2.txt"
+    hashes:
+      sha1: null  # Invalid value (not a valid Binaryx)
+
+  # Invalid because sha256 is too short
+  - name: "bad_file3.txt"
+    path: "/var/log/bad_file3.txt"
+    hashes:
+      sha256: "1234"  # Too short (should be 32 bytes)
+
+  # Invalid because hashes is not a dict
+  - name: "bad_file4.txt"
+    path: "/var/log/bad_file4.txt"
+    hashes: "not-a-dict"  # Completely invalid type
+
+  # Invalid because name is an integer
+  - name: 12345  # Invalid type
+    path: "/var/log/file.txt"
+    hashes:
+      md5: "BD0F6D2EBC329F2E8724953683098DFF"

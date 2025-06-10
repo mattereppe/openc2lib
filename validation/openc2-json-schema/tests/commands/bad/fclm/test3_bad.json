@@ -1,0 +1,32 @@
+{
+    "action": "start",
+    "target": {
+        "x-fclm:monitor": {
+            "file": {
+                "path": "/var/log/*.log"
+            }
+        }
+    },
+    "args": {
+        "x-fclm": {
+            "log_exporter": {
+                "collectors": [
+                    {
+                        "address": "999.999.999.9991",
+                        "port": 1234,
+                        "format": "json"
+                    }
+                ]
+            },
+            "export_fields": ["timestamp"],
+            "import_controls": {
+                "scan_frequency": 1000
+            }
+        }
+    },
+    "actuator": {
+        "x-fclm": {
+            "asset_id": "agent_x"
+        }
+    }
+}

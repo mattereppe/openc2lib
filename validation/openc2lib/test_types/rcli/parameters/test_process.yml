@@ -1,0 +1,17 @@
+test_good_process:
+  - pid: 78901
+    name: 'process5'
+    cwd: '/home/user5'
+    executable: '/usr/bin/process5'
+    parent: null
+    command_line: 'process5 --option5 value5'
+    state: 'running'
+
+test_bad_process:
+  - bad_pid: "not_a_number"
+    bad_name: ""
+    bad_cwd: "/invalid/cwd"
+    bad_executable: "/invalid/executable"
+    bad_parent: {}
+    bad_command_line: ""
+    bad_state: "invalid_state"

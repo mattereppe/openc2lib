@@ -1,0 +1,6 @@
+	Encoding+headers	Send-to-Receive		Decoding	Tot. Transaction
+Count:	1		1		1		1		
+Total:	0.000789		3.022672		0.001982		3.025443		
+Mean:	0.000789		3.022672		0.001982		3.025443		
+Min:	0.000789		3.000000		0.001982		3.000000		
+Max:	0.000789		3.022672		0.001982		3.025443		

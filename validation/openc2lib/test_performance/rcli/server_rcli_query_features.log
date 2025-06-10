@@ -1,0 +1,102 @@
+1745310894.564356 [[38;5;42m  INFO  [0m]werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+1745310894.564611 [[38;5;42m  INFO  [0m]werkzeug: [33mPress CTRL+C to quit[0m
+1745310894.565123 [[38;5;42m  INFO  [0m]werkzeug:  * Restarting with stat
+1745310894.846151 [[38;5;226mWARNING [0m]werkzeug:  * Debugger is active!
+1745310894.849563 [[38;5;42m  INFO  [0m]werkzeug:  * Debugger PIN: 885-270-589
+1745310901.766341 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: Received HTTP body: 
+{
+   "headers": {
+      "request_id": "5c7db800-4b28-490e-814f-da7d11be3f8d",
+      "created": 1745310901762,
+      "from": "producer.example.net",
+      "to": [
+         "127.0.0.1"
+      ]
+   },
+   "body": {
+      "openc2": {
+         "request": {
+            "action": "query",
+            "target": {
+               "features": [
+                  "clicommands"
+               ]
+            },
+            "args": {
+               "x-rcli": {},
+               "response_requested": "complete"
+            },
+            "actuator": {
+               "x-rcli": {}
+            }
+         }
+      }
+   }
+}
+1745310901.766908 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: Received command: Message(content=Command(action=query, target=[<Feature.clicommands: 5>], args={'response_requested': <ResponseType.complete: 3>}, actuator=x-rcli(), command_id=None), content_type='openc2', msg_type=<MessageType.command: 1>, status=None, request_id='5c7db800-4b28-490e-814f-da7d11be3f8d', created=1745310901762, from_='producer.example.net', to=['127.0.0.1'], version='1.0', encoding=<class 'openc2lib.encoders.json.JSONEncoder'>)
+1745310901.767183 [[38;5;42m  INFO  [0m]openc2lib.core.consumer: Dispatching command to: <openc2lib.actuators.rcli.rcli_actuator.RCLIActuator object at 0x731305faa660>
+1745310901.767319 [[38;5;42m  INFO  [0m]openc2lib.actuators.rcli.rcli_actuator: Received command for processing: Command(action=query, target=[<Feature.clicommands: 5>], args={'response_requested': <ResponseType.complete: 3>}, actuator=x-rcli(), command_id=None)
+1745310901.767424 [[38;5;42m  INFO  [0m]openc2lib.actuators.rcli.actions.query: Querying action with command: Command(action=query, target=[<Feature.clicommands: 5>], args={'response_requested': <ResponseType.complete: 3>}, actuator=x-rcli(), command_id=None)
+1745310901.767484 [[38;5;42m  INFO  [0m]openc2lib.actuators.rcli.actions.query: Querying features with command: Command(action=query, target=[<Feature.clicommands: 5>], args={'response_requested': <ResponseType.complete: 3>}, actuator=x-rcli(), command_id=None)
+1745310901.767676 [[38;5;42m  INFO  [0m]openc2lib.actuators.rcli.handlers.response_handler: Ok
+1745310901.768190 [[38;5;42m  INFO  [0m]openc2lib.actuators.rcli.rcli_actuator: Response generated: {'status': <StatusCode.OK: 200>, 'status_text': 'Ok', 'results': {'clicommands': [{'name': 'ls', 'command_line': '<Path> -a -l'}, {'name': 'cd', 'command_line': '<Path> '}, {'name': 'python', 'command_line': '<Path> '}, {'name': 'node', 'command_line': '<Path> '}, {'name': 'systemctl', 'command_line': 'start stop restart'}, {'name': 'ps', 'command_line': 'aux'}, {'name': 'kill', 'command_line': '-9'}, {'name': 'code', 'command_line': '<Path> '}]}}
+1745310901.768326 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: Got response: Message(content={'status': <StatusCode.OK: 200>, 'status_text': 'Ok', 'results': {'clicommands': [{'name': 'ls', 'command_line': '<Path> -a -l'}, {'name': 'cd', 'command_line': '<Path> '}, {'name': 'python', 'command_line': '<Path> '}, {'name': 'node', 'command_line': '<Path> '}, {'name': 'systemctl', 'command_line': 'start stop restart'}, {'name': 'ps', 'command_line': 'aux'}, {'name': 'kill', 'command_line': '-9'}, {'name': 'code', 'command_line': '<Path> '}]}}, content_type='openc2', msg_type=<MessageType.response: 2>, status=<StatusCode.OK: 200>, request_id='5c7db800-4b28-490e-814f-da7d11be3f8d', created=1745310901768, from_='testconsumer', to=['producer.example.net'], version='1.0', encoding=None)
+1745310901.768735 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: Sending response:
+{
+   "headers": {
+      "request_id": "5c7db800-4b28-490e-814f-da7d11be3f8d",
+      "created": 1745310901768,
+      "from": "testconsumer",
+      "to": [
+         "producer.example.net"
+      ]
+   },
+   "body": {
+      "openc2": {
+         "response": {
+            "status": 200,
+            "status_text": "Ok",
+            "results": {
+               "x-rcli": {
+                  "clicommands": [
+                     {
+                        "name": "ls",
+                        "command_line": "<Path> -a -l"
+                     },
+                     {
+                        "name": "cd",
+                        "command_line": "<Path> "
+                     },
+                     {
+                        "name": "python",
+                        "command_line": "<Path> "
+                     },
+                     {
+                        "name": "node",
+                        "command_line": "<Path> "
+                     },
+                     {
+                        "name": "systemctl",
+                        "command_line": "start stop restart"
+                     },
+                     {
+                        "name": "ps",
+                        "command_line": "aux"
+                     },
+                     {
+                        "name": "kill",
+                        "command_line": "-9"
+                     },
+                     {
+                        "name": "code",
+                        "command_line": "<Path> "
+                     }
+                  ]
+               }
+            }
+         }
+      }
+   }
+}
+1745310901.769404 [[38;5;42m  INFO  [0m]werkzeug: 127.0.0.1 - - [22/Apr/2025 10:35:01] "POST /.well-known/openc2 HTTP/1.1" 200 -
