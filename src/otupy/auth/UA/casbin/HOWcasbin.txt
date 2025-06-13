@@ -1,0 +1,15 @@
+in policy.csv si definiscono i ruoli e le policy.
+ES:
+    p, analyst, allow, ip_addr:*, firewall-*
+    questa policy permette a analyst di fare allow su qualsiasi ip_addr e su qualsiasi actuator
+
+g, producer-analyst, analyst -> viene definito un ruolo analyst e associato a user=producer-analyst
+
+
+in model.conf viene descritto come interpretare le policy (è lo schema)
+Matcher: è la regola logica che confronta la richiesta con le policy.
+    [matchers]
+    m = g(r.sub, p.sub) && keyMatch2(r.act, p.act) && keyMatch2(r.obj, p.obj) && keyMatch2(r.actuator, p.actuator)
+->Verifica che il soggetto abbia il ruolo (g(r.sub, p.sub)) e che gli altri campi combacino secondo keyMatch2
+(che supporta * e /.../ simili a pattern URL).
+

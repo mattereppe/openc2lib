@@ -48,6 +48,7 @@ class HTTPTransfer(oc2.Transfer):
 		self.scheme = 'https' if usessl else 'http'
 		self.url = f"{self.scheme}://{host}:{port}{endpoint}"
 		self.ssl_context = None
+		print(endpoint)
 
 	def _tohttp(self, msg, encoder):
 		""" Convert otupy `Message` to HTTP `Message` """
@@ -183,6 +184,7 @@ class HTTPTransfer(oc2.Transfer):
 		return msg, encoder
 	
 	def receive(self, callback, encoder):
+		print(' receive HTTP TRANSFER')
 		""" Listen for incoming messages
 
 			This method implements the `Transfer` interface to listen for and receive OpenC2 messages.
@@ -205,7 +207,7 @@ class HTTPTransfer(oc2.Transfer):
 			server = app.config['OPENC2']
 			callback = app.config['CALLBACK']
 			encoder=app.config['ENCODER']
-			
+
 			try:
 				cmd, encoder = server._recv(request.headers, request.data.decode('UTF-8') )
 				# TODO: Add the code to answer according to 'response_requested'
@@ -248,7 +250,8 @@ class HTTPTransfer(oc2.Transfer):
 				resp.to = [ str(request.remote_addr) ]
 			else:
 				logger.info("Received command: %s", cmd)
-				resp = callback(cmd)
+				#aggiunto anche headers per estrarre token
+				resp = callback(cmd,request.headers)
 
 			
 			logger.info("Got response: %s", resp)
