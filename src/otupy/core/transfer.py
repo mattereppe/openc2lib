@@ -9,7 +9,7 @@ class Transfer:
 		This is the base class for all implementation of Transfer protocols.
 	"""
 
-	def send(self, msg, encoder):
+	def send(self, msg, encoder,token):
 		""" Sends a Message
 
 			Encodes, sends a message, and returns the response.
