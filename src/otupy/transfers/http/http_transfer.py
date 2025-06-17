@@ -1,7 +1,7 @@
 """ HTTP Transfer Protocol
 
-	This module defines implementation of the `Transfer` interface for the 
-  	HTTP/HTTPs protocols. This implementation is mostly provided for 
+	This module defines implementation of the `Transfer` interface for the
+  	HTTP/HTTPs protocols. This implementation is mostly provided for
 	research and development purposes, but it is not suitable for production
 	environments.
 
@@ -91,7 +91,13 @@ class HTTPTransfer(oc2.Transfer):
         except:
             msg.status = None
 
-        return msg, encoder
+        # estrarre token da header
+        auth_header = hdr.get('Authorization')
+        token = None
+        if auth_header and auth_header.startswith('Bearer '):
+            token = auth_header.removeprefix('Bearer ').strip()
+
+        return msg, encoder, token
 
     # This function is used to send an HTTP request
     def send(self, msg, encoder, token=None):
@@ -129,10 +135,15 @@ class HTTPTransfer(oc2.Transfer):
         logger.info("HTTP got response: %s", response)
         logger.info("HTTP Response Content:\n%s", response.text)
 
+        if response.status_code == 401:
+            logger.error("Unauthorized access - HTTP 401")
+            print(response.text)
+            raise PermissionError(f"{response.text}")
+
         # TODO: How to manage HTTP response code? Can we safely assume they always match the Openc2 response?
         try:
             if response.text != "":
-                msg, encoder = self._fromhttp(response.headers, response.text)
+                msg, encoder, token = self._fromhttp(response.headers, response.text)
             else:
                 msg = None
         except ValueError as e:
@@ -180,9 +191,9 @@ class HTTPTransfer(oc2.Transfer):
 
         logger.info("Received HTTP body: \n%s", data)
         logger.debug(data)
-        msg, encoder = self._fromhttp(headers, data)
-
-        return msg, encoder
+        #restituisce anche token
+        msg, encoder, token = self._fromhttp(headers, data)
+        return msg, encoder, token
 
     def receive(self, callback, encoder):
         print(' receive HTTP TRANSFER')
@@ -210,7 +221,7 @@ class HTTPTransfer(oc2.Transfer):
             encoder = app.config['ENCODER']
 
             try:
-                cmd, encoder = server._recv(request.headers, request.data.decode('UTF-8'))
+                cmd, encoder,token = server._recv(request.headers, request.data.decode('UTF-8'))
             # TODO: Add the code to answer according to 'response_requested'
             except UnsupportedMediaType as e:
                 # We were not able to understand the OpenC2 Message.
@@ -251,8 +262,10 @@ class HTTPTransfer(oc2.Transfer):
                 resp.to = [str(request.remote_addr)]
             else:
                 logger.info("Received command: %s", cmd)
-                #aggiunto anche headers per estrarre token
-                resp = callback(cmd, request.headers)
+                #prima si passava interi headers al callback e poi dentro dispatch veniva estratto il token dagli header.
+                # Ora non si passa più request.headers, ma direttamente il token già estratto, perche il token viene estratto in _fromhttp()
+                # il Consumer quindi riceve già il token direttamente, e non deve occuparsi di estrarlo dagli header.
+                resp = callback(cmd, token=token)
 
             logger.info("Got response: %s", resp)
 

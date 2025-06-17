@@ -10,9 +10,6 @@ app = Flask(__name__)
 # URL dell'endpoint di login dell'Authorization Server
 login_url = 'http://127.0.0.1:9000/'
 
-# URL del client a cui reindirizzare il code
-client_redirect_url = 'http://127.0.0.1:8000/callback'
-
 def auth_flow(url):
     session = requests.Session()
 

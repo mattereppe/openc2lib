@@ -189,5 +189,4 @@ class Consumer:
 		return respmsg
 
 
-
 # TODO: Add main to load configuration from file
