@@ -1,4 +1,4 @@
-# Runnig the validation test suites
+# Otupy validation suite
 
 There are multiple tests available to check the compliance of otupy with the Language Specification, concerning data types, serialization, and message exchange. The same tests are available for both ```otupy``` and ```lycam```, with the necessary profiles definitions for each tool. Test concerning the exchange of messages over the network are not available for ```lycam```, since this library does not include a transfer protocol.
 
