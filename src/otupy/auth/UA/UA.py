@@ -1,30 +1,48 @@
-from flask import Flask, request, jsonify, redirect
+from flask import Flask, request, jsonify
 import requests
 import sys
 import threading
+import logging
+import os
+from dotenv import load_dotenv
 
-print(sys.executable)
+# Carica le variabili d'ambiente da .env
+load_dotenv()
 
+# Configurazione del logger
+logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+logger = logging.getLogger('UA')
+
+# Flask app
 app = Flask(__name__)
 
 # URL dell'endpoint di login dell'Authorization Server
-login_url = 'http://127.0.0.1:9000/'
+as_authorize_url = 'http://127.0.0.1:9000/'
+
+# Credenziali da variabili ambiente
+CONFIG_USERNAME = os.getenv("USERNAME")
+CONFIG_PASSWORD = os.getenv("PASSWORD")
+
+if not CONFIG_USERNAME or not CONFIG_PASSWORD:
+    logger.error("USERNAME o PASSWORD non definite nel file .env")
+    sys.exit(1)
+
 
 def auth_flow(url):
     session = requests.Session()
-
     response = session.get(url)
-    print(response.content)
-    print()
+    logger.debug(f'Response content: {response.content}\n')
 
     if response.status_code == 401:
-        print('Login richiesto...')
+        logger.info('Login required...')
 
-        for attempt in range(3):  # 3 tentativi
-            username = input('username: ')  # admin
-            password = input('password: ')  # password
-            login_payload = {'username': username, 'password': password}
-            login_response = session.post(login_url, json=login_payload)
+        for attempt in range(3):
+            login_payload = {
+                'username': CONFIG_USERNAME,
+                'password': CONFIG_PASSWORD
+            }
+
+            login_response = session.post(as_authorize_url, json=login_payload)
 
             if login_response.status_code == 200:
                 response = session.get(url)
@@ -33,28 +51,27 @@ def auth_flow(url):
                         data = response.json()
                         location = data.get('Location')
                         if location:
-                            print(f"Risposta: {location}")
-                            resp=requests.get(location)
-                            print(resp.status_code)
+                            logger.info(f"Redirecting to location: {location}")
+                            resp = requests.get(location)
                         else:
-                            print("Errore: Location non trovata nella risposta")
+                            logger.error("Errore: Location non trovata nella risposta")
                     except Exception as e:
-                        print(f"Errore parsing JSON: {str(e)}")
+                        logger.exception(f"Errore parsing JSON: {str(e)}")
                     return
                 elif response.status_code == 401:
-                    continue  # Tentativo fallito, riprova
+                    continue
                 else:
-                    print(f"Errore accesso risorsa: {response.status_code}")
+                    logger.error(f"Errore accesso risorsa: {response.status_code}")
                     return
             else:
-                print(f'Login fallito con status code: {login_response.status_code}')
-        print('Credenziali errate dopo 3 tentativi')
+                logger.warning(f'Login fallito con status code: {login_response.status_code}')
+        logger.error('Credenziali errate dopo 3 tentativi')
         return
 
     try:
-        print(response.json())
+        logger.debug(response.json())
     except Exception as e:
-        print(f"Errore parsing JSON: {str(e)}")
+        logger.exception(f"Errore parsing JSON: {str(e)}")
 
 
 @app.route('/auth', methods=['POST'])
@@ -67,6 +84,11 @@ def auth():
     url = data['url']
     threading.Thread(target=auth_flow, args=(url,)).start()
     return jsonify({'status': 'OK'}), 200
+
+
+@app.route('/as_url', methods=['GET'])
+def get_as_url():
+    return jsonify({'as_url': as_authorize_url})
 
 
 if __name__ == '__main__':

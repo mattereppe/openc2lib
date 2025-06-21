@@ -112,7 +112,7 @@ class OAuth2Consumer(Consumer):
     def __init__(self,
                  consumer: str,
                  introspection_url: str,
-                 auth_endpoint: str,
+                 ua_url: str,
                  client_id: Optional[str] = None,
                  client_secret: Optional[str] = None,
                  required_scopes: Optional[List[str]] = None,
@@ -126,9 +126,9 @@ class OAuth2Consumer(Consumer):
             client_secret=client_secret,
             required_scopes=required_scopes
         )
-        self.auth_endpoint = auth_endpoint
+        self.ua_url = ua_url
         logger.info(f"OAuth2Consumer initialized with introspection URL: {introspection_url}")
-        logger.info(f"Auth endpoint: {self.auth_endpoint}")
+        logger.info(f"Auth endpoint: {self.ua_url}")
 
     def dispatch(self, msg: Message, token: Optional[str] = None) -> Message:
         """
@@ -201,7 +201,7 @@ class OAuth2Consumer(Consumer):
     #     """
     #     results = Results()
     #
-    #     results['auth_endpoint'] = self.auth_endpoint
+    #     results['Ua_url'] = self.Ua_url
     #     results['auth_method'] = 'OAuth2'
     #     results['auth_required'] = True
     #
@@ -223,7 +223,7 @@ class OAuth2Consumer(Consumer):
     #     return error_msg
 
     def _create_error_message(self, original_msg):
-        auth_info = f"Auth endpoint: {self.auth_endpoint} "
+        auth_info = f"Auth endpoint: {self.ua_url} "
 
 
         response = Response(
@@ -238,12 +238,3 @@ class OAuth2Consumer(Consumer):
         error_msg.request_id = getattr(original_msg, 'request_id', None)
 
         return error_msg
-
-    def get_auth_endpoint(self) -> str:
-        """Restituisce l'endpoint di autenticazione"""
-        return self.auth_endpoint
-
-    def set_auth_endpoint(self, endpoint: str):
-        """Imposta l'endpoint di autenticazione"""
-        self.auth_endpoint = endpoint
-        logger.info(f"Auth endpoint updated to: {endpoint}")
