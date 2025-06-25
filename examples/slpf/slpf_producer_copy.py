@@ -21,19 +21,28 @@ logger.setLevel(logging.INFO)
 stdout_handler = logging.StreamHandler()
 stdout_handler.setLevel(logging.DEBUG)
 stdout_handler.setFormatter(oc2.LogFormatter(datetime=True,name=True))
-hdls = [ stdout_handler ]
+#hdls = [ stdout_handler ]
 # Add both handlers to the logger
 logger.addHandler(stdout_handler)
+# Add file logger
+file_handler = logging.FileHandler("controller.log")
+file_handler.setLevel(logging.INFO)
+file_handler.setFormatter(oc2.LogFormatter(datetime=True,name=True, datefmt='%t'))
+logger.addHandler(file_handler)
 
-def main(iptables_parameters):
+def main():
     logger.info("Creating Producer")
 
-    p = oc2.Producer("producer.example.net", JSONEncoder(), HTTPTransfer(iptables_parameters['ip'],
-                                                                        iptables_parameters['port']))
-    pf = slpf.Specifiers({'hostname': iptables_parameters['hostname'],
-                          'named_group': iptables_parameters['named_group'],
-                          'asset_id': iptables_parameters['asset_id']})
-    pf.fieldtypes['asset_id'] = iptables_parameters['asset_id']  # I have to repeat a second time to have no bugs
+#    p = oc2.Producer("producer.example.net", JSONEncoder(), HTTPTransfer(parameters['ip'],
+#                                                                        parameters['port']))
+#    pf = slpf.Specifiers({'hostname': parameters['hostname'],
+#                          'named_group': parameters['named_group'],
+#                          'asset_id': parameters['asset_id']})
+#    pf.fieldtypes['asset_id'] = parameters['asset_id']  # I have to repeat a second time to have no bugs
+
+    p = oc2.Producer("producer.example.net", JSONEncoder(), HTTPTransfer("127.0.0.1", 8080))
+#    pf = slpf.Specifiers({'asset_id': 'iptables'})
+    pf = slpf.Specifiers({'asset_id': 'openstack'})
 
     # Args
 #    arg = slpf.Args({})
@@ -58,12 +67,12 @@ def main(iptables_parameters):
 #    arg = slpf.Args({'persistent': False})
 #    arg = slpf.Args({'persistent': 0})
     # (start_time) (stop_time) (duration) (with oc2.DateTime and just int)
-#    arg = slpf.Args({'start_time': oc2.DateTime((time.time() + 10) * 1000)})
+#    arg = slpf.Args({'start_time': oc2.DateTime((time.time() + 15) * 1000)})
 #    arg = slpf.Args({'start_time': (time.time() + 20) * 1000})
-#    arg = slpf.Args({'stop_time': oc2.DateTime((time.time() + 10) * 1000)})
+#    arg = slpf.Args({'stop_time': oc2.DateTime((time.time() + 20) * 1000)})
 #    arg = slpf.Args({'duration': oc2.Duration(10000)})
 #    arg = slpf.Args({'duration': 10000})
-#    arg = slpf.Args({'start_time': oc2.DateTime((time.time() + 10) * 1000), 'stop_time': oc2.DateTime((time.time() + 30) * 1000)})
+#    arg = slpf.Args({'start_time': oc2.DateTime((time.time() + 30) * 1000), 'stop_time': oc2.DateTime((time.time() + 35) * 1000)})
 #    arg = slpf.Args({'start_time': oc2.DateTime((time.time() + 10) * 1000), 'duration': 10000})
 #    arg = slpf.Args({'stop_time': oc2.DateTime((time.time() + 15) * 1000), 'duration': 10000})
 
@@ -103,7 +112,7 @@ def main(iptables_parameters):
 #	not valid:
 #    cmd = oc2.Command(oc2.Actions.allow, oc2.IPv4Connection(src_port=oc2.Port(8080)), arg, actuator=pf)
 #    cmd = oc2.Command(oc2.Actions.allow, oc2.IPv4Connection(dst_port=oc2.Port(8080)), arg, actuator=pf)
-    cmd = oc2.Command(oc2.Actions.allow, oc2.IPv4Connection(src_port=oc2.Port(8080), protocol=oc2.L4Protocol.icmp), arg, actuator=pf)
+#    cmd = oc2.Command(oc2.Actions.allow, oc2.IPv4Connection(src_port=oc2.Port(8080), protocol=oc2.L4Protocol.icmp), arg, actuator=pf)
 
     # (allow IPv6Connection)
 #    cmd = oc2.Command(oc2.Actions.allow, oc2.IPv6Connection(src_addr=oc2.IPv6Net("2001:db8:85a3::8a2e:370:7334")), arg, actuator=pf)
@@ -126,6 +135,8 @@ def main(iptables_parameters):
     # (deny IPv4Connection)
 #    cmd = oc2.Command(oc2.Actions.deny, oc2.IPv4Connection(src_addr=oc2.IPv4Net("172.19.0.1")), arg, actuator=pf)
 #    cmd = oc2.Command(oc2.Actions.deny, oc2.IPv4Connection(dst_addr=oc2.IPv4Net("172.19.0.1")), arg, actuator=pf)
+#    cmd = oc2.Command(oc2.Actions.deny, oc2.IPv4Connection(src_addr=oc2.IPv4Net("172.19.0.3"), dst_addr=oc2.IPv4Net("172.19.0.4")), arg, actuator=pf)
+
 
     # (deny IPv6Connection)
 #    cmd = oc2.Command(oc2.Actions.deny, oc2.IPv6Connection(src_addr=oc2.IPv6Net("2001:db8:85a3::8a2e:370:7334")), arg, actuator=pf)
@@ -135,7 +146,7 @@ def main(iptables_parameters):
 
     # (Delete)
 
-#    cmd = oc2.Command(oc2.Actions.delete, slpf.RuleID(1), arg, actuator=pf)
+    cmd = oc2.Command(oc2.Actions.delete, slpf.RuleID(1), arg, actuator=pf)
 
 #   ----------------------------------------------------------
 
@@ -147,11 +158,12 @@ def main(iptables_parameters):
 #    cmd = oc2.Command(oc2.Actions.update, oc2.File(name="new_iptables_rules.v6", path="/home/kali/Scrivania/openc2lib/applications/slpf", hashes=oc2.Hashes(hashes={'sha256': oc2.Binaryx(bytes.fromhex('5e2ba905ca03620586f71eeb4bb5008548219ac4da49f130e5200cd3db3bc593'))})), arg, actuator=pf)
 #    cmd = oc2.Command(oc2.Actions.update, oc2.File(name="new_iptables_rules.v6", path="/home/kali/Scrivania/openc2lib/applications/slpf", hashes=oc2.Hashes(hashes={'md5': oc2.Binaryx(bytes.fromhex('3e4d11990c706c9ccc787951026ccf82')), 'sha1': oc2.Binaryx(bytes.fromhex('504cd4900a2791dd07e0fef60623d2086e6e3705')), 'sha256': oc2.Binaryx(bytes.fromhex('5e2ba905ca03620586f71eeb4bb5008548219ac4da49f130e5200cd3db3bc593'))})), arg, actuator=pf)
 #   not valid:
+#    cmd = oc2.Command(oc2.Actions.update, oc2.File(name="server.log"), arg, actuator=pf)
 #    cmd = oc2.Command(oc2.Actions.update, oc2.File(name="non_existing_file.txt"), arg, actuator=pf)
-#    cmd = oc2.Command(oc2.Actions.update, oc2.File(path="/home/kali/Scrivania/openc2lib/applications/slpf"), arg, actuator=pf)
-#    cmd = oc2.Command(oc2.Actions.update, oc2.File(name="new_iptables_rules.v6", path="/home/kali/Scrivania/openc2lib/applications/slpf", hashes=oc2.Hashes(hashes={'md5': oc2.Binaryx(bytes.fromhex('3e4d11990c706c9ccc787951026ccf80'))})), arg, actuator=pf)
-#    cmd = oc2.Command(oc2.Actions.update, oc2.File(name="new_iptables_rules.v6", path="/home/kali/Scrivania/openc2lib/applications/slpf", hashes=oc2.Hashes(hashes={'sha1': oc2.Binaryx(bytes.fromhex('504cd4900a2791dd07e0fef60623d2086e6e3700'))})), arg, actuator=pf)
-#    cmd = oc2.Command(oc2.Actions.update, oc2.File(name="new_iptables_rules.v6", path="/home/kali/Scrivania/openc2lib/applications/slpf", hashes=oc2.Hashes(hashes={'sha256': oc2.Binaryx(bytes.fromhex('5e2ba905ca03620586f71eeb4bb5008548219ac4da49f130e5200cd3db3bc590'))})), arg, actuator=pf)
+#    cmd = oc2.Command(oc2.Actions.update, oc2.File(path="/home/kali/Scrivania/openc2lib/examples/slpf"), arg, actuator=pf)
+#    cmd = oc2.Command(oc2.Actions.update, oc2.File(name="new_iptables_rules.v6", path="/home/kali/Scrivania/openc2lib/examples/slpf", hashes=oc2.Hashes(hashes={'md5': oc2.Binaryx(bytes.fromhex('3e4d11990c706c9ccc787951026ccf80'))})), arg, actuator=pf)
+#    cmd = oc2.Command(oc2.Actions.update, oc2.File(name="new_iptables_rules.v6", path="/home/kali/Scrivania/openc2lib/examples/slpf", hashes=oc2.Hashes(hashes={'sha1': oc2.Binaryx(bytes.fromhex('504cd4900a2791dd07e0fef60623d2086e6e3700'))})), arg, actuator=pf)
+#    cmd = oc2.Command(oc2.Actions.update, oc2.File(name="new_iptables_rules.v6", path="/home/kali/Scrivania/openc2lib/examples/slpf", hashes=oc2.Hashes(hashes={'sha256': oc2.Binaryx(bytes.fromhex('5e2ba905ca03620586f71eeb4bb5008548219ac4da49f130e5200cd3db3bc590'))})), arg, actuator=pf)
 
     logger.info("Sending command: %s", cmd)
     response = p.sendcmd(cmd)
@@ -159,11 +171,14 @@ def main(iptables_parameters):
     
 
 if __name__ == '__main__':
+    main()
 	
-    configuration_file = os.path.dirname(os.path.abspath(__file__))+"/configuration.json"
-    with open(configuration_file, 'r') as file:
-        configuration_parameters = json.load(file)
+#    configuration_file = os.path.dirname(os.path.abspath(__file__))+"/configuration.json"
+#    with open(configuration_file, 'r') as file:
+#        configuration_parameters = json.load(file)
 
-    for element in configuration_parameters['slpf_actuators']:
-        if (element["type"] == "iptables"):      
-            main(element)
+#    for element in configuration_parameters['slpf_actuators']:
+#        if (element["type"] == "iptables"):      
+#            main(element)
+#        elif (element["type"] == "openstack"):      
+#            main(element)

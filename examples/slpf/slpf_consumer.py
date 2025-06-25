@@ -10,7 +10,7 @@ from openc2lib.encoders.json import JSONEncoder
 from openc2lib.transfers.http import HTTPTransfer
 from openc2lib.actuators.slpf.slpf_actuator import SLPFActuator
 from openc2lib.actuators.slpf.slpf_actuator_iptables import SLPFActuator_iptables
-#from openc2lib.actuators.ctxd.ctxd_actuator_kubernetes import CTXDActuator_kubernetes
+from openc2lib.actuators.slpf.slpf_actuator_openstack import SLPFActuator_openstack
 import openc2lib.profiles.slpf as slpf
 
 # Declare the logger name
@@ -36,20 +36,18 @@ def main():
         with open(configuration_file, 'r') as file:
             configuration_parameters = json.load(file)
         
-        #process = subprocess.Popen('source ./matteo-astrid.rc', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        #stdout, stderr = process.communicate()
+        
 
         actuators = {}
         for element in configuration_parameters['slpf_actuators']:
             if (element["type"] == "iptables"):
-                #CTXDActuator_openstack is able to find vm connected to the cloud service openstack
                 actuators[(slpf.Profile.nsid,element['asset_id'])] = SLPFActuator_iptables(
                       hostname = element['hostname'],
                       named_group = element['named_group'],
                       asset_id = element['asset_id'],
                       asset_tuple = element['asset_tuple'],
-                      db_name = element['db_name'],
                       db_path = element['db_path'],
+                      db_name = element['db_name'],                     
                       db_commands_table_name = element['db_commands_table_name'],
                       db_jobs_table_name = element['db_jobs_table_name'],
                       iptables_rules_path = element['iptables_rules_path'],
@@ -59,8 +57,20 @@ def main():
                       iptables_output_chain_name = element['iptables_output_chain_name'],
                       iptables_forward_chain_name = element['iptables_forward_chain_name'],
                       iptables_cmd = element['iptables_cmd'],
-                      ip6tables_cmd = element['ip6tables_cmd'],
-                      misfire_grace_time = element["misfire_grace_time"]
+                      ip6tables_cmd = element['ip6tables_cmd']
+                )
+            elif (element["type"] == "openstack"):
+                actuators[(slpf.Profile.nsid,element['asset_id'])] = SLPFActuator_openstack(
+                      hostname = element['hostname'],
+                      named_group = element['named_group'],
+                      asset_id = element['asset_id'],
+                      asset_tuple = element['asset_tuple'],
+                      db_path = element['db_path'],
+                      db_name = element['db_name'],
+                      db_commands_table_name = element['db_commands_table_name'],
+                      db_jobs_table_name = element['db_jobs_table_name'],
+                      file_environment_variables = element['file_environment_variables'],
+                      security_group_id = element['security_group_id']
                 )
             else:
                 raise Exception("type must be equal to iptables")

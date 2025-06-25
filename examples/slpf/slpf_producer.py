@@ -30,23 +30,27 @@ file_handler.setLevel(logging.INFO)
 file_handler.setFormatter(oc2.LogFormatter(datetime=True,name=True, datefmt='%t'))
 logger.addHandler(file_handler)
 
-def main(iptables_parameters):
+def main():
     logger.info("Creating Producer")
 
-    p = oc2.Producer("producer.example.net", JSONEncoder(), HTTPTransfer(iptables_parameters['ip'],
-                                                                        iptables_parameters['port']))
-    pf = slpf.Specifiers({'hostname': iptables_parameters['hostname'],
-                          'named_group': iptables_parameters['named_group'],
-                          'asset_id': iptables_parameters['asset_id']})
-    pf.fieldtypes['asset_id'] = iptables_parameters['asset_id']  # I have to repeat a second time to have no bugs
+#    p = oc2.Producer("producer.example.net", JSONEncoder(), HTTPTransfer(parameters['ip'],
+#                                                                        parameters['port']))
+#    pf = slpf.Specifiers({'hostname': parameters['hostname'],
+#                          'named_group': parameters['named_group'],
+#                          'asset_id': parameters['asset_id']})
+#    pf.fieldtypes['asset_id'] = parameters['asset_id']  # I have to repeat a second time to have no bugs
+
+    p = oc2.Producer("producer.example.net", JSONEncoder(), HTTPTransfer("127.0.0.1", 8080))
+#    pf = slpf.Specifiers({'asset_id': 'iptables'})
+    pf = slpf.Specifiers({'asset_id': 'openstack'})
 
     # Args
 #    arg = slpf.Args({})
     # (response_requested)
-    arg = oc2.Args({'response_requested': oc2.ResponseType.complete})
+#    arg = oc2.Args({'response_requested': oc2.ResponseType.complete})
 #    arg = oc2.Args({'response_requested': oc2.ResponseType.ack})
     # (direction)
-#    arg = slpf.Args({'response_requested': oc2.ResponseType.complete, 'direction': slpf.Direction.ingress})
+    arg = slpf.Args({'response_requested': oc2.ResponseType.complete, 'direction': slpf.Direction.ingress})
 #    arg = slpf.Args({'response_requested': oc2.ResponseType.complete, 'direction': slpf.Direction.egress})
 #    arg = slpf.Args({'response_requested': oc2.ResponseType.complete, 'direction': slpf.Direction.both})
     # (insert_rule) (with slpf.RuleID and just int)(response_requested MUST be present)
@@ -63,12 +67,12 @@ def main(iptables_parameters):
 #    arg = slpf.Args({'persistent': False})
 #    arg = slpf.Args({'persistent': 0})
     # (start_time) (stop_time) (duration) (with oc2.DateTime and just int)
-    arg = slpf.Args({'start_time': oc2.DateTime((time.time() + 10) * 1000)})
+#    arg = slpf.Args({'start_time': oc2.DateTime((time.time() + 10) * 1000)})
 #    arg = slpf.Args({'start_time': (time.time() + 20) * 1000})
-#    arg = slpf.Args({'stop_time': oc2.DateTime((time.time() + 10) * 1000)})
+#    arg = slpf.Args({'stop_time': oc2.DateTime((time.time() + 30) * 1000)})
 #    arg = slpf.Args({'duration': oc2.Duration(10000)})
 #    arg = slpf.Args({'duration': 10000})
-#    arg = slpf.Args({'start_time': oc2.DateTime((time.time() + 10) * 1000), 'stop_time': oc2.DateTime((time.time() + 30) * 1000)})
+#    arg = slpf.Args({'start_time': oc2.DateTime((time.time() + 30) * 1000), 'stop_time': oc2.DateTime((time.time() + 50) * 1000)})
 #    arg = slpf.Args({'start_time': oc2.DateTime((time.time() + 10) * 1000), 'duration': 10000})
 #    arg = slpf.Args({'stop_time': oc2.DateTime((time.time() + 15) * 1000), 'duration': 10000})
 
@@ -117,6 +121,7 @@ def main(iptables_parameters):
 #	cmd = oc2.Command(oc2.Actions.allow, oc2.IPv6Connection(dst_addr=oc2.IPv6Net("2001:db8:85a3::8a2e:370:7334"), protocol=oc2.L4Protocol.tcp), arg, actuator=pf)
 #    cmd = oc2.Command(oc2.Actions.allow, oc2.IPv6Connection(src_addr=oc2.IPv6Net("2001:db8:85a3::8a2e:370:7334"), dst_port=oc2.Port(8080), protocol=oc2.L4Protocol.tcp), arg, actuator=pf)
 #	cmd = oc2.Command(oc2.Actions.allow, oc2.IPv6Connection(dst_addr=oc2.IPv6Net("2001:db8:85a3::8a2e:370:7334"), src_port=oc2.Port(8080), protocol=oc2.L4Protocol.tcp), arg, actuator=pf)
+#    cmd = oc2.Command(oc2.Actions.allow, oc2.IPv6Connection(src_addr=oc2.IPv6Net("2001:db8:85a3::8a2e:370:7334"), dst_addr=oc2.IPv6Net("2001:db8:85a3::8a2e:370:7334")), arg, actuator=pf)
 #	not valid:
 #    cmd = oc2.Command(oc2.Actions.allow, oc2.IPv6Connection(src_addr=oc2.IPv6Net("2001:db8:85a3::8a2e:370:7334"), dst_port=oc2.Port(8080)), arg, actuator=pf)
 #	cmd = oc2.Command(oc2.Actions.allow, oc2.IPv6Connection(dst_addr=oc2.IPv6Net("2001:db8:85a3::8a2e:370:7334"), src_port=oc2.Port(8080)), arg, actuator=pf)
@@ -131,6 +136,8 @@ def main(iptables_parameters):
     # (deny IPv4Connection)
 #    cmd = oc2.Command(oc2.Actions.deny, oc2.IPv4Connection(src_addr=oc2.IPv4Net("172.19.0.1")), arg, actuator=pf)
 #    cmd = oc2.Command(oc2.Actions.deny, oc2.IPv4Connection(dst_addr=oc2.IPv4Net("172.19.0.1")), arg, actuator=pf)
+#    cmd = oc2.Command(oc2.Actions.deny, oc2.IPv4Connection(src_addr=oc2.IPv4Net("172.19.0.3"), dst_addr=oc2.IPv4Net("172.19.0.4")), arg, actuator=pf)
+
 
     # (deny IPv6Connection)
 #    cmd = oc2.Command(oc2.Actions.deny, oc2.IPv6Connection(src_addr=oc2.IPv6Net("2001:db8:85a3::8a2e:370:7334")), arg, actuator=pf)
@@ -165,11 +172,14 @@ def main(iptables_parameters):
     
 
 if __name__ == '__main__':
+    main()
 	
-    configuration_file = os.path.dirname(os.path.abspath(__file__))+"/configuration.json"
-    with open(configuration_file, 'r') as file:
-        configuration_parameters = json.load(file)
+#    configuration_file = os.path.dirname(os.path.abspath(__file__))+"/configuration.json"
+#    with open(configuration_file, 'r') as file:
+#        configuration_parameters = json.load(file)
 
-    for element in configuration_parameters['slpf_actuators']:
-        if (element["type"] == "iptables"):      
-            main(element)
+#    for element in configuration_parameters['slpf_actuators']:
+#        if (element["type"] == "iptables"):      
+#            main(element)
+#        elif (element["type"] == "openstack"):      
+#            main(element)

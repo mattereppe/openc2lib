@@ -25,7 +25,7 @@ class SLPFActuator_iptables(SLPFActuator):
         This class provides an implementation of the `SLPF Actuator` using iptables.
     """
 
-    def __init__(self, hostname, named_group, asset_id, asset_tuple, iptables_rules_path, iptables_rules_v4_filename, iptables_rules_v6_filename, iptables_input_chain_name, iptables_output_chain_name, iptables_forward_chain_name, iptables_cmd, ip6tables_cmd, db_name, db_path, db_commands_table_name, db_jobs_table_name, misfire_grace_time):
+    def __init__(self, hostname, named_group, asset_id, asset_tuple, iptables_rules_path, iptables_rules_v4_filename, iptables_rules_v6_filename, iptables_input_chain_name, iptables_output_chain_name, iptables_forward_chain_name, iptables_cmd, ip6tables_cmd, db_path, db_name, db_commands_table_name, db_jobs_table_name):
         """ Initialization of the `iptables-based` SLPF Actuator.
 
             This method creates `personalized iptables chain`, 
@@ -56,16 +56,14 @@ class SLPFActuator_iptables(SLPFActuator):
             :type iptables_cmd: str
             :param ip6tables_cmd: Base command for iptables v6 (e.g: sudo ip6tables).
             :type ip6tables_cmd: str
-            :param db_name: sqlite3 database name.
-            :type db_name: str
             :param db_path: sqlite3 database path.
             :type db_path: str
+            :param db_name: sqlite3 database name.
+            :type db_name: str
             :param db_commands_table_name: Name of the `commands` table in the sqlite3 database.
             :type db_commands_table_name: str
             :param db_jobs_table_name: Name of the `APScheduler jobs` table in the sqlite3 database.
             :type db_jobs_table_name: str
-            :param misfire_grace_time: Seconds after the designated runtime that the `APScheduler job` is still allowed to be run, because of a `shutdown`.
-            :type misfire_grace_time: int
         """
 
         if os.environ.get("WERKZEUG_RUN_MAIN") == "true":
@@ -126,8 +124,16 @@ class SLPFActuator_iptables(SLPFActuator):
                     with open(os.path.join(self.iptables_rules_path, self.iptables_rules_v6_filename), "w") as file:
                         file.write("")
 
-                #   Initializing SLPF Actuator
-                super().__init__(hostname, named_group, asset_id, asset_tuple, db_name, db_path, db_commands_table_name, db_jobs_table_name, misfire_grace_time, self.iptables_rules_path)
+            #   Initializing SLPF Actuator
+                super().__init__(hostname=hostname,
+                                 named_group=named_group,
+                                 asset_id=asset_id,
+                                 asset_tuple=asset_tuple,
+                                 db_path=db_path,
+                                 db_name=db_name,
+                                 db_commands_table_name=db_commands_table_name,
+                                 db_jobs_table_name=db_jobs_table_name,
+                                 rule_files_path=self.iptables_rules_path)
             except Exception as e:
                 logger.info("[IPTABLES] Initialization error: %s", str(e))
                 raise e
@@ -148,14 +154,10 @@ class SLPFActuator_iptables(SLPFActuator):
 
     
     def validate_action_target_args(self, action, target, args):
-        try:
-            if action == Actions.allow or action == Actions.deny:
-                if type(target) == IPv4Connection or type(target) == IPv6Connection:
-                    if (target.src_port or target.dst_port) and not target.protocol:
-                        raise ValueError(StatusCode.BADREQUEST, "Protocol must be provided")
-                if action == Actions.deny:
-                    if 'drop_process' in args and args['drop_process'] == DropProcess.false_ack:
-                        raise ValueError(StatusCode.NOTIMPLEMENTED, "Drop process argument with false ack value not implemented for iptables")
+        try:   
+            if action == Actions.deny:
+                if 'drop_process' in args and args['drop_process'] == DropProcess.false_ack:
+                    raise ValueError(StatusCode.NOTIMPLEMENTED, "Drop process argument with false ack value not implemented for iptables")
                 
             if action == Actions.update:
                 ext = os.path.splitext(target['name'])[1] 
@@ -216,7 +218,7 @@ class SLPFActuator_iptables(SLPFActuator):
             raise e
 
     def iptables_execution_handler(self, **kwargs):
-        """ This method handles the execution of an OpenC2 `allow`, `deny` or `delete` command.
+        """ This method handles the execution of an OpenC2 `allow`, `deny` or `delete` command for `iptables`.
 
             Creates the desired iptables command and executes it.
 
@@ -325,10 +327,21 @@ class SLPFActuator_iptables(SLPFActuator):
         
     def clean_actuator_rules(self):
         try:
+        #   Deleting rules from iptables
             cmd = self.iptables_cmd + " -F"
             self.iptables_execute_command(cmd)
+        #   Linking personalized iptables chains with iptables chains
+            self.iptables_execute_command(self.iptables_cmd + " -A INPUT -j " + self.iptables_input_chain_name)
+            self.iptables_execute_command(self.iptables_cmd + " -A OUTPUT -j " + self.iptables_output_chain_name)     
+            self.iptables_execute_command(self.iptables_cmd + " -A FORWARD -j " + self.iptables_forward_chain_name)
+
+        #   Deleting rules from ip6tables
             cmd = self.ip6tables_cmd + " -F"
             self.iptables_execute_command(cmd)
+        #   Linking personalized ip6tables chains with ip6tables chains
+            self.iptables_execute_command(self.ip6tables_cmd + " -A INPUT -j " + self.iptables_input_chain_name)
+            self.iptables_execute_command(self.ip6tables_cmd + " -A OUTPUT -j " + self.iptables_output_chain_name)
+            self.iptables_execute_command(self.ip6tables_cmd + " -A FORWARD -j " + self.iptables_forward_chain_name)
         except Exception as e:
             raise e
         

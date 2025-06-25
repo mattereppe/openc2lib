@@ -20,8 +20,24 @@
             "iptables_output_chain_name": "OUTPUT_OC2",
             "iptables_forward_chain_name": "FORWARD_OC2",
             "iptables_cmd": "sudo iptables",
-            "ip6tables_cmd": "sudo ip6tables",
-            "misfire_grace_time": 86400
+            "ip6tables_cmd": "sudo ip6tables"
+        },
+        {
+            "type": "openstack",
+            "hostname": "abete.tnt-lab.unige.it",
+            "named_group": "firewalls",
+            "asset_id": "openstack",
+            "asset_tuple": "",
+            "ip": "127.0.0.1",
+            "port": 8080,
+            "protocol": 6,
+            "endpoint": "/.well-known/openc2",
+            "db_path": "/home/kali/Scrivania/openc2lib/examples/slpf",
+            "db_name": "slpf_commands.sqlite",
+            "db_commands_table_name": "openstack_commands",
+            "db_jobs_table_name": "openstack_jobs",
+            "file_environment_variables": "/home/kali/Scrivania/matteo-astrid.rc",
+            "security_group_id": "9d2b8ab0-2626-4007-8253-0111cf608e9e"
         }
     ],
     "consumer": {
