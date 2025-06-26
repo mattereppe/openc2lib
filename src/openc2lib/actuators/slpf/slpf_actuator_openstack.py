@@ -71,13 +71,13 @@ class SLPFActuator_openstack(SLPFActuator):
         except Exception as e:
             logger.info("[OPENSTACK] Initialization error: %s", str(e))
             raise e
+        
     
     def connect_to_openstack(self):
         """ OpenStack connection.
         
-            This method loads enviroment variables into linux OS to connect to OpenStack, 
-            initialize the OpenStack connection 
-            and authorizes the connection getting a token from the connection object.
+            This method loads enviroment variables into linux OS to connect to OpenStack  
+            and initializes and authorizes the OpenStack connection.
         """
         try:
         #   Load enviroment variables into linux OS to connect to openstack
@@ -134,7 +134,7 @@ class SLPFActuator_openstack(SLPFActuator):
     def validate_action_target_args(self, action, target, args):
         try:
             if action == Actions.allow:
-                if self.openstack_find_rule(target, args):
+                if self.openstack_find_rule(target, args['direction']):
                     raise ValueError(StatusCode.BADREQUEST, "Openstack rule already exists.")
             elif action == Actions.deny:
                 raise ValueError(StatusCode.NOTIMPLEMENTED, "Deny action not implemented for OpenStack.")
@@ -153,6 +153,7 @@ class SLPFActuator_openstack(SLPFActuator):
                                              direction=direction)
         except Exception as e:
             raise e
+        
         
     def openstack_allow_handler(self, target, direction):
         """ This method handles the execution of an OpenC2 `allow` command for `OpenStack`.
@@ -184,9 +185,9 @@ class SLPFActuator_openstack(SLPFActuator):
     def openstack_delete_handler(self, target, direction):
         """ This method handles the execution of an OpenC2 `delete` command for `OpenStack`.
 
-            Starting from OpenC2 `Target` and `Args` of the command to delete 
-            gets the corresponding OpenStack `rule id`, 
-            finally deletes the OpenStack `rule`.
+            Starting from OpenC2 `Target` and `direction` of the command to delete 
+            gets the corresponding OpenStack `rule id`  
+            and deletes the OpenStack `rule`.
 
             :param target: The target of the delete action.
             :type target: IPv4Net/IPv6Net/IPv4Connection/IPv6Connection
@@ -221,24 +222,19 @@ class SLPFActuator_openstack(SLPFActuator):
             raise e
         
 
-    def openstack_find_rule(self, target, args):
-        """ This method search for an `OpenStack rule` that matches the OpenC2 `Target` and `Args` passed as arguments.
+    def openstack_find_rule(self, target, direction):
+        """ This method search for an `OpenStack rule` that matches the OpenC2 `Target` and `direction` passed as arguments.
 
             :param target: The desired OpenC2 Target
             :type target: IPv4Net/IPv6Net/IPv4Connection/IPv6Connection
-            :param args: The desired OpenC2 Args
-            :type args: slpf.Args
+            :param direction: The desired OpenC2 direction
+            :type direction: Direction
 
             :return: This method returns `True` an `OpenStack rule` is found, `False` otherwise.
         """
         try:
-            direction = args['direction']
             if direction == Direction.both:
-                direction = Direction.ingress
-                if self.openstack_get_rule_id(target, direction):
-                    return True
-                direction = Direction.egress
-                if self.openstack_get_rule_id(target, direction):
+                if self.openstack_get_rule_id(target, Direction.ingress) or self.openstack_get_rule_id(target, Direction.egress):
                     return True
             else:
                 if self.openstack_get_rule_id(target, direction):
@@ -249,7 +245,7 @@ class SLPFActuator_openstack(SLPFActuator):
         
         
     def openstack_get_rule_id(self, target, direction):
-        """ This method gets the OpenStack `rule id` of the corresponding OpenStack `rule` that matches the OpenC2 `Target` and `Args` passed as arguments.
+        """ This method gets the OpenStack `rule id` of the corresponding OpenStack `rule` that matches the OpenC2 `Target` and `direction` passed as arguments.
         
             :param target: The desired OpenC2 Target
             :type target: IPv4Net/IPv6Net/IPv4Connection/IPv6Connection
@@ -276,7 +272,7 @@ class SLPFActuator_openstack(SLPFActuator):
     def openstack_get_rule_arguments(self, target, direction):
         """ This method gets `OpenStack` arguments from `OpenC2` arguments.
         
-            Starting from OpenC2 `Target` and `direction` gets the corresponding OpenStack arguments for the execution
+            Transforms OpenC2 `Target` and `direction` into valid OpenStack arguments for the execution
             of the create_security_group_rule(...) method in order to create a new OpenStack `rule`.
 
             :param target: The desired OpenC2 Target
