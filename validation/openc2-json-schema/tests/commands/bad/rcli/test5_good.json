@@ -1,0 +1,17 @@
+{
+  "action": "delete",
+  "target": {
+    "x-rcli:files": [
+      {
+        "path": "/opt/hani/tmacp/fcd/a",
+        "name": "axqaaxzcccxcae.txt"
+      }
+    ]
+  },
+  "args": {
+    "x-rcli": {}
+  },
+  "actuator": {
+    "x-rcli": {}
+  }
+}

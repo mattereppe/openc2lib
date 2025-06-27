@@ -1,0 +1,16 @@
+{
+    "action": "stop",
+    "target": {
+      "x-nfm:monitor_id": "Epsilon_8824LB"
+    },
+    "args": {
+      "x-nfm": {},
+      "response_requested": "complete"
+    },
+    "actuator": {
+      "x-nfm": {
+        "asset_id": "probe_x"
+      }
+    }
+  }
+  

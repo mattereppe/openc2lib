@@ -1,0 +1,22 @@
+test_good_ie:
+  - good_ie: "source.ip"
+  - good_ie: "destination.port"
+  - good_ie: "timestamp"
+  - good_ie: "event.type"
+  - good_ie: "user.name"
+  - good_ie: "process.pid"
+  - good_ie: "network.transport"
+  - good_ie: "log.level"
+  - good_ie: "file.name"
+  - good_ie: "dns.question.name"
+  - good_ie: ""               # possibly invalid if empty strings are disallowed
+  - good_ie: "\n"             # newline string
+  - good_ie: " "              # space-only string
+test_bad_ie:
+  - bad_ie: 123              # not a string
+  - bad_ie: null             # None
+  - bad_ie: true             # boolean
+  - bad_ie: ["source.ip"]    # list
+  - bad_ie: {"field": "ip"}  # dict
+  - bad_ie: 12.34            # float
+

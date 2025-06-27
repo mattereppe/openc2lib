@@ -1,0 +1,16 @@
+{
+    "action": "start",
+    "target": {
+        "x-fclm:monitor": {
+            "artifact": {
+                "path": "/var/log/*.log"
+            }
+        }
+    },
+    "args": {
+        "x-fclm": {
+            "export_fields": ["timestamp"]
+        }
+    },
+    "actuator": {}
+}

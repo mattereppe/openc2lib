@@ -1,0 +1,22 @@
+{
+  "action": "start",
+  "target": {
+    "x-rcli:processes": [
+      {
+        "name": "code",
+        "command_line": "_"
+      },
+      {
+        "name": "code",
+        "command_line": "__"
+      }
+    ]
+  },
+  "args": {
+    "x-rcli": {},
+    "start_time": 1745304673830
+  },
+  "actuator": {
+    "x-rcli": {}
+  }
+}

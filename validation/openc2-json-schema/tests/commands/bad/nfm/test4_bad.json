@@ -1,0 +1,19 @@
+{
+    "action": "start",
+    "target": {
+      "x-nfm:monitor": {
+        "interfaces": [
+          {
+            "name": ""
+          }
+        ]
+      }
+    },
+    "args": {},
+    "actuator": {
+      "x-nfm": {
+        "asset_id": "probe_x"
+      }
+    }
+  }
+  

@@ -1,0 +1,56 @@
+1745310817.648913 [[38;5;42m  INFO  [0m]root: Creating Producer
+1745310817.649656 [[38;5;42m  INFO  [0m]root: Sending command: Command(action=delete, target=[{'path': '/opt/hani/tmacp/fcd/a', 'name': 'acxzcsxs.txt'}], args={}, actuator=x-rcli(), command_id=None)
+1745310817.650200 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: Sending to http://127.0.0.1:8080/.well-known/openc2
+1745310817.650528 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP Request Content:
+{
+   "headers": {
+      "request_id": "d5f4f4e8-2bcf-498b-a459-fcc95de6704d",
+      "created": 1745310817649,
+      "from": "producer.example.net",
+      "to": [
+         "127.0.0.1"
+      ]
+   },
+   "body": {
+      "openc2": {
+         "request": {
+            "action": "delete",
+            "target": {
+               "x-rcli:files": [
+                  {
+                     "path": "/opt/hani/tmacp/fcd/a",
+                     "name": "acxzcsxs.txt"
+                  }
+               ]
+            },
+            "args": {
+               "x-rcli": {}
+            },
+            "actuator": {
+               "x-rcli": {}
+            }
+         }
+      }
+   }
+}
+1745310817.661255 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP got response: <Response [200]>
+1745310817.662344 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP Response Content:
+{
+   "headers": {
+      "request_id": "d5f4f4e8-2bcf-498b-a459-fcc95de6704d",
+      "created": 1745310817659,
+      "from": "testconsumer",
+      "to": [
+         "producer.example.net"
+      ]
+   },
+   "body": {
+      "openc2": {
+         "response": {
+            "status": 200,
+            "status_text": "OK"
+         }
+      }
+   }
+}
+1745310817.662826 [[38;5;42m  INFO  [0m]root: Got response: Message(content={'status': <StatusCode.OK: 200>, 'status_text': 'OK'}, content_type='openc2', msg_type=<MessageType.response: 2>, status=<StatusCode.OK: 200>, request_id='d5f4f4e8-2bcf-498b-a459-fcc95de6704d', created=1745310817659, from_='testconsumer', to=['producer.example.net'], version='1.0', encoding=<class 'openc2lib.encoders.json.JSONEncoder'>)

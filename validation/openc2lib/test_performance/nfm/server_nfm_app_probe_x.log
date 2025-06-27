@@ -1,0 +1,144 @@
+1745310428.882786 [[38;5;42m  INFO  [0m]werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+1745310428.883032 [[38;5;42m  INFO  [0m]werkzeug: [33mPress CTRL+C to quit[0m
+1745310428.883498 [[38;5;42m  INFO  [0m]werkzeug:  * Restarting with stat
+1745310429.241130 [[38;5;226mWARNING [0m]werkzeug:  * Debugger is active!
+1745310429.244287 [[38;5;42m  INFO  [0m]werkzeug:  * Debugger PIN: 885-270-589
+1745310432.376274 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: Received HTTP body: 
+{
+   "headers": {
+      "request_id": "83ae50df-5f97-4cd8-8a57-632ce0361930",
+      "created": 1745310432371,
+      "from": "producer2.example.net",
+      "to": [
+         "127.0.0.1"
+      ]
+   },
+   "body": {
+      "openc2": {
+         "request": {
+            "action": "start",
+            "target": {
+               "x-nfm:monitor": {
+                  "interfaces": [
+                     {
+                        "name": "ens33"
+                     }
+                  ],
+                  "information_elements": [
+                     "source ip",
+                     "destination ip"
+                  ],
+                  "filter_v4": [],
+                  "filter_v6": []
+               }
+            },
+            "args": {
+               "x-nfm": {
+                  "exporter": {
+                     "storage": {
+                        "path": "/flows"
+                     },
+                     "collectors": [
+                        {
+                           "address": "192.168.1.0/32",
+                           "port": 5213
+                        },
+                        {
+                           "address": "192.168.2.0/32",
+                           "port": 5213
+                        }
+                     ]
+                  },
+                  "exporter_options": {
+                     "sampling": 20,
+                     "format": "json"
+                  }
+               }
+            },
+            "actuator": {
+               "x-nfm": {
+                  "asset_id": "probe_x"
+               }
+            }
+         }
+      }
+   }
+}
+1745310432.377765 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: Received command: Message(content=Command(action=start, target=FlowMonitor(interfaces=[Interface(name=ens33, description=None, if_id=None, ipv4_net=None, ipv6_net=None, mac_addr=None, iface_type=None, active=None)], information_elements=['source ip', 'destination ip'], filter_v4=[], filter_v6=[]), args={'exporter': Exporter(storage={'path': '/flows'}, collectors=[Collector(address=192.168.1.0, port=5213), Collector(address=192.168.2.0, port=5213)]), 'exporter_options': ExportOptions(sampling=20, aggregate=None, buffer=None, timeout=None, format=json)}, actuator=x-nfm(asset_id:probe_x), command_id=None), content_type='openc2', msg_type=<MessageType.command: 1>, status=None, request_id='83ae50df-5f97-4cd8-8a57-632ce0361930', created=1745310432371, from_='producer2.example.net', to=['127.0.0.1'], version='1.0', encoding=<class 'openc2lib.encoders.json.JSONEncoder'>)
+1745310432.378250 [[38;5;42m  INFO  [0m]openc2lib.core.consumer: Dispatching command to: <openc2lib.actuators.nmf.nfm_actuator_nprobe.NprobeActuator object at 0x77c5b48068d0>
+1745310432.378580 [[38;5;42m  INFO  [0m]openc2lib.actuators.nmf.nfm_flow_monitor: Received command: Command(action=start, target=FlowMonitor(interfaces=[Interface(name=ens33, description=None, if_id=None, ipv4_net=None, ipv6_net=None, mac_addr=None, iface_type=None, active=None)], information_elements=['source ip', 'destination ip'], filter_v4=[], filter_v6=[]), args={'exporter': Exporter(storage={'path': '/flows'}, collectors=[Collector(address=192.168.1.0, port=5213), Collector(address=192.168.2.0, port=5213)]), 'exporter_options': ExportOptions(sampling=20, aggregate=None, buffer=None, timeout=None, format=json)}, actuator=x-nfm(asset_id:probe_x), command_id=None)
+1745310432.379207 [[38;5;42m  INFO  [0m]openc2lib.actuators.nmf.utils.process_utils: Executing: /usr/bin/nprobe --interface ens33 -T %IPV4_SRC_ADDR %IPV4_DST_ADDR -P /flows/ --collector 192.168.1.0:5213 --collector 192.168.2.0:5213 --sampling-rate 20 -D json
+1745310432.393775 [[38;5;42m  INFO  [0m]openc2lib.actuators.nmf.utils.process_utils: [Monitor Output] 22/Apr/2025 10:27:12 [plugin.c:176] No plugins found in ./plugins
+1745310432.394644 [[38;5;42m  INFO  [0m]openc2lib.actuators.nmf.utils.process_utils: [Monitor Output] 22/Apr/2025 10:27:12 [plugin.c:184] Loading 22 plugins [.so] from /usr/lib/nprobe/plugins
+1745310432.404880 [[38;5;42m  INFO  [0m]openc2lib.actuators.nmf.utils.process_utils: [Monitor Output] 22/Apr/2025 10:27:12 [nprobe.c:5181] Exporting flows towards 192.168.1.0:5213 using UDP
+1745310432.404984 [[38;5;196m ERROR  [0m]openc2lib.actuators.nmf.utils.process_utils: [Monitor Error] /usr/bin/nprobe: unrecognized option '--sampling-rate'
+1745310432.405272 [[38;5;42m  INFO  [0m]openc2lib.actuators.nmf.utils.process_utils: [Monitor Output] 22/Apr/2025 10:27:12 [nprobe.c:5181] Exporting flows towards 192.168.2.0:5213 using UDP
+1745310432.405350 [[38;5;42m  INFO  [0m]openc2lib.actuators.nmf.utils.process_utils: [Monitor Output] 22/Apr/2025 10:27:12 [nprobe.c:8260] WARNING: Unrecognized option '--sampling-rate'
+1745310432.405439 [[38;5;42m  INFO  [0m]openc2lib.actuators.nmf.utils.process_utils: [Monitor Output] 22/Apr/2025 10:27:12 [nprobe.c:8372] WARNING: The output interfaceId is set to 0: did you forget to use -Q perhaps ?
+1745310432.405514 [[38;5;42m  INFO  [0m]openc2lib.actuators.nmf.utils.process_utils: [Monitor Output] 22/Apr/2025 10:27:12 [nprobe.c:8375] WARNING: The input interfaceId is set to 0: did you forget to use -u perhaps ?
+1745310432.408201 [[38;5;42m  INFO  [0m]openc2lib.actuators.nmf.utils.process_utils: [Monitor Output] 22/Apr/2025 10:27:12 [nprobe.c:8478] Welcome to nProbe v.10.7.250402 for x86_64-pc-linux-gnu with native PF_RING acceleration
+1745310432.408293 [[38;5;42m  INFO  [0m]openc2lib.actuators.nmf.utils.process_utils: [Monitor Output] 22/Apr/2025 10:27:12 [nprobe.c:8500] Pro Edition running on Ubuntu 24.04.1 LTS
+1745310432.408364 [[38;5;42m  INFO  [0m]openc2lib.actuators.nmf.utils.process_utils: [Monitor Output] 22/Apr/2025 10:27:12 [nprobe.c:8508] Current limits [4 ZMQ exporters][4 collector devices]
+1745310432.408434 [[38;5;42m  INFO  [0m]openc2lib.actuators.nmf.utils.process_utils: [Monitor Output] 22/Apr/2025 10:27:12 [nprobe.c:8523] SystemId: L3B84B3000107070E--U3B84B3008F66A13E--OL
+1745310432.408497 [[38;5;42m  INFO  [0m]openc2lib.actuators.nmf.utils.process_utils: [Monitor Output] 22/Apr/2025 10:27:12 [nprobe.c:8560] Dumping flow files every 60 sec into directory /flows
+1745310432.408561 [[38;5;42m  INFO  [0m]openc2lib.actuators.nmf.utils.process_utils: [Monitor Output] 22/Apr/2025 10:27:12 [nprobe.c:8616] Sample rate [packet: 1][flow collection/export: 1/1]
+1745310432.408622 [[38;5;42m  INFO  [0m]openc2lib.actuators.nmf.utils.process_utils: [Monitor Output] 22/Apr/2025 10:27:12 [nprobe.c:12230] WARNING: ***************************************************************
+1745310432.408683 [[38;5;42m  INFO  [0m]openc2lib.actuators.nmf.utils.process_utils: [Monitor Output] 22/Apr/2025 10:27:12 [nprobe.c:12231] WARNING: * NOTE: This is a DEMO version limited to:                    *
+1745310432.408744 [[38;5;42m  INFO  [0m]openc2lib.actuators.nmf.utils.process_utils: [Monitor Output] 22/Apr/2025 10:27:12 [nprobe.c:12232] WARNING: *       - flows export: 5000 (live), 512 (pcap).              *
+1745310432.408807 [[38;5;42m  INFO  [0m]openc2lib.actuators.nmf.utils.process_utils: [Monitor Output] 22/Apr/2025 10:27:12 [nprobe.c:12233] WARNING: *       - 300 seconds.                                        *
+1745310432.408872 [[38;5;42m  INFO  [0m]openc2lib.actuators.nmf.utils.process_utils: [Monitor Output] 22/Apr/2025 10:27:12 [nprobe.c:12234] WARNING: ***************************************************************
+1745310432.408937 [[38;5;42m  INFO  [0m]openc2lib.actuators.nmf.utils.process_utils: [Monitor Output] 22/Apr/2025 10:27:12 [exportPlugin.c:671] WARNING: Kafka support requires nprobe Enterprise M or better: disabled
+1745310432.412763 [[38;5;42m  INFO  [0m]openc2lib.actuators.nmf.utils.process_utils: [Monitor Output] 22/Apr/2025 10:27:12 [nprobe.c:10717] Using template %IPV4_SRC_ADDR
+1745310432.412934 [[38;5;42m  INFO  [0m]openc2lib.actuators.nmf.utils.process_utils: [Monitor Output] 22/Apr/2025 10:27:12 [nprobe.c:10719] Using NetFlow Packet Payload Len: 1472
+1745310432.413030 [[38;5;42m  INFO  [0m]openc2lib.actuators.nmf.utils.process_utils: [Monitor Output] 22/Apr/2025 10:27:12 [nprobe.c:10870] WARNING: Your template lacks some important fields
+1745310432.413141 [[38;5;42m  INFO  [0m]openc2lib.actuators.nmf.utils.process_utils: [Monitor Output] 22/Apr/2025 10:27:12 [nprobe.c:10871] WARNING: Unless you know what you are doing, make sure
+1745310432.413248 [[38;5;42m  INFO  [0m]openc2lib.actuators.nmf.utils.process_utils: [Monitor Output] 22/Apr/2025 10:27:12 [nprobe.c:10872] WARNING: your template (-T) contains at least
+1745310432.413346 [[38;5;42m  INFO  [0m]openc2lib.actuators.nmf.utils.process_utils: [Monitor Output] 22/Apr/2025 10:27:12 [nprobe.c:10873] WARNING: %IPV4_SRC_ADDR %IPV4_DST_ADDR %PROTOCOL
+1745310432.413428 [[38;5;42m  INFO  [0m]openc2lib.actuators.nmf.utils.process_utils: [Monitor Output] 22/Apr/2025 10:27:12 [nprobe.c:10874] WARNING: %L4_SRC_PORT %L4_DST_PORT %FIRST_SWITCHED %LAST_SWITCHED
+1745310432.413509 [[38;5;42m  INFO  [0m]openc2lib.actuators.nmf.utils.process_utils: [Monitor Output] 22/Apr/2025 10:27:12 [nprobe.c:10926] WARNING: L4 ports will be ignored (your template lacks %L4_SRC_PORT/%L4_DST_PORT)
+1745310432.413599 [[38;5;42m  INFO  [0m]openc2lib.actuators.nmf.utils.process_utils: [Monitor Output] 22/Apr/2025 10:27:12 [nprobe.c:10932] WARNING: Layer-4 protocol ignored as template lacks %PROTOCOL. This can cause severe issues when dissecting packets or using plugins. Make sure to know what you are doing.
+1745310432.413711 [[38;5;42m  INFO  [0m]openc2lib.actuators.nmf.utils.process_utils: [Monitor Output] 22/Apr/2025 10:27:12 [plugin.c:1203] 0 plugin(s) enabled
+1745310432.413810 [[38;5;42m  INFO  [0m]openc2lib.actuators.nmf.utils.process_utils: [Monitor Output] 22/Apr/2025 10:27:12 [nprobe.c:11282] Each flow is 16 bytes long
+1745310432.413889 [[38;5;42m  INFO  [0m]openc2lib.actuators.nmf.utils.process_utils: [Monitor Output] 22/Apr/2025 10:27:12 [nprobe.c:11283] The # flows per packet has been set to 91
+1745310432.413953 [[38;5;42m  INFO  [0m]openc2lib.actuators.nmf.utils.process_utils: [Monitor Output] 22/Apr/2025 10:27:12 [nprobe.c:11286] IP TOS is ignored
+1745310432.414018 [[38;5;42m  INFO  [0m]openc2lib.actuators.nmf.utils.process_utils: [Monitor Output] 22/Apr/2025 10:27:12 [nprobe.c:11314] Non IPv4/v6 traffic is discarded according to the template
+1745310432.414149 [[38;5;42m  INFO  [0m]openc2lib.actuators.nmf.utils.process_utils: [Monitor Output] 22/Apr/2025 10:27:12 [nprobe.c:12306] Flow export type (-T): unidirectional flows
+1745310432.414232 [[38;5;42m  INFO  [0m]openc2lib.actuators.nmf.utils.process_utils: [Monitor Output] 22/Apr/2025 10:27:12 [nprobe.c:12512] Flows ASs will not be computed (no GeoDB files loaded with --as-list)
+1745310432.414300 [[38;5;42m  INFO  [0m]openc2lib.actuators.nmf.utils.process_utils: [Monitor Output] 22/Apr/2025 10:27:12 [nprobe.c:12544] Flows will be exported in NetFlow 9 format
+1745310432.414376 [[38;5;42m  INFO  [0m]openc2lib.actuators.nmf.utils.process_utils: [Monitor Output] 22/Apr/2025 10:27:12 [pf_ring.c:434] Initializing PF_RING socket on device ens33.. (promisc)
+1745310432.421839 [[38;5;42m  INFO  [0m]openc2lib.actuators.nmf.utils.process_utils: [Monitor Output] 22/Apr/2025 10:27:12 [pf_ring.c:476] Dumping traffic statistics on /proc/net/pf_ring/stats/24149-ens33.9
+1745310432.422070 [[38;5;42m  INFO  [0m]openc2lib.actuators.nmf.utils.process_utils: [Monitor Output] 22/Apr/2025 10:27:12 [pf_ring.c:556] PF_RING enabled on ens33
+1745310432.422479 [[38;5;42m  INFO  [0m]openc2lib.actuators.nmf.utils.process_utils: [Monitor Output] 22/Apr/2025 10:27:12 [nprobe.c:12791] Capturing packets from PF_RING interface ens33
+1745310432.423570 [[38;5;42m  INFO  [0m]openc2lib.actuators.nmf.utils.process_utils: [Monitor Output] 22/Apr/2025 10:27:12 [util.c:5651] nProbe changed user to 'nprobe'
+1745310432.423671 [[38;5;42m  INFO  [0m]openc2lib.actuators.nmf.utils.process_utils: [Monitor Output] 22/Apr/2025 10:27:12 [export.c:533] Using TLV as serialization format
+1745310432.423744 [[38;5;42m  INFO  [0m]openc2lib.actuators.nmf.utils.process_utils: [Monitor Output] 22/Apr/2025 10:27:12 [nprobe.c:13105] nProbe started successfully
+1745310435.392056 [[38;5;42m  INFO  [0m]openc2lib.actuators.nmf.handlers.response_handler: Monitor started
+1745310435.392452 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: Got response: Message(content={'status': <StatusCode.OK: 200>, 'status_text': 'Monitor started', 'results': {'monitor_id': 'Theta_260140'}}, content_type='openc2', msg_type=<MessageType.response: 2>, status=<StatusCode.OK: 200>, request_id='83ae50df-5f97-4cd8-8a57-632ce0361930', created=1745310435392, from_='testconsumer', to=['producer2.example.net'], version='1.0', encoding=None)
+1745310435.392867 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: Sending response:
+{
+   "headers": {
+      "request_id": "83ae50df-5f97-4cd8-8a57-632ce0361930",
+      "created": 1745310435392,
+      "from": "testconsumer",
+      "to": [
+         "producer2.example.net"
+      ]
+   },
+   "body": {
+      "openc2": {
+         "response": {
+            "status": 200,
+            "status_text": "Monitor started",
+            "results": {
+               "x-nfm": {
+                  "monitor_id": "Theta_260140"
+               }
+            }
+         }
+      }
+   }
+}
+1745310435.393385 [[38;5;42m  INFO  [0m]werkzeug: 127.0.0.1 - - [22/Apr/2025 10:27:15] "POST /.well-known/openc2 HTTP/1.1" 200 -
+1745310440.257295 [[38;5;42m  INFO  [0m]openc2lib.actuators.nmf.utils.process_utils: [Monitor Output] 22/Apr/2025 10:27:20 [nprobe.c:725] Received shutdown request... [signal: 2]
+1745310440.257617 [[38;5;42m  INFO  [0m]openc2lib.actuators.nmf.utils.process_utils: [Monitor Output] 22/Apr/2025 10:27:20 [pf_ring.c:410] Terminated PF_RING packet processing

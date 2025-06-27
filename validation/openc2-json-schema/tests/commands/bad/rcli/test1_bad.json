@@ -1,0 +1,19 @@
+{
+    "action": "query",
+    "target": {
+        "context": {
+            "services": [],
+            "links": []
+        }
+    },
+    "args": {
+        "rcli": {
+            "name_only": false
+        }
+    },
+    "actuator": {
+        "rcli": {
+            "asset_id": "x-rcli"
+        }
+    }
+}

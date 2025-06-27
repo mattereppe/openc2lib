@@ -1,0 +1,20 @@
+valid_formats:
+  - format_name: "text"
+    expected_value: 1
+  - format_name: "json"
+    expected_value: 2
+  - format_name: "yaml"
+    expected_value: 3
+  - format_name: "csv"
+    expected_value: 4
+  - format_name: "xml"
+    expected_value: 5
+
+invalid_formats:
+  - format_name: "TXT"
+  - format_name: "Json"
+  - format_name: "yml"
+  - format_name: "html"
+  - format_name: ""
+  - format_name: null
+  - format_name: "invalid"

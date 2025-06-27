@@ -1,0 +1,57 @@
+test_good_socket:
+  - host: "192.168.1.1"
+    port: 8080
+    protocol: "tcp"
+  - host: "10.0.0.5"
+    port: 53
+    protocol: "udp"
+  - host: "172.16.0.10"
+    port: 22
+    protocol: "tcp"
+  - host: "192.168.0.1"
+    port: 443
+    protocol: "tcp"
+  - host: "198.51.100.10"
+    port: 9090
+    protocol: "udp"
+  - host: "203.0.113.25"
+    port: 80
+    protocol: "tcp"
+  - host: "224.0.0.1"
+    port: 5353
+    protocol: "udp"
+  - host: "127.0.0.1"
+    port: 5432
+    protocol: "tcp"
+
+test_bad_socket:
+  - bad_host: "300.300.300.300"  # Invalid IP
+    bad_port: 8080
+    bad_protocol: "TCP"
+  - bad_host: "192.168.1.1"
+    bad_port: "notaport"  # Invalid port
+    bad_protocol: "TCP"
+  - bad_host: "192.168.1.1"
+    bad_port: 8080
+    bad_protocol: "INVALID"  # Invalid protocol
+  - bad_host: "256.256.256.256"  # Invalid IP (out of range)
+    bad_port: 12345
+    bad_protocol: "tcp"
+  - bad_host: "172.256.0.1"  # Invalid IP (out of range)
+    bad_port: 80
+    bad_protocol: "udp"
+  - bad_host: "192.168.1.1"
+    bad_port: -1  # Invalid port (negative number)
+    bad_protocol: "udp"
+  - bad_host: "192.168.1.1"
+    bad_port: 70000  # Invalid port (above max range)
+    bad_protocol: "http"
+  - bad_host: "10.10.10.10"
+    bad_port: "not_a_port"  # Invalid port (string instead of integer)
+    bad_protocol: "tcp"
+  - bad_host: "fe80::1"  # Invalid IPv6 address in an IPv4 field
+    bad_port: 8080
+    bad_protocol: "udp"
+  - bad_host: "localhost"  # Invalid host format (not an IP address)
+    bad_port: 22
+    bad_protocol: "ssh"

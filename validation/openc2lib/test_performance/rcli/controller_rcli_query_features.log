@@ -1,0 +1,92 @@
+1745310901.762189 [[38;5;42m  INFO  [0m]root: Creating Producer
+1745310901.762493 [[38;5;42m  INFO  [0m]root: Sending command: Command(action=query, target=[<Feature.clicommands: 5>], args={'response_requested': <ResponseType.complete: 3>}, actuator=x-rcli(), command_id=None)
+1745310901.762959 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: Sending to http://127.0.0.1:8080/.well-known/openc2
+1745310901.763111 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP Request Content:
+{
+   "headers": {
+      "request_id": "5c7db800-4b28-490e-814f-da7d11be3f8d",
+      "created": 1745310901762,
+      "from": "producer.example.net",
+      "to": [
+         "127.0.0.1"
+      ]
+   },
+   "body": {
+      "openc2": {
+         "request": {
+            "action": "query",
+            "target": {
+               "features": [
+                  "clicommands"
+               ]
+            },
+            "args": {
+               "x-rcli": {},
+               "response_requested": "complete"
+            },
+            "actuator": {
+               "x-rcli": {}
+            }
+         }
+      }
+   }
+}
+1745310901.770132 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP got response: <Response [200]>
+1745310901.771855 [[38;5;42m  INFO  [0m]openc2lib.transfers.http.http_transfer: HTTP Response Content:
+{
+   "headers": {
+      "request_id": "5c7db800-4b28-490e-814f-da7d11be3f8d",
+      "created": 1745310901768,
+      "from": "testconsumer",
+      "to": [
+         "producer.example.net"
+      ]
+   },
+   "body": {
+      "openc2": {
+         "response": {
+            "status": 200,
+            "status_text": "Ok",
+            "results": {
+               "x-rcli": {
+                  "clicommands": [
+                     {
+                        "name": "ls",
+                        "command_line": "<Path> -a -l"
+                     },
+                     {
+                        "name": "cd",
+                        "command_line": "<Path> "
+                     },
+                     {
+                        "name": "python",
+                        "command_line": "<Path> "
+                     },
+                     {
+                        "name": "node",
+                        "command_line": "<Path> "
+                     },
+                     {
+                        "name": "systemctl",
+                        "command_line": "start stop restart"
+                     },
+                     {
+                        "name": "ps",
+                        "command_line": "aux"
+                     },
+                     {
+                        "name": "kill",
+                        "command_line": "-9"
+                     },
+                     {
+                        "name": "code",
+                        "command_line": "<Path> "
+                     }
+                  ]
+               }
+            }
+         }
+      }
+   }
+}
+1745310901.772631 [[38;5;42m  INFO  [0m]root: Got response: Message(content={'status': <StatusCode.OK: 200>, 'status_text': 'Ok', 'results': {'clicommands': [{'name': 'ls', 'command_line': '<Path> -a -l'}, {'name': 'cd', 'command_line': '<Path> '}, {'name': 'python', 'command_line': '<Path> '}, {'name': 'node', 'command_line': '<Path> '}, {'name': 'systemctl', 'command_line': 'start stop restart'}, {'name': 'ps', 'command_line': 'aux'}, {'name': 'kill', 'command_line': '-9'}, {'name': 'code', 'command_line': '<Path> '}]}}, content_type='openc2', msg_type=<MessageType.response: 2>, status=<StatusCode.OK: 200>, request_id='5c7db800-4b28-490e-814f-da7d11be3f8d', created=1745310901768, from_='testconsumer', to=['producer.example.net'], version='1.0', encoding=<class 'openc2lib.encoders.json.JSONEncoder'>)

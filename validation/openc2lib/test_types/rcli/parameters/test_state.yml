@@ -1,0 +1,39 @@
+valid_states:
+  - state_name: "running"
+    expected_value: 1
+  - state_name: "sleeping"
+    expected_value: 2
+  - state_name: "disk_sleep"
+    expected_value: 3
+  - state_name: "stopped"
+    expected_value: 4
+  - state_name: "tracing_stop"
+    expected_value: 5
+  - state_name: "zombie"
+    expected_value: 6
+  - state_name: "dead"
+    expected_value: 7
+  - state_name: "wake_kill"
+    expected_value: 8
+  - state_name: "waking"
+    expected_value: 9
+  - state_name: "parked"
+    expected_value: 10
+  - state_name: "idle"
+    expected_value: 11
+  - state_name: "locked"
+    expected_value: 12
+  - state_name: "waiting"
+    expected_value: 13
+  - state_name: "suspended"
+    expected_value: 14
+  - state_name: "not_found"
+    expected_value: 15
+
+invalid_states:
+  - state_name: "DISK_SLEEP"
+  - state_name: "RUNNING"
+  - state_name: "ZOMBIE"
+  - state_name: "INVALID"
+  - state_name: ""
+  - state_name: null

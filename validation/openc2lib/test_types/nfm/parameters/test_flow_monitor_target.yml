@@ -1,0 +1,86 @@
+test_good_flow_monitor:
+  - interfaces:
+      - {"interface_name": "eth0"}
+      - {"interface_name": "eth1"}
+    information_elements: 
+      - {"element_type": "ip"}
+      - {"element_type": "port"}
+    filter_v4: 
+      - {"src_address": "192.168.1.1", "src_port": 8080, "dst_address": "10.0.0.1", "dst_port": 80, "protocol": "tcp"}
+    filter_v6:
+      - {"src_address": "2001:0db8:85a3:0000:0000:8a2e:0370:7334", "src_port": 8080, "dst_address": "2001:0db8:85a3:0000:0000:8a2e:0370:7335", "dst_port": 80, "protocol": "tcp"}
+
+  - interfaces:
+      - {"interface_name": "eth0"}
+    information_elements: 
+      - {"element_type": "ip"}
+    filter_v4: 
+      - {"src_address": "192.168.1.1", "src_port": 80, "dst_address": "192.168.1.2", "dst_port": 443, "protocol": "udp"}
+    filter_v6:
+      - {"src_address": "2001:0db8:85a3:0000:0000:8a2e:0370:7334", "src_port": 443, "dst_address": "2001:0db8:85a3:0000:0000:8a2e:0370:7335", "dst_port": 443, "protocol": "udp"}
+
+  - interfaces:
+      - {"interface_name": "eth1"}
+    information_elements: 
+      - {"element_type": "port"}
+    filter_v4: 
+      - {"src_address": "192.168.2.1", "src_port": 9090, "dst_address": "10.0.0.3", "dst_port": 53, "protocol": "tcp"}
+    filter_v6:
+      - {"src_address": "2001:0db8:85a3:0000:0000:8a2e:0370:7336", "src_port": 443, "dst_address": "2001:0db8:85a3:0000:0000:8a2e:0370:7337", "dst_port": 443, "protocol": "udp"}
+
+  - interfaces:
+      - {"interface_name": "eth2"}
+    information_elements: 
+      - {"element_type": "port"}
+      - {"element_type": "ip"}
+    filter_v4: 
+      - {"src_address": "192.168.2.2", "src_port": 9999, "dst_address": "10.0.0.4", "dst_port": 80, "protocol": "tcp"}
+    filter_v6:
+      - {"src_address": "2001:0db8:85a3:0000:0000:8a2e:0370:7338", "src_port": 80, "dst_address": "2001:0db8:85a3:0000:0000:8a2e:0370:7339", "dst_port": 443, "protocol": "tcp"}
+
+  - interfaces:
+      - {"interface_name": "eth3"}
+    information_elements: 
+      - {"element_type": "port"}
+    filter_v4: 
+      - {"src_address": "192.168.3.1", "src_port": 10000, "dst_address": "10.0.0.5", "dst_port": 443, "protocol": "udp"}
+    filter_v6:
+      - {"src_address": "2001:0db8:85a3:0000:0000:8a2e:0370:7340", "src_port": 443, "dst_address": "2001:0db8:85a3:0000:0000:8a2e:0370:7341", "dst_port": 80, "protocol": "tcp"}
+
+test_bad_flow_monitor:
+  - bad_interfaces: 
+      - {"interface_name": ""}
+    bad_information_elements: 
+      - {"element_type": "ip"}
+    bad_filter_v4: 
+      - {"src_address": "10.0.0.1", "src_port": 8080, "dst_address": "10.0.0.2", "dst_port": 80, "protocol": "tcp"}
+    bad_filter_v6: []
+
+  - bad_interfaces: []
+    bad_information_elements: []
+    bad_filter_v4: []
+    bad_filter_v6: []
+
+  - bad_interfaces:
+      - {"interface_name": "eth-0"}  # Invalid interface name
+    bad_information_elements: 
+      - {"element_type": "unknown"}  # Invalid element type
+    bad_filter_v4: 
+      - {"src_address": "10.0.0.1", "src_port": "notaport", "dst_address": "10.0.0.2", "dst_port": 80, "protocol": "tcp"}  # Invalid port type
+    bad_filter_v6: []
+
+  - bad_interfaces: 
+      - {"interface_name": "eth0"}
+    bad_information_elements: 
+      - {"element_type": "port"}
+    bad_filter_v4: 
+      - {"src_address": "192.168.1.1", "src_port": "notaport", "dst_address": "10.0.0.3", "dst_port": 80, "protocol": "tcp"}  # Invalid port
+    bad_filter_v6: []
+
+  - bad_interfaces: 
+      - {"interface_name": "eth1"}
+    bad_information_elements: 
+      - {"element_type": "ip"}
+    bad_filter_v4: 
+      - {"src_address": "192.168.1.1", "src_port": 8080, "dst_address": "10.0.0.2", "dst_port": 80, "protocol": "unknown"}  # Invalid protocol
+    bad_filter_v6: []

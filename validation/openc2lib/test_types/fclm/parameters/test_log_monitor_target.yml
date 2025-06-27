@@ -1,0 +1,91 @@
+test_log_monitor_target:
+  - monitor_type: "file"
+    monitor_value:
+      name: "app.log"
+      path: "/var/log/app"
+  - monitor_type: "file"
+    monitor_value:
+      name: "error.log"
+      path: "/tmp/logs"
+  - monitor_type: "file"
+    monitor_value:
+      name: "access.log"
+      path: "/home/user/logs"
+  - monitor_type: "URI"
+    monitor_value:
+      uri: "https://logs.server.com/logs"
+  - monitor_type: "URI"
+    monitor_value:
+      uri: "ftp://ftp.server.net/dump"
+  - monitor_type: "URI"
+    monitor_value:
+      uri: "file:///etc/logs/data.txt"
+  - monitor_type: "socket"
+    monitor_value:
+      host: "10.0.0.5"
+      port: 514
+      protocol: "udp"
+  - monitor_type: "socket"
+    monitor_value:
+      host: "192.168.1.100"
+      port: 1514
+      protocol: "tcp"
+  - monitor_type: "socket"
+    monitor_value:
+      host: "172.16.0.1"
+      port: 2055
+      protocol: "tcp"
+  - monitor_type: "socket"
+    monitor_value:
+      host: "192.0.2.1"
+      port: 8080
+      protocol: "udp"
+  - monitor_type: "file"
+    monitor_value:
+      path: "/missing/name"
+
+test_bad_log_monitor_target:
+  - bad_monitor_type: "file"
+    bad_monitor_value: {}
+  - bad_monitor_type: "URI"
+    bad_monitor_value:
+      uri: "not a uri"
+  - bad_monitor_type: "URI"
+    bad_monitor_value: {}
+  - bad_monitor_type: "socket"
+    bad_monitor_value:
+      host: "not.an.ip"
+      port: 2055
+      protocol: "tcp"
+  - bad_monitor_type: "socket"
+    bad_monitor_value:
+      host: "192.168.0.1"
+      port: -1
+      protocol: "tcp"
+  - bad_monitor_type: "socket"
+    bad_monitor_value:
+      host: "192.168.0.1"
+      port: 2055
+      protocol: "icmps"  # unsupported protocol
+  - bad_monitor_type: "socket"
+    bad_monitor_value:
+      host: "192.168.0.1"
+      port: "string-instead-of-int"
+      protocol: "tcp"
+  - bad_monitor_type: "socket"
+    bad_monitor_value:
+      port: 1234
+      protocol: "udp"
+  - bad_monitor_type: "socket"
+    bad_monitor_value:
+      host: "localhost"
+      port: 1514
+      protocol: "tcp"
+  - bad_monitor_type: "socket"
+    bad_monitor_value:
+      host: "::1"
+      port: 2055
+      protocol: "tcp"
+  - bad_monitor_type: "unknown"
+    bad_monitor_value:
+      something: "invalid"

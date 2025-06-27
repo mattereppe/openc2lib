@@ -1,0 +1,32 @@
+{
+    "action": "start",
+    "target": {
+        "x-fclm:monitor": {
+            "file": {
+                "path": "/var/log/*.log"
+            }
+        }
+    },
+    "args": {
+        "x-fclm": {
+            "log_exporter": {
+                "storage": {
+                    "path": "/var/log/filebeat/flows"
+                }
+            },
+            "import_controls": {
+                "scan_frequency": 1000,
+                "max_backoff": 10
+            },
+            "export_fields": [
+                "timestamp",
+                "metadata"
+            ]
+        }
+    },
+    "actuator": {
+        "x-fclm": {
+            "asset_id": "agent_x"
+        }
+    }
+}
