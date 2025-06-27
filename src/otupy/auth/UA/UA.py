@@ -6,25 +6,23 @@ import logging
 import os
 from dotenv import load_dotenv
 
-# Carica le variabili d'ambiente da .env
+# Load environment variables from .env
 load_dotenv()
 
-# Configurazione del logger
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logger = logging.getLogger('UA')
 
-# Flask app
 app = Flask(__name__)
 
-# URL dell'endpoint di login dell'Authorization Server
+# Authorization Server login endpoint URL
 as_authorize_url = 'http://127.0.0.1:9000/'
 
-# Credenziali da variabili ambiente
+# Credentials from environment variables
 CONFIG_USERNAME = os.getenv("USERNAME")
 CONFIG_PASSWORD = os.getenv("PASSWORD")
 
 if not CONFIG_USERNAME or not CONFIG_PASSWORD:
-    logger.error("USERNAME o PASSWORD non definite nel file .env")
+    logger.error("USERNAME or PASSWORD not defined in .env file")
     sys.exit(1)
 
 
@@ -54,24 +52,24 @@ def auth_flow(url):
                             logger.info(f"Redirecting to location: {location}")
                             resp = requests.get(location)
                         else:
-                            logger.error("Errore: Location non trovata nella risposta")
+                            logger.error("Error: 'Location' not found in response")
                     except Exception as e:
-                        logger.exception(f"Errore parsing JSON: {str(e)}")
+                        logger.exception(f"Error parsing JSON: {str(e)}")
                     return
                 elif response.status_code == 401:
                     continue
                 else:
-                    logger.error(f"Errore accesso risorsa: {response.status_code}")
+                    logger.error(f"Resource access error: {response.status_code}")
                     return
             else:
-                logger.warning(f'Login fallito con status code: {login_response.status_code}')
-        logger.error('Credenziali errate dopo 3 tentativi')
+                logger.warning(f'Login failed with status code: {login_response.status_code}')
+        logger.error('Invalid credentials after 3 attempts')
         return
 
     try:
         logger.debug(response.json())
     except Exception as e:
-        logger.exception(f"Errore parsing JSON: {str(e)}")
+        logger.exception(f"Error parsing JSON: {str(e)}")
 
 
 @app.route('/auth', methods=['POST'])

@@ -9,8 +9,7 @@ import time
 import queue
 import logging
 
-from otupy.types.data import DateTime
-from otupy.core.message import Content, Message
+from otupy.core.message import Message
 from otupy.core.command import Command
 from otupy.core.encoder import Encoder
 from otupy.core.transfer import Transfer
@@ -18,7 +17,7 @@ from otupy.core.producer import Producer
 
 
 class OAuth2AuthManager:
-    """Gestisce l'autenticazione OAuth2"""
+    """Handles OAuth2 authentication"""
 
     def __init__(self, client_id, client_secret, redirect_uri, callback_port=8000):
         self.CLIENT_ID = client_id
@@ -32,11 +31,11 @@ class OAuth2AuthManager:
         self.token = None
         self.flask_app = None
         self.flask_thread = None
-        self.as_url=None
+        self.as_url = None
         self.logger = logging.getLogger('oauth2_auth')
 
     def setup_flask_app(self):
-        """Configura il server Flask per ricevere il redirect"""
+        """Configure Flask server to receive redirect"""
         if self.flask_app is None:
             self.flask_app = Flask(__name__)
 
@@ -44,30 +43,30 @@ class OAuth2AuthManager:
             def callback():
                 authorization_response = request.url
                 self.auth_response_queue.put(authorization_response)
-                return 'Autenticazione completata.', 200
+                return 'Authentication completed.', 200
 
     def get_token_threaded(self):
-        """Thread per ottenere il token"""
-        token_url=f"{self.as_url}/oauth/token"
+        """Thread to get token"""
+        token_url = f"{self.as_url}/oauth/token"
         auth_response = self.auth_response_queue.get()
         try:
             self.token = self.client.fetch_token(token_url,
                                                  authorization_response=auth_response)
-            self.logger.info("TOKEN ottenuto correttamente")
+            self.logger.info("TOKEN obtained successfully")
             return self.token
         except Exception as e:
-            self.logger.error(f"Errore nel fetch del token: {e}")
+            self.logger.error(f"Error fetching the token: {e}")
             raise
 
     def authenticate(self, ua_url):
-        """Avvia il processo di autenticazione OAuth2, contattando lo UA passato come parametro"""
+        """Starts the OAuth2 authentication process"""
         try:
             response = requests.get(f"{ua_url}/as_url")
             if response.status_code != 200:
                 raise Exception(f"Error fetching AS Url: {response.status_code}")
 
             self.as_url = response.json().get("as_url")
-            as_auth_url=f"{self.as_url}/oauth/authorize"
+            as_auth_url = f"{self.as_url}/oauth/authorize"
             if not self.as_url:
                 raise ValueError("Missing AS url")
 
@@ -76,7 +75,7 @@ class OAuth2AuthManager:
             )
             authorization_url = authorization_url.replace("https://", "http://")
             payload = {"url": authorization_url}
-            ua_auth=f"{ua_url}/auth"
+            ua_auth = f"{ua_url}/auth"
             response = requests.post(ua_auth, json=payload)
 
             if response.status_code != 401:
@@ -89,7 +88,7 @@ class OAuth2AuthManager:
                         daemon=True
                     )
                     self.flask_thread.start()
-                    time.sleep(1)  # Aspetta che Flask si avvi
+                    time.sleep(1)  # Wait tha Flask server start
 
                 token_thread = threading.Thread(target=self.get_token_threaded, daemon=True)
                 token_thread.start()
@@ -112,7 +111,7 @@ class OAuth2AuthManager:
 
 
 class OAuth2Producer(Producer):
-    """Producer OpenC2 con supporto OAuth2"""
+    """Oauth2 Producer class"""
 
     def __init__(self, producer, encoder, transfer, oauth2_config):
         super().__init__(producer, encoder, transfer)
@@ -120,29 +119,28 @@ class OAuth2Producer(Producer):
                                                    if k not in ['consumer_url']})
         self.consumer_url = oauth2_config.get('consumer_url')
         if not self.consumer_url:
-            raise ValueError("consumer_url deve essere specificato in oauth2_config")
+            raise ValueError("consumer_url must be specified in oauth2_config")
 
         self.logger = logging.getLogger('oauth2_producer')
 
     def authenticate(self, endpoint=None):
-        """Esegue l'autenticazione OAuth2"""
+        """Performs OAuth2 authentication"""
         if endpoint is None:
-            raise ValueError("Endpoint di autenticazione non specificato")
+            raise ValueError("Authentication endpoint not specified")
 
-        self.logger.info(f"Avvio autenticazione OAuth2 con endpoint: {endpoint}")
+        self.logger.info(f"Starting OAuth2 authentication with endpoint: {endpoint}")
         token = self.oauth2_manager.authenticate(endpoint)
-        self.logger.info("Autenticazione completata")
+        self.logger.info("Authentication completed")
         return token
 
     def _extract_auth_endpoint_from_error(self, error_response):
-        """Estrae l'endpoint di autenticazione dalla risposta di errore"""
+        """Extracts the authentication endpoint from the error response"""
         try:
-            parsed=json.loads(str(error_response))
-            res=parsed['body']['openc2']['response']['status_text']
+            parsed = json.loads(str(error_response))
+            res = parsed['body']['openc2']['response']['status_text']
             url = res.split(":", 1)[1].strip()
         except Exception as e:
-            self.logger.error(f"Errore nell'estrazione dell'endpoint di autenticazione: {e}")
-
+            self.logger.error(f"Error extracting authentication endpoint: {e}")
         return url
 
     def sendcmd(self, cmd: Command, encoder: Encoder = None, transfer: Transfer = None, consumers=None):
@@ -156,31 +154,31 @@ class OAuth2Producer(Producer):
         try:
             msg = Message(cmd, from_=self.producer, to=target_consumers)
 
-            # Prima richiesta senza token
-            token = self.oauth2_manager.token
+            # First request without token
+            token = self.oauth2_manager.token  #can be None
             return transfer.send(msg, encoder, token=token)
 
         except PermissionError as e:
-            self.logger.error(f"Rilevato errore 401 dal consumer, avvio processo di autenticazione {e}")
+            self.logger.error(f"401 Response. Starting authentication process {e}")
             auth_endpoint = self._extract_auth_endpoint_from_error(e)
 
             if not auth_endpoint:
-                self.logger.error("Impossibile determinare l'endpoint di autenticazione dalla risposta 401")
-                raise ValueError("Endpoint di autenticazione non trovato nella risposta 401")
+                self.logger.error("Error fetching endpoint url")
+                raise ValueError("Error fetching endpoint url")
 
             try:
                 self.authenticate(endpoint=auth_endpoint)
 
-                # Riprova l'invio del comando con il token
+                # Retry sending of the message
                 token = self.oauth2_manager.token
                 msg = Message(cmd, from_=self.producer, to=target_consumers)
                 return transfer.send(msg, encoder, token=token)
 
             except Exception as auth_exc:
-                self.logger.error(f"Autenticazione fallita: {auth_exc}")
+                self.logger.error(f"Authentication failed {auth_exc}")
                 raise auth_exc
         except Exception as e:
-            self.logger.error(f"Errore nell'invio del comando: {e}")
+            self.logger.error(f"Error sending the command {e}")
             raise e
 
     def is_authenticated(self):

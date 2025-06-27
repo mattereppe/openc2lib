@@ -8,15 +8,14 @@ from otupy.transfers.http import HTTPTransfer
 import otupy as oc2
 import otupy.profiles.slpf as slpf
 
-from otupy.auth.Client.Pv2 import OAuth2Producer  # Nuova classe derivata da Producer
+from otupy.auth.Client.oauth2producer import OAuth2Producer
 
-# Set up logging
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logger = logging.getLogger('openc2producer')
 
 
 def main():
-    """Create an OAuth2-enabled OpenC2 Producer and send commands"""
+    """Create an OAuth2 Producer and send commands"""
 
     # OAuth2 configuration
     oauth2_config = {
@@ -28,7 +27,6 @@ def main():
     }
 
     try:
-        # Create the OAuth2 Producer (senza auto-autenticazione)
         producer = OAuth2Producer(
             producer="producer.example.net",
             encoder=JSONEncoder(),
@@ -36,14 +34,12 @@ def main():
             oauth2_config=oauth2_config,
         )
 
-        # Define the actuator profile
         actuator_profile = slpf.Specifiers({
             'hostname': 'firewall',
             'named_group': 'firewalls',
             'asset_id': 'iptables'
         })
 
-        # Request a complete response
         args = slpf.Args({'response_requested': oc2.ResponseType.complete})
 
         # Example command: query features
@@ -59,7 +55,6 @@ def main():
         response = producer.sendcmd(cmd)
         logger.info("Received OpenC2 response: %s", response)
 
-        # Controlla se l'autenticazione è avvenuta
         if producer.is_authenticated():
             logger.info("Producer successfully authenticated with OAuth2")
             token_info = producer.get_token_info()
@@ -75,7 +70,6 @@ def main():
         sys.exit(1)
     except Exception as e:
         logger.error("Error while sending command: %s", e)
-        # Log dell'errore completo per debugging
         import traceback
         logger.error("Full traceback: %s", traceback.format_exc())
         sys.exit(1)

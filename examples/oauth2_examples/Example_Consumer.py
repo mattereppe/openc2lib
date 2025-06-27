@@ -10,11 +10,10 @@ that extends the original Consumer interface.
 import logging
 import sys
 
-import otupy as oc2
-from otupy.auth.Resource.Cv2 import OAuth2Consumer
+from otupy.auth.Resource.oauth2consumer import OAuth2Consumer
 
 from otupy.encoders.json import JSONEncoder
-from otupy.transfers.http import HTTPTransfer  # o HTTPSTransfer se preferisci TLS
+from otupy.transfers.http import HTTPTransfer
 from otupy.actuators.iptables_actuator import IptablesActuator
 import otupy.profiles.slpf as slpf
 
@@ -26,10 +25,8 @@ logger = logging.getLogger('openc2')
 def main():
     """Create and run an OAuth2-protected OpenC2 Consumer"""
 
-    # Mappa degli actuator registrati
     actuators = {(slpf.nsid, 'iptables'): IptablesActuator()}
 
-    # Crea il Consumer protetto con configurazione OAuth2
     consumer = OAuth2Consumer(
         consumer="testconsumer",
         introspection_url="http://127.0.0.1:9000/oauth/introspect",

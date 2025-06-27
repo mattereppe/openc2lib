@@ -8,7 +8,7 @@ from datetime import datetime, timezone
 
 from otupy.core.results import Results
 from otupy.core.message import Message
-from otupy.core.response import Response, StatusCode, StatusCodeDescription
+from otupy.core.response import Response, StatusCode
 from otupy.core.consumer import Consumer
 
 logger = logging.getLogger(__name__)
@@ -31,7 +31,7 @@ class OAuth2TokenValidator(IntrospectTokenValidator):
         self.timeout = timeout
 
     def introspect_token(self, token_string: str) -> Dict[str, Any]:
-        """Esegue token introspection"""
+        """Token introspection"""
         data = {
             'token': token_string,
             'token_type_hint': 'access_token'
@@ -55,22 +55,22 @@ class OAuth2TokenValidator(IntrospectTokenValidator):
             raise
 
     def validate_token(self, token: str) -> Dict[str, Any]:
-        """Valida il token e restituisce le informazioni"""
+        """Validates the token and returns the information"""
         try:
             token_info = self.introspect_token(token)
 
-            # Verifica se il token è attivo
+            # Check if the token is active
             if not token_info.get('active', False):
                 logger.warning("Token is not active")
                 raise OAuth2Error("Token is not active")
 
-            # Verifica scadenza
+            # Check if token has expired
             exp = token_info.get('exp')
             if exp and datetime.fromtimestamp(exp, timezone.utc) < datetime.now(timezone.utc):
                 logger.warning("Token has expired")
                 raise OAuth2Error("Token has expired")
 
-            # Verifica scope richiesti (se configurati)
+            # Check token scopes
             if self.required_scopes:
                 token_scopes = token_info.get('scope', '').split()
                 missing_scopes = set(self.required_scopes) - set(token_scopes)
@@ -106,7 +106,7 @@ class OAuth2TokenValidator(IntrospectTokenValidator):
 
 class OAuth2Consumer(Consumer):
     """
-    Estensione di Consumer con supporto per autenticazione OAuth2 via introspection
+    Oauth2 extension of Consumer
     """
 
     def __init__(self,
@@ -132,22 +132,21 @@ class OAuth2Consumer(Consumer):
 
     def dispatch(self, msg: Message, token: Optional[str] = None) -> Message:
         """
-        Dispatch con validazione OAuth2
+        Dispatch with Oauth2 validation
 
-        :param msg: Messaggio OpenC2
-        :param token: Access token da validare (estratto da Transfer.receive())
-        :return: Messaggio di risposta
+        :param msg: OpenC2 Message
+        :param token: Access token to be validated (extract from Transfer.receive())
+        :return: Response message
         """
         logger.info("Processing message with OAuth2 validation")
 
-        # Validazione del token
+        # Token validation
         is_valid, token_info, error_response = self.is_authorized(token)
         if not is_valid:
-            # Crea messaggio di errore con informazioni per l'autenticazione
+            # Create error message with authentication information
             error_msg = self._create_error_message(msg)
             return error_msg
 
-        # Aggiunge metadati OAuth2 al messaggio se la validazione è riuscita
         if token_info:
             if not hasattr(msg, 'metadata'):
                 msg.metadata = {}
@@ -160,14 +159,13 @@ class OAuth2Consumer(Consumer):
             })
             logger.info(f"OAuth2 metadata added to message for client: {token_info.get('client_id')}")
 
-        # Processa il messaggio normalmente
         return super().dispatch(msg)
 
     def is_authorized(self, token: Optional[str]) -> Tuple[bool, Optional[Dict[str, Any]], Optional[Response]]:
         """
-        Verifica autorizzazione del token
+        Token Authorization Check
 
-        :param token: Token estratto dal Transfer
+        :param token: Token extracted from Transfer
         :return: (is_valid, token_info, error_response)
         """
         if not token:
@@ -224,8 +222,6 @@ class OAuth2Consumer(Consumer):
 
     def _create_error_message(self, original_msg):
         auth_info = f"Auth endpoint: {self.ua_url} "
-
-
         response = Response(
             status=StatusCode.UNAUTHORIZED,
             status_text=auth_info
