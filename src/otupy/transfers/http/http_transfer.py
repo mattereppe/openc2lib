@@ -191,7 +191,6 @@ class HTTPTransfer(oc2.Transfer):
 
         logger.info("Received HTTP body: \n%s", data)
         logger.debug(data)
-        #restituisce anche token
         msg, encoder, token = self._fromhttp(headers, data)
         return msg, encoder, token
 
@@ -262,9 +261,6 @@ class HTTPTransfer(oc2.Transfer):
                 resp.to = [str(request.remote_addr)]
             else:
                 logger.info("Received command: %s", cmd)
-                #prima si passava interi headers al callback e poi dentro dispatch veniva estratto il token dagli header.
-                # Ora non si passa più request.headers, ma direttamente il token già estratto, perche il token viene estratto in _fromhttp()
-                # il Consumer quindi riceve già il token direttamente, e non deve occuparsi di estrarlo dagli header.
                 resp = callback(cmd, token=token)
 
             logger.info("Got response: %s", resp)

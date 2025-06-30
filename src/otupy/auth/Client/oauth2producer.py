@@ -20,14 +20,14 @@ class OAuth2AuthManager:
     """Handles OAuth2 authentication"""
 
     def __init__(self, client_id, client_secret, redirect_uri, callback_port=8000):
-        self.CLIENT_ID = client_id
-        self.CLIENT_SECRET = client_secret
-        self.REDIRECT_URI = redirect_uri
+        self.client_id = client_id
+        self.client_secret = client_secret
+        self.redirect_uri = redirect_uri
         self.callback_port = callback_port
 
         self.auth_response_queue = queue.Queue()
-        self.client = OAuth2Session(self.CLIENT_ID, self.CLIENT_SECRET,
-                                    redirect_uri=self.REDIRECT_URI)
+        self.client = OAuth2Session(self.client_id, self.client_secret,
+                                    redirect_uri=self.redirect_uri)
         self.token = None
         self.flask_app = None
         self.flask_thread = None

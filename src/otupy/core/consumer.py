@@ -160,7 +160,7 @@ class Consumer:
 		# Add the metadata to be returned to the Producer
 		return self.__respmsg(msg, response_content)
 
-	def __runcmd(self, msg, actuator):
+	def _runcmd(self, msg, actuator):
 		# Run the command and collect the response
 		# TODO: Define how to manage concurrent execution from more than one actuator
 		try:

@@ -71,12 +71,12 @@ class OAuth2TokenValidator(IntrospectTokenValidator):
                 raise OAuth2Error("Token has expired")
 
             # Check token scopes
-            if self.required_scopes:
-                token_scopes = token_info.get('scope', '').split()
-                missing_scopes = set(self.required_scopes) - set(token_scopes)
-                if missing_scopes:
-                    logger.warning(f"Token missing required scopes: {missing_scopes}")
-                    raise OAuth2Error(f"Insufficient scopes. Missing: {', '.join(missing_scopes)}")
+            # if self.required_scopes:
+            #     token_scopes = token_info.get('scope', '').split()
+            #     missing_scopes = set(self.required_scopes) - set(token_scopes)
+            #     if missing_scopes:
+            #         logger.warning(f"Token missing required scopes: {missing_scopes}")
+            #         raise OAuth2Error(f"Insufficient scopes. Missing: {', '.join(missing_scopes)}")
 
             logger.info(f"Token validated successfully for client: {token_info.get('client_id')}")
             return token_info
@@ -97,7 +97,6 @@ class OAuth2TokenValidator(IntrospectTokenValidator):
             logger.error("Invalid JSON response from introspection endpoint")
             raise OAuth2Error("Invalid introspection response")
         except OAuth2Error:
-            # Re-raise OAuth2Error as-is
             raise
         except Exception as e:
             logger.error(f"Unexpected error during token validation: {e}")
@@ -127,6 +126,7 @@ class OAuth2Consumer(Consumer):
             required_scopes=required_scopes
         )
         self.ua_url = ua_url
+        self._current_token = None  # Store current token for __runcmd
         logger.info(f"OAuth2Consumer initialized with introspection URL: {introspection_url}")
         logger.info(f"Auth endpoint: {self.ua_url}")
 
@@ -140,26 +140,36 @@ class OAuth2Consumer(Consumer):
         """
         logger.info("Processing message with OAuth2 validation")
 
-        # Token validation
-        is_valid, token_info, error_response = self.is_authorized(token)
-        if not is_valid:
-            # Create error message with authentication information
-            error_msg = self._create_error_message(msg)
-            return error_msg
-
-        if token_info:
-            if not hasattr(msg, 'metadata'):
-                msg.metadata = {}
-            msg.metadata.update({
-                'oauth2_client_id': token_info.get('client_id'),
-                'oauth2_scopes': token_info.get('scope', '').split(),
-                'oauth2_subject': token_info.get('sub'),
-                'oauth2_validated_at': datetime.now(timezone.utc).isoformat(),
-                'oauth2_token_active': True
-            })
-            logger.info(f"OAuth2 metadata added to message for client: {token_info.get('client_id')}")
-
+        # Store token
+        self._current_token = token
         return super().dispatch(msg)
+
+    def _runcmd(self, msg, actuator):
+        """
+        Performs token validation before executing the command.
+        :param msg: The OpenC2 message
+        :param actuator: The actuator to execute the command
+        :return: Response object
+        """
+        # Perform token validation before command execution
+        is_valid, token_info, error_response = self.is_authorized(self._current_token)
+
+        if not is_valid:
+            logger.warning("Token validation failed during command execution")
+            return Response(
+                status=StatusCode.UNAUTHORIZED,
+                status_text=f"Unauthorized: {error_response.status_text if error_response else 'Invalid token'}"
+            )
+
+        logger.info("Token validated successfully, proceeding with command execution")
+
+        try:
+            logger.info("Dispatching command to: %s", actuator[0])
+            response_content = actuator[0].run(msg.content)
+        except (IndexError, AttributeError):
+            response_content = Response(status=StatusCode.NOTFOUND, status_text='No actuator available')
+
+        return response_content
 
     def is_authorized(self, token: Optional[str]) -> Tuple[bool, Optional[Dict[str, Any]], Optional[Response]]:
         """
@@ -193,34 +203,10 @@ class OAuth2Consumer(Consumer):
                 status_text="Token validation error"
             )
 
-    # def _create_error_message(self,original_msg):
-    #     """
-    #     Create an OAuth2 unauthorized error message with authentication info
-    #     """
-    #     results = Results()
-    #
-    #     results['Ua_url'] = self.Ua_url
-    #     results['auth_method'] = 'OAuth2'
-    #     results['auth_required'] = True
-    #
-    #     # Create response with unauthorized status and auth info
-    #     response = Response(
-    #         status=StatusCode.UNAUTHORIZED,
-    #         status_text="Missing or invalid access token",
-    #         results=results
-    #     )
-    #
-    #     # Create the error message
-    #     error_msg = Message(content=response)
-    #     error_msg.status= StatusCode.UNAUTHORIZED
-    #     error_msg.from_ = "consumer"  # or your consumer identifier
-    #     error_msg.to = getattr(original_msg, 'from_', None)
-    #     error_msg.request_id = getattr(original_msg, 'request_id', None)
-    #     # error_msg.created = int(datetime.now())
-    #
-    #     return error_msg
-
     def _create_error_message(self, original_msg):
+        """
+        Create an OAuth2 unauthorized error message with authentication endpoint info
+        """
         auth_info = f"Auth endpoint: {self.ua_url} "
         response = Response(
             status=StatusCode.UNAUTHORIZED,
