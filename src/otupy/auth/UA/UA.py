@@ -5,6 +5,7 @@ import threading
 import logging
 import os
 from dotenv import load_dotenv
+from otupy.auth.UA.casbin.AuthAgent import AuthorizationAgent, AuthorizationError
 
 # Load environment variables from .env
 load_dotenv()
@@ -20,13 +21,22 @@ as_authorize_url = 'http://127.0.0.1:9000/'
 # Credentials from environment variables
 CONFIG_USERNAME = os.getenv("USERNAME")
 CONFIG_PASSWORD = os.getenv("PASSWORD")
+MODEL_PATH = os.getenv("CASBIN_MODEL", "model.conf")
+POLICY_PATH = os.getenv("CASBIN_POLICY", "policy.csv")
 
 if not CONFIG_USERNAME or not CONFIG_PASSWORD:
     logger.error("USERNAME or PASSWORD not defined in .env file")
     sys.exit(1)
 
 
-def auth_flow(url):
+# Initialize Casbin Authorization Agent
+try:
+    auth_agent = AuthorizationAgent(model_path=MODEL_PATH, policy_path=POLICY_PATH)
+except AuthorizationError as e:
+    logger.error(f"Failed to initialize AuthorizationAgent: {e}")
+    sys.exit(1)
+
+def auth_flow(url,command):
     session = requests.Session()
     response = session.get(url)
     logger.debug(f'Response content: {response.content}\n')
@@ -43,6 +53,24 @@ def auth_flow(url):
             login_response = session.post(as_authorize_url, json=login_payload)
 
             if login_response.status_code == 200:
+                # check authorization after login
+                try:
+                    #TODO estarre info da comando
+                    is_allowed = auth_agent.is_authorized(
+                        user=CONFIG_USERNAME,
+                        action="query",
+                        target="ip_addr:1.2.3.4",
+                        actuator="firewall-1"
+                    )
+                    if is_allowed:
+                        logger.info(f"User {CONFIG_USERNAME} is authorized.")
+                    else:
+                        logger.warning(f"User {CONFIG_USERNAME} is NOT authorized.")
+                        return
+                except AuthorizationError as e:
+                    logger.error(f"Authorization check error: {e}")
+                    return
+
                 response = session.get(url)
                 if response.status_code == 200:
                     try:
@@ -80,7 +108,8 @@ def auth():
         return jsonify({'error': 'Missing URL'}), 400
 
     url = data['url']
-    threading.Thread(target=auth_flow, args=(url,)).start()
+    command=data['command']
+    threading.Thread(target=auth_flow, args=(url,command,)).start()
     return jsonify({'status': 'OK'}), 200
 
 

@@ -18,7 +18,6 @@ p, operator, deny, ip_addr:*, firewall-*
 p, operator, deny, domain_name:*, firewall-*
 p, operator, block, ip_addr:*, firewall-*
 p, operator, query, *, *
-p, operator, investigate, *, endpoint-*
 
 # Administrator permissions (full access)
 p, administrator, *, *, *
