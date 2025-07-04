@@ -58,9 +58,10 @@ class OAuth2AuthManager:
             self.logger.error(f"Error fetching the token: {e}")
             raise
 
-    def authenticate(self, ua_url):
+    def authenticate(self, ua_url,command):
         """Starts the OAuth2 authentication process"""
         try:
+            print(command)
             response = requests.get(f"{ua_url}/as_url")
             if response.status_code != 200:
                 raise Exception(f"Error fetching AS Url: {response.status_code}")
@@ -74,7 +75,7 @@ class OAuth2AuthManager:
                 as_auth_url, request=None
             )
             authorization_url = authorization_url.replace("https://", "http://")
-            payload = {"url": authorization_url}
+            payload = {"url": authorization_url, "command": command}
             ua_auth = f"{ua_url}/auth"
             response = requests.post(ua_auth, json=payload)
 
@@ -123,13 +124,13 @@ class OAuth2Producer(Producer):
 
         self.logger = logging.getLogger('oauth2_producer')
 
-    def authenticate(self, endpoint=None):
+    def authenticate(self, endpoint=None,command=None):
         """Performs OAuth2 authentication"""
         if endpoint is None:
             raise ValueError("Authentication endpoint not specified")
 
         self.logger.info(f"Starting OAuth2 authentication with endpoint: {endpoint}")
-        token = self.oauth2_manager.authenticate(endpoint)
+        token = self.oauth2_manager.authenticate(endpoint,command)
         self.logger.info("Authentication completed")
         return token
 
@@ -137,8 +138,7 @@ class OAuth2Producer(Producer):
         """Extracts the authentication endpoint from the error response"""
         try:
             parsed = json.loads(str(error_response))
-            res = parsed['body']['openc2']['response']['status_text']
-            url = res.split(":", 1)[1].strip()
+            url=parsed['body']['openc2']['response']['auth_endpoint']
         except Exception as e:
             self.logger.error(f"Error extracting authentication endpoint: {e}")
         return url
@@ -167,7 +167,7 @@ class OAuth2Producer(Producer):
                 raise ValueError("Error fetching endpoint url")
 
             try:
-                self.authenticate(endpoint=auth_endpoint)
+                self.authenticate(endpoint=auth_endpoint,command=cmd)
 
                 # Retry sending of the message
                 token = self.oauth2_manager.token

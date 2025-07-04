@@ -147,14 +147,14 @@ class Consumer:
 						# TODO: Spawn a process to run the process offline
 						logger.warn("Command: %s not run! -- Missing code")
 					case ResponseType.complete:
-						response_content = self.__runcmd(msg, actuator)
+						response_content = self._runcmd(msg, actuator)
 					case _:
 						response_content = Response(status=StatusCode.BADREQUEST, status_text="Invalid response requested")
 
 		if not response_content:
 			# Default: ResponseType == complete. Return an answer after the command is executed.
-			response_content = self.__runcmd(msg, actuator)
-					
+			response_content = self._runcmd(msg, actuator)
+
 		logger.debug("Actuator %s returned: %s", actuator, response_content)
 
 		# Add the metadata to be returned to the Producer
@@ -174,17 +174,20 @@ class Consumer:
 		return response_content
 
 	def __respmsg(self, msg, response):
-		if response:
-			respmsg = Message(response)
-			respmsg.from_=self.consumer
-			respmsg.to=[msg.from_]
-			respmsg.content_type=msg.content_type
-			respmsg.request_id=msg.request_id
-			respmsg.created=int(DateTime())
-			respmsg.status=response['status']
-		else:
-			respmsg = None
-		logger.debug("Response to be sent: %s", respmsg)
+		try:
+			if response:
+				respmsg = Message(response)
+				respmsg.from_=self.consumer
+				respmsg.to=[msg.from_]
+				respmsg.content_type=msg.content_type
+				respmsg.request_id=msg.request_id
+				respmsg.created=int(DateTime())
+				respmsg.status=response['status']
+			else:
+				respmsg = None
+			logger.debug("Response to be sent: %s", respmsg)
+		except Exception as e:
+			print(e)
 
 		return respmsg
 

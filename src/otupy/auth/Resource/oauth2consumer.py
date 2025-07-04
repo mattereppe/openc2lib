@@ -155,21 +155,13 @@ class OAuth2Consumer(Consumer):
         is_valid, token_info, error_response = self.is_authorized(self._current_token)
 
         if not is_valid:
-            logger.warning("Token validation failed during command execution")
-            return Response(
-                status=StatusCode.UNAUTHORIZED,
-                status_text=f"Unauthorized: {error_response.status_text if error_response else 'Invalid token'}"
-            )
+            # Create error message with authentication information
+            error_msg = self.create_error_message(msg)
+            return error_msg
 
         logger.info("Token validated successfully, proceeding with command execution")
 
-        try:
-            logger.info("Dispatching command to: %s", actuator[0])
-            response_content = actuator[0].run(msg.content)
-        except (IndexError, AttributeError):
-            response_content = Response(status=StatusCode.NOTFOUND, status_text='No actuator available')
-
-        return response_content
+        return super()._runcmd(msg,actuator)
 
     def is_authorized(self, token: Optional[str]) -> Tuple[bool, Optional[Dict[str, Any]], Optional[Response]]:
         """
@@ -203,20 +195,13 @@ class OAuth2Consumer(Consumer):
                 status_text="Token validation error"
             )
 
-    def _create_error_message(self, original_msg):
+    def create_error_message(self, original_msg):
         """
         Create an OAuth2 unauthorized error message with authentication endpoint info
         """
         auth_info = f"Auth endpoint: {self.ua_url} "
         response = Response(
             status=StatusCode.UNAUTHORIZED,
-            status_text=auth_info
+            auth_endpoint=self.ua_url
         )
-
-        error_msg = Message(content=response)
-        error_msg.status = StatusCode.UNAUTHORIZED
-        error_msg.from_ = "consumer"
-        error_msg.to = getattr(original_msg, 'from_', None)
-        error_msg.request_id = getattr(original_msg, 'request_id', None)
-
-        return error_msg
+        return response

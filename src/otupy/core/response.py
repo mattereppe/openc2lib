@@ -52,7 +52,7 @@ class Response(Content, Map):
 			correct Python objects for each <key, value> pair.		
 	"""
 		
-	fieldtypes = dict(status= StatusCode, status_text= str, results= Results)
+	fieldtypes = dict(status= StatusCode, status_text= str, auth_endpoint=str, results= Results)
 	""" The list of allowed <key,value> pair expected in a `Response`"""
 	msg_type = MessageType.response
 

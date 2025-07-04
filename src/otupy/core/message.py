@@ -51,7 +51,10 @@ class Message:
 
 	This is is an additional field not envisioned by the Language Specification.
 	"""
-	
+
+	def __getitem__(self, key):
+		return getattr(self, key)
+
 	def __post_init__(self ):
 		self.request_id = str(uuid.uuid4()) 
 		self.created = int(DateTime())

@@ -21,8 +21,9 @@ as_authorize_url = 'http://127.0.0.1:9000/'
 # Credentials from environment variables
 CONFIG_USERNAME = os.getenv("USERNAME")
 CONFIG_PASSWORD = os.getenv("PASSWORD")
-MODEL_PATH = os.getenv("CASBIN_MODEL", "model.conf")
-POLICY_PATH = os.getenv("CASBIN_POLICY", "policy.csv")
+MODEL_PATH="./casbin/model.conf"
+POLICY_PATH="./casbin/policy.csv"
+
 
 if not CONFIG_USERNAME or not CONFIG_PASSWORD:
     logger.error("USERNAME or PASSWORD not defined in .env file")
@@ -109,6 +110,7 @@ def auth():
 
     url = data['url']
     command=data['command']
+    print(command)
     threading.Thread(target=auth_flow, args=(url,command,)).start()
     return jsonify({'status': 'OK'}), 200
 

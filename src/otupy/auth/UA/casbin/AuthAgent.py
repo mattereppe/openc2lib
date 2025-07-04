@@ -3,6 +3,9 @@ import logging
 from pathlib import Path
 import sys
 
+logging.getLogger("casbin").setLevel(logging.WARNING)
+
+
 class AuthorizationError(Exception):
     pass
 

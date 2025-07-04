@@ -137,7 +137,7 @@ class HTTPTransfer(oc2.Transfer):
 
         if response.status_code == 401:
             logger.error("Unauthorized access - HTTP 401")
-            print(response.text)
+            # print(response.text)
             raise PermissionError(f"{response.text}")
 
         # TODO: How to manage HTTP response code? Can we safely assume they always match the Openc2 response?
