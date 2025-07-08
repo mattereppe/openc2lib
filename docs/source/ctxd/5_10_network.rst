@@ -16,7 +16,7 @@ Type: Network (Record)
      - #
      - Description
    * - 1
-     - des
+     - description
      - String
      - 1
      - Generic description of the network.

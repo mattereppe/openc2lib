@@ -15,7 +15,7 @@ Type: Container (Record)
      - #
      - Description
    * - 1
-     - desc
+     - description
      - String
      - 1
      - Generic description of the container.

@@ -17,7 +17,7 @@ Type: Service-Type (Choice)
      - #
      - Description
    * - 1
-     - ap
+     - application
      - Application
      - 1
      - Software application.

@@ -15,7 +15,7 @@ Type: Cloud (Record)
      - #
      - Description
    * - 1
-     - desc
+     - description
      - String
      - 1
      - Generic description of the cloud service.

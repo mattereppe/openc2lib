@@ -15,7 +15,7 @@ Type: Web Service (Record)
      - #
      - Description
    * - 1
-     - desc
+     - description
      - String
      - 1
      - Generic description of the web service.
