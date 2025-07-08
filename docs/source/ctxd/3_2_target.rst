@@ -12,19 +12,19 @@ Type: Target (Choice)
    :widths: 3 4 4 3 40
    :header-rows: 1
 
-   * - I
+   * - ID
      - Name
      - Type
      - #
      - Description
    * - 9
-     - feat
-     - Feat
+     - features
+     - Features
      - 1
      - A set of items used with the query Action to determine an Actuator’s capabilities.
    * - 2
-     - con
-     - Con
+     - context
+     - Context
      - 1
      - It describes the service environment, its connections and security capabilities.
 

@@ -7,13 +7,13 @@ Type: Args (Map)
    :widths: 3 4 4 3 40
    :header-rows: 1
 
-   * - I
+   * - ID
      - Name
      - Type
      - #
      - Description
    * - 4
-     - resp
+     - response_requested
      - Response-Type
      - 0
      - The type of Response required for the Command: none, ack, status, complete.

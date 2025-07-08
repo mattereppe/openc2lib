@@ -7,13 +7,13 @@ Type: Context (Record)
    :widths: 3 4 4 3 40
    :header-rows: 1
 
-   * - I
+   * - ID
      - Name
      - Type
      - #
      - Description
    * - 1
-     - servi
+     - services
      - ArrayOf(Name)
      - 0
      - List the service names that the command refers to.

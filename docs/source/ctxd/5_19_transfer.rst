@@ -6,13 +6,16 @@ with other transfer protocols.
 
 Type: Transfer (Enumerated)
 
-+---+--------+----------------------------------------+
-| I | Name   | Description                            |
-+===+========+========================================+
-| 1 | http   | HTTP protocol                          |
-+---+--------+----------------------------------------+
-| 2 | https  | HTTPS protocol                         |
-+---+--------+----------------------------------------+
-| 3 | mqtt   | MQTT protocol                          |
-+---+--------+----------------------------------------+
+.. list-table::
+   :widths: 3 5 45
+   :header-rows: 1
 
+   * - ID
+     - Name
+     - Description
+   * - 1
+     - http
+     - HTTP protocol
+   * - 2
+     - https
+     - HTTPS protocol

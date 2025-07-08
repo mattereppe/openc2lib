@@ -7,9 +7,13 @@ are permitted, the type Encoding can be extended with other encoders
 
 Type: Encoding (Enumerated)
 
-+---+--------+------------------------------------+
-| I | Name   | Description                        |
-+===+========+====================================+
-| 1 | json   | JSON encoding                      |
-+---+--------+------------------------------------+
+.. list-table::
+   :widths: 3 5 45
+   :header-rows: 1
 
+   * - ID
+     - Name
+     - Description
+   * - 1
+     - json
+     - JSON encoding
