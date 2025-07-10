@@ -1,0 +1,92 @@
+1751644343.800665 [[38;5;42m  INFO  [0m]werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+1751644343.801410 [[38;5;42m  INFO  [0m]werkzeug: [33mPress CTRL+C to quit[0m
+1751644343.803154 [[38;5;42m  INFO  [0m]werkzeug:  * Restarting with stat
+1751644344.197786 [[38;5;226mWARNING [0m]werkzeug:  * Debugger is active!
+1751644344.210811 [[38;5;42m  INFO  [0m]werkzeug:  * Debugger PIN: 337-102-096
+1751644349.694277 [[38;5;42m  INFO  [0m]otupy.transfers.http.http_transfer: Received HTTP body: 
+{
+   "headers": {
+      "request_id": "4d481065-c163-46ba-a151-dad6efa3bc2e",
+      "created": 1751644349664,
+      "from": "producer.example.net",
+      "to": [
+         "127.0.0.1"
+      ]
+   },
+   "body": {
+      "openc2": {
+         "request": {
+            "action": "query",
+            "target": {
+               "features": [
+                  "versions",
+                  "profiles",
+                  "pairs"
+               ]
+            },
+            "args": {
+               "slpf": {
+                  "direction": "ingress"
+               },
+               "response_requested": "complete"
+            },
+            "actuator": {
+               "slpf": {
+                  "hostname": "firewall",
+                  "named_group": "firewalls",
+                  "asset_id": "iptables"
+               }
+            }
+         }
+      }
+   }
+}
+1751644349.695466 [[38;5;42m  INFO  [0m]otupy.transfers.http.http_transfer: Received command: Message(content=Command(action=query, target=[<Feature.versions: 1>, <Feature.profiles: 2>, <Feature.pairs: 3>], args={'direction': <Direction.ingress: 2>, 'response_requested': <ResponseType.complete: 3>}, actuator=slpf(hostname:firewall,named_group:firewalls,asset_id:iptables), command_id=None), content_type='openc2', msg_type=<MessageType.command: 1>, status=None, request_id='4d481065-c163-46ba-a151-dad6efa3bc2e', created=1751644349664, from_='producer.example.net', to=['127.0.0.1'], version='1.0', encoding=<class 'otupy.encoders.json.JSONEncoder'>)
+1751644349.705994 [[38;5;42m  INFO  [0m]werkzeug: 127.0.0.1 - - [04/Jul/2025 17:52:29] "[35m[1mPOST /.well-known/openc2 HTTP/1.1[0m" 500 -
+1751644384.675802 [[38;5;42m  INFO  [0m]werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+1751644384.676533 [[38;5;42m  INFO  [0m]werkzeug: [33mPress CTRL+C to quit[0m
+1751644384.678101 [[38;5;42m  INFO  [0m]werkzeug:  * Restarting with stat
+1751644385.057128 [[38;5;226mWARNING [0m]werkzeug:  * Debugger is active!
+1751644385.070508 [[38;5;42m  INFO  [0m]werkzeug:  * Debugger PIN: 337-102-096
+1751644391.678303 [[38;5;42m  INFO  [0m]otupy.transfers.http.http_transfer: Received HTTP body: 
+{
+   "headers": {
+      "request_id": "768e9f85-8bd5-4bd5-9ba6-8c31af6ea26a",
+      "created": 1751644391661,
+      "from": "producer.example.net",
+      "to": [
+         "127.0.0.1"
+      ]
+   },
+   "body": {
+      "openc2": {
+         "request": {
+            "action": "query",
+            "target": {
+               "features": [
+                  "versions",
+                  "profiles",
+                  "pairs"
+               ]
+            },
+            "args": {
+               "slpf": {
+                  "direction": "ingress"
+               },
+               "response_requested": "complete"
+            },
+            "actuator": {
+               "slpf": {
+                  "hostname": "firewall",
+                  "named_group": "firewalls",
+                  "asset_id": "iptables"
+               }
+            }
+         }
+      }
+   }
+}
+1751644391.679331 [[38;5;42m  INFO  [0m]otupy.transfers.http.http_transfer: Received command: Message(content=Command(action=query, target=[<Feature.versions: 1>, <Feature.profiles: 2>, <Feature.pairs: 3>], args={'direction': <Direction.ingress: 2>, 'response_requested': <ResponseType.complete: 3>}, actuator=slpf(hostname:firewall,named_group:firewalls,asset_id:iptables), command_id=None), content_type='openc2', msg_type=<MessageType.command: 1>, status=None, request_id='768e9f85-8bd5-4bd5-9ba6-8c31af6ea26a', created=1751644391661, from_='producer.example.net', to=['127.0.0.1'], version='1.0', encoding=<class 'otupy.encoders.json.JSONEncoder'>)
+1751644391.686949 [[38;5;42m  INFO  [0m]werkzeug: 127.0.0.1 - - [04/Jul/2025 17:53:11] "[35m[1mPOST /.well-known/openc2 HTTP/1.1[0m" 500 -

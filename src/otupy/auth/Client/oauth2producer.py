@@ -1,6 +1,6 @@
 """ OAuth2 Authentication Support for OpenC2 Producer """
 import json
-
+import os
 from flask import Flask, request
 from authlib.integrations.requests_client import OAuth2Session
 import requests
@@ -24,7 +24,7 @@ class OAuth2AuthManager:
         self.client_secret = client_secret
         self.redirect_uri = redirect_uri
         self.callback_port = callback_port
-
+        self.token_path = os.path.join(os.getcwd(), 'oauth2_token.json')
         self.auth_response_queue = queue.Queue()
         self.client = OAuth2Session(self.client_id, self.client_secret,
                                     redirect_uri=self.redirect_uri)
@@ -42,6 +42,7 @@ class OAuth2AuthManager:
             @self.flask_app.route('/error')
             def error():
                 self.logger.error('User NOT authorized')
+                self.auth_response_queue.put("ERROR")
                 return 'OK', 200
 
             @self.flask_app.route('/callback')
@@ -55,9 +56,13 @@ class OAuth2AuthManager:
         token_url = f"{self.as_url}/oauth/token"
         auth_response = self.auth_response_queue.get()
         try:
+            if auth_response == "ERROR":
+                raise PermissionError("User denied authorization")
+
             self.token = self.client.fetch_token(token_url,
                                                  authorization_response=auth_response)
-            self.logger.info("TOKEN obtained successfully")
+            self.logger.info("Token obtained successfully")
+            self.save_token_to_file()
             return self.token
         except Exception as e:
             self.logger.error(f"Error fetching the token: {e}")
@@ -113,6 +118,9 @@ class OAuth2AuthManager:
                 if self.token is None:
                     raise TimeoutError("Timeout fetching Token")
 
+                if not token_thread.is_alive() and self.token is None:
+                    raise PermissionError("User denied authorization")
+
                 return self.token
             else:
                 raise Exception(f"Error: {response.status_code}")
@@ -124,6 +132,36 @@ class OAuth2AuthManager:
     def is_authenticated(self):
         return self.token is not None
 
+    def is_token_valid(self):
+        if not self.token:
+            return False
+        expires_at = self.token.get("expires_at")
+        if not expires_at:
+            return False
+        return time.time() < expires_at
+
+    def save_token_to_file(self):
+        path=self.token_path
+        if self.token:
+            try:
+                with open(path, 'w') as f:
+                    json.dump(self.token, f)
+                self.logger.info("Token saved on file")
+            except Exception as e:
+                self.logger.error(f"Error saving token: {e}")
+
+    def load_token_from_file(self):
+        path=self.token_path
+        if os.path.exists(path):
+            try:
+                with open(path, 'r') as f:
+                    self.token = json.load(f)
+                self.logger.info("Token loaded from file")
+                return self.token
+            except Exception as e:
+                self.logger.error(f"Error loading token from file: {e}")
+                self.token = None
+        return None
 
 class OAuth2Producer(Producer):
     """Oauth2 Producer class"""
@@ -164,6 +202,10 @@ class OAuth2Producer(Producer):
             raise ValueError("Missing encoder or transfer")
 
         target_consumers = consumers or [self.consumer_url]
+
+        if not self.oauth2_manager.token or not self.oauth2_manager.is_token_valid():
+            self.logger.info("Trying to load token from file")
+            self.oauth2_manager.load_token_from_file()
 
         try:
             msg = Message(cmd, from_=self.producer, to=target_consumers)
