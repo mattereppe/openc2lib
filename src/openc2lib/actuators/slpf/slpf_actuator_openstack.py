@@ -55,7 +55,7 @@ class SLPFActuator_openstack(SLPFActuator):
                 self.AllowedCommandTarget[Actions.delete] = [TargetEnum[Profile.nsid+':rule_number']]
 
 
-            #   Connecting to openstack
+            #   Connecting to OpenStack
                 self.connect_to_openstack()
             #   Initializing SLPF Actuator
                 super().__init__(hostname=hostname,
@@ -65,8 +65,7 @@ class SLPFActuator_openstack(SLPFActuator):
                                  db_path=db_path,
                                  db_name=db_name,
                                  db_commands_table_name=db_commands_table_name,
-                                 db_jobs_table_name=db_jobs_table_name,
-                                 rule_files_path=None)
+                                 db_jobs_table_name=db_jobs_table_name)
 
         except Exception as e:
             logger.info("[OPENSTACK] Initialization error: %s", str(e))
@@ -98,12 +97,10 @@ class SLPFActuator_openstack(SLPFActuator):
             self.conn = openstack.connect()           
             # Get the token from the connection object (it will automatically handle authentication)
             token = self.conn.authorize()            
-            # Verify successful authentication by checking token
-            if token:
-                logger.info("[OPENSTACK] Authentication executed successfully")
-            else:
-                logger.info("[OPENSTACK] Authentication failed")    
+            logger.info("[OPENSTACK] Connection executed successfully")
+                  
         except Exception as e:
+            logger.info("[OPENSTACK] Connection failed")  
             raise e
         
 
@@ -197,6 +194,7 @@ class SLPFActuator_openstack(SLPFActuator):
         try:
             rule_id = self.openstack_get_rule_id(target, direction)
             if rule_id:
+                logger.info("[OPENSTACK] Deleting OpenStack rule " + rule_id)
                 self.conn.network.delete_security_group_rule(rule_id)
         except Exception as e:
             raise e
@@ -306,10 +304,7 @@ class SLPFActuator_openstack(SLPFActuator):
                         kwargs['port_range_min'] = target.dst_port
                         kwargs['port_range_max'] = target.dst_port
             elif type(target) == IPv4Net or type(target) == IPv6Net:
-                kwargs['remote_ip_prefix'] = target.addr()
-                cidr = target.prefix()
-                if cidr:
-                    kwargs['remote_ip_prefix'] += f"/{cidr}"
+                kwargs['remote_ip_prefix'] = target.__str__()
 
             return kwargs
         except Exception as e:

@@ -13,7 +13,8 @@
             "db_name": "slpf_commands.sqlite",
             "db_commands_table_name": "iptables_commands",
             "db_jobs_table_name": "iptables_jobs",
-            "iptables_rules_path": "/home/kali/Scrivania/openc2lib/examples/slpf",
+            "update_path": "/home/kali/Scrivania/openc2lib/examples/slpf",
+            "iptables_rules_files_path": "/home/kali/Scrivania/openc2lib/examples/slpf",
             "iptables_rules_v4_filename": "iptables_rules.v4",
             "iptables_rules_v6_filename": "iptables_rules.v6",
             "iptables_input_chain_name": "INPUT_OC2",
@@ -38,6 +39,26 @@
             "db_jobs_table_name": "openstack_jobs",
             "file_environment_variables": "/home/kali/Scrivania/matteo-astrid.rc",
             "security_group_id": "9d2b8ab0-2626-4007-8253-0111cf608e9e"
+        },
+        {
+            "type": "kubernetes",
+            "hostname": "abete.tnt-lab.unige.it",
+            "named_group": "firewalls",
+            "asset_id": "kubernetes",
+            "asset_tuple": "",
+            "ip": "127.0.0.1",
+            "port": 8080,
+            "protocol": 6,
+            "endpoint": "/.well-known/openc2",
+            "db_path": "/home/kali/Scrivania/openc2lib/examples/slpf",
+            "db_name": "slpf_commands.sqlite",
+            "db_commands_table_name": "kubernetes_commands",
+            "db_jobs_table_name": "kubernetes_jobs",
+            "update_path": "/home/kali/Scrivania/openc2lib/examples/slpf",
+            "config_file": "/home/kali/.kube/config",
+            "kube_context": "kubernetes-super-admin@kubernetes",
+            "namespace": "my5gtestbed",
+            "generate_name": "network-policy-"
         }
     ],
     "consumer": {

@@ -11,6 +11,7 @@ from openc2lib.transfers.http import HTTPTransfer
 from openc2lib.actuators.slpf.slpf_actuator import SLPFActuator
 from openc2lib.actuators.slpf.slpf_actuator_iptables import SLPFActuator_iptables
 from openc2lib.actuators.slpf.slpf_actuator_openstack import SLPFActuator_openstack
+from openc2lib.actuators.slpf.slpf_actuator_kubernetes import SLPFActuator_kubernetes
 import openc2lib.profiles.slpf as slpf
 
 # Declare the logger name
@@ -50,7 +51,8 @@ def main():
                       db_name = element['db_name'],                     
                       db_commands_table_name = element['db_commands_table_name'],
                       db_jobs_table_name = element['db_jobs_table_name'],
-                      iptables_rules_path = element['iptables_rules_path'],
+                      update_path = element['update_path'],
+                      iptables_rules_files_path = element['iptables_rules_files_path'],
                       iptables_rules_v4_filename = element['iptables_rules_v4_filename'],
                       iptables_rules_v6_filename = element['iptables_rules_v6_filename'],
                       iptables_input_chain_name = element['iptables_input_chain_name'],
@@ -71,6 +73,22 @@ def main():
                       db_jobs_table_name = element['db_jobs_table_name'],
                       file_environment_variables = element['file_environment_variables'],
                       security_group_id = element['security_group_id']
+                )
+            elif (element["type"] == "kubernetes"):
+                actuators[(slpf.Profile.nsid,element['asset_id'])] = SLPFActuator_kubernetes(
+                      hostname = element['hostname'],
+                      named_group = element['named_group'],
+                      asset_id = element['asset_id'],
+                      asset_tuple = element['asset_tuple'],
+                      db_path = element['db_path'],
+                      db_name = element['db_name'],
+                      db_commands_table_name = element['db_commands_table_name'],
+                      db_jobs_table_name = element['db_jobs_table_name'],
+                      update_path = element['update_path'],
+                      config_file = element['config_file'],
+                      kube_context = element['kube_context'],
+                      namespace=element['namespace'],
+                      generate_name=element['generate_name']
                 )
             else:
                 raise Exception("type must be equal to iptables")

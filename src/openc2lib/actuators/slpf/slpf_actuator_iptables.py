@@ -1,6 +1,7 @@
 import logging
 import subprocess
 import os
+import ipaddress
 
 
 from openc2lib.actuators.slpf.slpf_actuator import SLPFActuator
@@ -25,23 +26,15 @@ class SLPFActuator_iptables(SLPFActuator):
         This class provides an implementation of the `SLPF Actuator` using iptables.
     """
 
-    def __init__(self, hostname, named_group, asset_id, asset_tuple, iptables_rules_path, iptables_rules_v4_filename, iptables_rules_v6_filename, iptables_input_chain_name, iptables_output_chain_name, iptables_forward_chain_name, iptables_cmd, ip6tables_cmd, db_path, db_name, db_commands_table_name, db_jobs_table_name):
+    def __init__(self, iptables_rules_files_path, iptables_rules_v4_filename, iptables_rules_v6_filename, iptables_input_chain_name, iptables_output_chain_name, iptables_forward_chain_name, iptables_cmd, ip6tables_cmd, hostname, named_group, asset_id, asset_tuple, db_path, db_name, db_commands_table_name, db_jobs_table_name, update_path):
         """ Initialization of the `iptables-based` SLPF Actuator.
 
             This method creates `personalized iptables chain`, 
             creates two `file` to store iptables v4 and v6 persistent rules, respectively, 
             finally initializes the `SLPF Actuator`.
 
-            :param hostname: SLPF Actuator hostname.
-            :type hostname: str
-            :param named_group: SLPF Actuator group.
-            :type named_group: str
-            :param asset_id: SLPF Actuator asset id.
-            :type asset_id: str
-            :param asset_tuple: SLPF Actuator asset tuple.
-            :type asset_tuple: str
-            :param iptables_rules_path: Path to iptables rule files.
-            :type rule_files_path: str
+            :param iptables_rules_files_path: Path to the directory containing the files where iptables rules v4/v6 are stored.
+            :type iptables_rules_files_path: str
             :param iptables_rules_v4_filename: Name of the file where iptables rules v4 are stored.
             :type iptables_rules_v4_filename: str
             :param iptables_rules_v6_filename: Name of the file where iptables rules v6 are stored.
@@ -56,6 +49,14 @@ class SLPFActuator_iptables(SLPFActuator):
             :type iptables_cmd: str
             :param ip6tables_cmd: Base command for iptables v6 (e.g: sudo ip6tables).
             :type ip6tables_cmd: str
+            :param hostname: SLPF Actuator hostname.
+            :type hostname: str
+            :param named_group: SLPF Actuator group.
+            :type named_group: str
+            :param asset_id: SLPF Actuator asset id.
+            :type asset_id: str
+            :param asset_tuple: SLPF Actuator asset tuple.
+            :type asset_tuple: str
             :param db_path: sqlite3 database path.
             :type db_path: str
             :param db_name: sqlite3 database name.
@@ -64,6 +65,8 @@ class SLPFActuator_iptables(SLPFActuator):
             :type db_commands_table_name: str
             :param db_jobs_table_name: Name of the `APScheduler jobs` table in the sqlite3 database.
             :type db_jobs_table_name: str
+            :param update_path: Path to the directory containing the files to be used as update.
+            :type update_path: str
         """
 
         if os.environ.get("WERKZEUG_RUN_MAIN") == "true":
@@ -107,21 +110,21 @@ class SLPFActuator_iptables(SLPFActuator):
 
             #   Path for iptables/ip6tables files
             #   These files are used by iptables/ip6tables-save and iptables/ip6tables-restore commands
-                self.iptables_rules_path = iptables_rules_path if iptables_rules_path else os.path.dirname(os.path.abspath(__file__))
-                if not os.path.exists(self.iptables_rules_path):
+                self.iptables_rules_files_path = iptables_rules_files_path if iptables_rules_files_path else os.path.dirname(os.path.abspath(__file__))
+                if not os.path.exists(self.iptables_rules_files_path):
                     raise
         
             #   Creating the files
                 self.iptables_rules_v4_filename = iptables_rules_v4_filename if iptables_rules_v4_filename else "iptables_rules.v4"
-                if not os.path.exists(os.path.join(self.iptables_rules_path, self.iptables_rules_v4_filename)):
+                if not os.path.exists(os.path.join(self.iptables_rules_files_path, self.iptables_rules_v4_filename)):
                     logger.info("[IPTABLES] Creating file %s", self.iptables_rules_v4_filename)
-                    with open(os.path.join(self.iptables_rules_path, self.iptables_rules_v4_filename), "w") as file:
+                    with open(os.path.join(self.iptables_rules_files_path, self.iptables_rules_v4_filename), "w") as file:
                         file.write("")
                     
                 self.iptables_rules_v6_filename = iptables_rules_v6_filename if iptables_rules_v6_filename else "iptables_rules.v6"
-                if not os.path.exists(os.path.join(self.iptables_rules_path, self.iptables_rules_v6_filename)):
+                if not os.path.exists(os.path.join(self.iptables_rules_files_path, self.iptables_rules_v6_filename)):
                     logger.info("[IPTABLES] Creating file %s", self.iptables_rules_v6_filename)
-                    with open(os.path.join(self.iptables_rules_path, self.iptables_rules_v6_filename), "w") as file:
+                    with open(os.path.join(self.iptables_rules_files_path, self.iptables_rules_v6_filename), "w") as file:
                         file.write("")
 
             #   Initializing SLPF Actuator
@@ -133,7 +136,7 @@ class SLPFActuator_iptables(SLPFActuator):
                                  db_name=db_name,
                                  db_commands_table_name=db_commands_table_name,
                                  db_jobs_table_name=db_jobs_table_name,
-                                 rule_files_path=self.iptables_rules_path)
+                                 update_path=update_path)
             except Exception as e:
                 logger.info("[IPTABLES] Initialization error: %s", str(e))
                 raise e
@@ -145,6 +148,8 @@ class SLPFActuator_iptables(SLPFActuator):
             :type base_cmd: str
             :param chain_name: Name of the custom iptables v4/v6 chain.
             :type chain_name: str
+
+            :return: `True` if the custom iptables v4/v6 chain already exists, `False` otherwise.
         """
         try:
             self.iptables_execute_command(base_cmd + " -L " + chain_name)
@@ -252,6 +257,8 @@ class SLPFActuator_iptables(SLPFActuator):
             :type action_to_delete: Actions
             :param forward: A flag that specifies if the rule has to be inserted in the iptables forward chain.
             :type forward: bool
+
+            :return: The created `iptables command`.
         """
         try:
             if type(target) == IPv4Connection or type(target) == IPv4Net:
@@ -262,7 +269,7 @@ class SLPFActuator_iptables(SLPFActuator):
             if action == Actions.delete:
                 cmd += "-D "
             else:
-                cmd += "--append "
+                cmd += "-I "
 
             if not forward:
                 if direction == Direction.ingress:
@@ -271,6 +278,10 @@ class SLPFActuator_iptables(SLPFActuator):
                     cmd += self.iptables_output_chain_name + " "
             else:
                 cmd += self.iptables_forward_chain_name + " "
+
+            if action != Actions.delete:
+                position = self.iptables_get_rule_position(target, direction, forward)
+                cmd += f"{position} "
 
             if type(target) == IPv4Connection or type(target) == IPv6Connection:
                 if target.protocol:
@@ -284,12 +295,8 @@ class SLPFActuator_iptables(SLPFActuator):
                 if target.dst_port:
                     cmd += f"--dport {target.dst_port} "
             elif type(target) == IPv4Net or type(target) == IPv6Net:
-                ip = target.addr()
-                cidr = target.prefix()
-                if cidr:
-                    ip += f"/{cidr}"
             #   The address is always considered as a destination address
-                cmd += f"--destination {ip} "
+                cmd += "--destination " + target.__str__() + " "
 
             if action == Actions.allow or action_to_delete == Actions.allow:
                 iptables_target = "ACCEPT"
@@ -300,33 +307,152 @@ class SLPFActuator_iptables(SLPFActuator):
                     iptables_target = "REJECT --reject-with icmp-host-unreachable"
 
             cmd += f"--jump {iptables_target} "
-
             return cmd
+        except Exception as e:
+            raise e
+        
+
+    def iptables_get_rule_position(self, target, direction, forward):
+        """ This method returns the position where the new rule should be inserted in the considered chain.
+
+            Compare the specifity of the new rule to be inserted with the specifity of the rules already present.
+
+            Specifity order (from lower to higher):
+            - destination address,
+            - source address,
+            - protocol,
+            - destination port,
+            - source port.
+
+            Networks are always placed at the bottom in size order.
+
+            :param target: Command target.
+            :type target: IPv4Net/IPv6Net/IPv4Connection/IPv6Connection
+            :param direction: Command direction.
+            :type direction: Direction
+            :param forward: A flag that specifies if the rule has to be inserted in the iptables forward chain.
+            :type forward: bool
+
+            :return: The `position` found.
+        """
+        try:
+            prot_specifity = None
+            addr_specifity = None
+            if type(target) == IPv4Connection or type(target) == IPv6Connection:
+                if target.protocol and target.dst_port and target.src_port:
+                    prot_specifity = 5
+                elif target.protocol and target.dst_port and not target.src_port:
+                    prot_specifity = 4
+                elif target.protocol and not target.dst_port and target.src_port:
+                    prot_specifity = 3
+                elif target.protocol and not target.dst_port and not target.src_port:
+                    prot_specifity = 2
+                elif not target.protocol:
+                    prot_specifity = 1
+
+                if target.dst_addr and target.src_addr:
+                    addr_specifity = 4
+                elif target.dst_addr and not target.src_addr:
+                    addr_specifity = 3
+                elif not target.dst_addr and target.src_addr:
+                    addr_specifity = 2
+                elif not target.dst_addr and not target.src_addr:
+                    addr_specifity = 1
+                
+            if not forward:
+                if direction == Direction.ingress:
+                    chain = self.iptables_input_chain_name
+                elif direction == Direction.egress:
+                    chain = self.iptables_output_chain_name
+            else:
+                chain = self.iptables_forward_chain_name
+
+            cmd = self.iptables_cmd if type(target) == IPv4Connection or type(target) == IPv4Net else self.ip6tables_cmd
+            cmd = cmd.strip().split()
+            cmd.append("-S")
+            cmd.append(chain)
+            output = subprocess.check_output(cmd, text=True)
+            rules = output.strip().splitlines()
+            
+            pos = 0
+            for rule in rules:
+                if not rule.startswith("-A"):
+                    continue
+
+                pos += 1
+                rule_parts = rule.split()
+                
+                rule_addr_specifity = None
+                if "-d" in rule_parts and "-s" in rule_parts:
+                    rule_addr_specifity = 4
+                elif "-d" in rule_parts and not "-s" in rule_parts:
+                    rule_addr_specifity = 3
+                elif not "-d" in rule_parts and "-s" in rule_parts:
+                    rule_addr_specifity = 2
+                elif not "-d" in rule_parts and not "-s" in rule_parts:
+                    rule_addr_specifity = 1
+
+                rule_prot_specifity = None
+                if "-p" in rule_parts and "--dport" in rule_parts and "--sport" in rule_parts:
+                    rule_prot_specifity = 5
+                elif "-p" in rule_parts and "--dport" in rule_parts and not "--sport" in rule_parts:
+                    rule_prot_specifity = 4
+                elif "-p" in rule_parts and not "--dport" in rule_parts and "--sport" in rule_parts:
+                    rule_prot_specifity = 3
+                elif "-p" in rule_parts and not "--dport" in rule_parts and not "--sport" in rule_parts:
+                    rule_prot_specifity = 2
+                elif not "-p" in rule_parts:
+                    rule_prot_specifity = 1
+
+                if type(target) == IPv4Connection or type(target) == IPv6Connection:
+                    if rule_addr_specifity < addr_specifity:
+                        return pos
+                    elif rule_addr_specifity > addr_specifity:
+                        continue
+                    elif rule_addr_specifity == addr_specifity: 
+                        if rule_prot_specifity <= prot_specifity:
+                            return pos
+                        else:
+                            continue
+                elif type(target) == IPv4Net or type(target) == IPv6Net:
+                    if rule_addr_specifity != 3 or rule_prot_specifity != 1:
+                        continue
+                    rule_cidr = rule_parts[rule_parts.index("-d") + 1]
+                    rule_prefix = ipaddress.ip_network(rule_cidr, strict=False).prefixlen
+                    target_prefix = ipaddress.ip_network(target.__str__(), strict=False).prefixlen
+                    if rule_prefix <= target_prefix:
+                        return pos
+            return pos + 1
         except Exception as e:
             raise e
 
 
     def save_persistent_commands(self):
         try:
-            cmd = self.iptables_cmd + "-save > " + os.path.join(self.iptables_rules_path, self.iptables_rules_v4_filename)
+            logger.info("[IPTABLES] Saving iptables persistent commands")
+            cmd = self.iptables_cmd + "-save > " + os.path.join(self.iptables_rules_files_path, self.iptables_rules_v4_filename)
             self.iptables_execute_command(cmd)
-            cmd = self.ip6tables_cmd + "-save > " + os.path.join(self.iptables_rules_path, self.iptables_rules_v6_filename)
+            cmd = self.ip6tables_cmd + "-save > " + os.path.join(self.iptables_rules_files_path, self.iptables_rules_v6_filename)
             self.iptables_execute_command(cmd)
         except Exception as e:
+            logger.info("[IPTABLES] An error occurred saving iptables rules: %s", str(e))
             raise e
         
     
     def restore_persistent_commands(self):
         try:
-            cmd = self.iptables_cmd + "-restore < " + os.path.join(self.iptables_rules_path, self.iptables_rules_v4_filename)
+            logger.info("[IPTABLES] Restoring iptables persistent commands")
+            cmd = self.iptables_cmd + "-restore < " + os.path.join(self.iptables_rules_files_path, self.iptables_rules_v4_filename)
             self.iptables_execute_command(cmd)
-            cmd = self.ip6tables_cmd + "-restore < " + os.path.join(self.iptables_rules_path, self.iptables_rules_v6_filename)
+            cmd = self.ip6tables_cmd + "-restore < " + os.path.join(self.iptables_rules_files_path, self.iptables_rules_v6_filename)
             self.iptables_execute_command(cmd)
         except Exception as e:
+            logger.info("[IPTABLES] An error occurred restoring iptables rules: %s", str(e))
             raise e
         
     def clean_actuator_rules(self):
         try:
+            logger.info("[IPTABLES] Deleting all iptables rules") 
         #   Deleting rules from iptables
             cmd = self.iptables_cmd + " -F"
             self.iptables_execute_command(cmd)
@@ -343,6 +469,7 @@ class SLPFActuator_iptables(SLPFActuator):
             self.iptables_execute_command(self.ip6tables_cmd + " -A OUTPUT -j " + self.iptables_output_chain_name)
             self.iptables_execute_command(self.ip6tables_cmd + " -A FORWARD -j " + self.iptables_forward_chain_name)
         except Exception as e:
+            logger.info("[IPTABLES] An error occurred deleting all iptables rules: %s", str(e))
             raise e
         
     def execute_update_command(self, name, path):
@@ -351,15 +478,14 @@ class SLPFActuator_iptables(SLPFActuator):
             ext = os.path.splitext(name)[1]
 
             if ext == '.v4':
-                destination = os.path.join(self.iptables_rules_path, self.iptables_rules_v4_filename)
+                destination = os.path.join(self.iptables_rules_files_path, self.iptables_rules_v4_filename)
             elif ext == '.v6':
-                destination = os.path.join(self.iptables_rules_path, self.iptables_rules_v6_filename)
+                destination = os.path.join(self.iptables_rules_files_path, self.iptables_rules_v6_filename)
 
             with open(abs_path, "r") as src, open(destination, "w") as dst:
                 dst.write(src.read())
 
             self.restore_persistent_commands()
-
         except Exception as e:
             raise e  
     
@@ -374,4 +500,6 @@ class SLPFActuator_iptables(SLPFActuator):
             subprocess.run(cmd, shell=True, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         except subprocess.CalledProcessError as e:
              raise e
+        except Exception as e:
+            raise e
         
