@@ -39,6 +39,11 @@ class OAuth2AuthManager:
         if self.flask_app is None:
             self.flask_app = Flask(__name__)
 
+            @self.flask_app.route('/error')
+            def error():
+                self.logger.error('User NOT authorized')
+                return 'OK', 200
+
             @self.flask_app.route('/callback')
             def callback():
                 authorization_response = request.url
@@ -61,7 +66,16 @@ class OAuth2AuthManager:
     def authenticate(self, ua_url,command):
         """Starts the OAuth2 authentication process"""
         try:
-            print(command)
+            # print(command)
+            action=command.action.name if hasattr(command.action, 'name') else str(command.action)
+            target_type = command.target.choice
+            target = [f"{target_type}.{t.name}" for t in command.target.obj]
+            actuator= command.actuator.choice
+            command_dict = {
+                "action": action,
+                "target": target,
+                "actuator": actuator
+            }
             response = requests.get(f"{ua_url}/as_url")
             if response.status_code != 200:
                 raise Exception(f"Error fetching AS Url: {response.status_code}")
@@ -75,7 +89,7 @@ class OAuth2AuthManager:
                 as_auth_url, request=None
             )
             authorization_url = authorization_url.replace("https://", "http://")
-            payload = {"url": authorization_url, "command": command}
+            payload = {"url": authorization_url, "command": command_dict}
             ua_auth = f"{ua_url}/auth"
             response = requests.post(ua_auth, json=payload)
 

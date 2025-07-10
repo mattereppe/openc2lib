@@ -2,27 +2,10 @@
 # Format: p, subject, action, object, actuator
 
 # Role definitions (g, user, role)
-g, producer-analyst, analyst
-g, producer-soc, operator
-g, producer-admin, administrator
+g, admin, administrator
 
-# Network Security Analyst permissions
-p, analyst, allow, ip_addr:*, firewall-*
-p, analyst, deny, ip_addr:*, firewall-*
-p, analyst, query, ip_addr:*, *
-p, analyst, scan, ip_addr:*, scanner-*
+# Administrator permissions
+p, administrator, query, features.versions, slpf
 
-# Operator permissions
-p, operator, allow, ip_addr:*, firewall-*
-p, operator, deny, ip_addr:*, firewall-*
-p, operator, deny, domain_name:*, firewall-*
-p, operator, block, ip_addr:*, firewall-*
-p, operator, query, *, *
-
-# Administrator permissions (full access)
-p, administrator, *, *, *
-
-# External user permissions (very limited)
-p, external_user, query, public:*, *
 
 

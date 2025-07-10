@@ -13,3 +13,36 @@ Matcher: è la regola logica che confronta la richiesta con le policy.
 ->Verifica che il soggetto abbia il ruolo (g(r.sub, p.sub)) e che gli altri campi combacino secondo keyMatch2
 (che supporta * e /.../ simili a pattern URL).
 
+
+
+# Casbin Policy Rules for OpenC2 User Agent
+# Format: p, subject, action, object, actuator
+
+# Role definitions (g, user, role)
+g, producer-analyst, analyst
+g, producer-soc, operator
+g, producer-admin, administrator
+g, admin, administrator
+
+# Network Security Analyst permissions
+p, analyst, allow, ip_addr:*, firewall-*
+p, analyst, deny, ip_addr:*, firewall-*
+p, analyst, query, ip_addr:*, *
+p, analyst, scan, ip_addr:*, scanner-*
+p, analyst, query, features:*, slpf
+
+
+# Operator permissions
+p, operator, allow, ip_addr:*, firewall-*
+p, operator, deny, ip_addr:*, firewall-*
+p, operator, deny, domain_name:*, firewall-*
+p, operator, block, ip_addr:*, firewall-*
+
+# Administrator permissions (full access)
+p, administrator, query, features:versions, slpf
+
+
+# External user permissions (very limited)
+p, external_user, query, public:*, *
+
+
