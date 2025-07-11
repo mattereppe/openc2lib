@@ -5,7 +5,7 @@
 g, admin, administrator
 
 # Administrator permissions
-p, administrator, query, features: , slpf
+p, administrator, query, features:* , slpf
 
 
 

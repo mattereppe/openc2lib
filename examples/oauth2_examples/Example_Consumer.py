@@ -35,7 +35,7 @@ def main():
         actuators=actuators,
         encoder=JSONEncoder(),
         transfer=HTTPTransfer("127.0.0.1", 8080),
-        ua_url='http://127.0.0.1:7000/'
+        ua_url='http://127.0.0.1:7000'
     )
 
     logger.info("OAuth2Consumer initialized successfully")

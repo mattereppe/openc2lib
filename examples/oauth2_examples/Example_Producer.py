@@ -50,13 +50,9 @@ def main():
             actuator=actuator_profile
         )
 
-        logger.info("Sending OpenC2 command: %s", cmd)
-
         response = producer.sendcmd(cmd)
-        logger.info("Received OpenC2 response: %s", response)
 
         if producer.is_authenticated():
-            logger.info("Producer successfully authenticated with OAuth2")
             token_info = producer.get_token_info()
             logger.info("Token info: %s", token_info)
         else:

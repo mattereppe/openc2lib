@@ -195,7 +195,7 @@ class OAuth2Consumer(Consumer):
                 status_text="Token validation error"
             )
 
-    def create_error_message(self, original_msg):
+    def create_error_message(self):
         """
         Create an OAuth2 unauthorized error message with authentication endpoint info
         """

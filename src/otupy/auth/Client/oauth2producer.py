@@ -32,18 +32,13 @@ class OAuth2AuthManager:
         self.flask_app = None
         self.flask_thread = None
         self.as_url = None
+        self.ua_url = None
         self.logger = logging.getLogger('oauth2_auth')
 
     def setup_flask_app(self):
         """Configure Flask server to receive redirect"""
         if self.flask_app is None:
             self.flask_app = Flask(__name__)
-
-            @self.flask_app.route('/error')
-            def error():
-                self.logger.error('User NOT authorized')
-                self.auth_response_queue.put("ERROR")
-                return 'OK', 200
 
             @self.flask_app.route('/callback')
             def callback():
@@ -56,9 +51,6 @@ class OAuth2AuthManager:
         token_url = f"{self.as_url}/oauth/token"
         auth_response = self.auth_response_queue.get()
         try:
-            if auth_response == "ERROR":
-                raise PermissionError("User denied authorization")
-
             self.token = self.client.fetch_token(token_url,
                                                  authorization_response=auth_response)
             self.logger.info("Token obtained successfully")
@@ -68,10 +60,9 @@ class OAuth2AuthManager:
             self.logger.error(f"Error fetching the token: {e}")
             raise
 
-    def authenticate(self, ua_url,command):
-        """Starts the OAuth2 authentication process"""
+    def authorize(self,ua_url,command):
+        """Authorize user based on cammand"""
         try:
-            # print(command)
             action=command.action.name if hasattr(command.action, 'name') else str(command.action)
             target_type = command.target.choice
             target = [f"{target_type}.{t.name}" for t in command.target.obj]
@@ -81,6 +72,21 @@ class OAuth2AuthManager:
                 "target": target,
                 "actuator": actuator
             }
+            payload = {"command": command_dict}
+            ua_auth = f"{ua_url}/authorize"
+            response = requests.post(ua_auth, json=payload)
+            if response.status_code == 200 and response.json() is True:
+                self.logger.info('Authorized to send command')
+                return True
+            return False
+
+        except Exception as e:
+            self.logger.error(f"Error authorizing user: {e}")
+
+    def authenticate(self, ua_url):
+        """Starts the OAuth2 authentication process"""
+        try:
+            self.ua_url=ua_url
             response = requests.get(f"{ua_url}/as_url")
             if response.status_code != 200:
                 raise Exception(f"Error fetching AS Url: {response.status_code}")
@@ -94,8 +100,8 @@ class OAuth2AuthManager:
                 as_auth_url, request=None
             )
             authorization_url = authorization_url.replace("https://", "http://")
-            payload = {"url": authorization_url, "command": command_dict}
-            ua_auth = f"{ua_url}/auth"
+            payload = {"url": authorization_url}
+            ua_auth = f"{ua_url}/authenticate"
             response = requests.post(ua_auth, json=payload)
 
             if response.status_code != 401:
@@ -141,21 +147,26 @@ class OAuth2AuthManager:
         return time.time() < expires_at
 
     def save_token_to_file(self):
-        path=self.token_path
+        path = self.token_path
         if self.token:
             try:
+                token_to_save = self.token.copy()
+                if self.as_url:
+                    token_to_save["ua_endpoint"] = self.ua_url
                 with open(path, 'w') as f:
-                    json.dump(self.token, f)
+                    json.dump(token_to_save, f)
                 self.logger.info("Token saved on file")
             except Exception as e:
                 self.logger.error(f"Error saving token: {e}")
 
     def load_token_from_file(self):
-        path=self.token_path
+        path = self.token_path
         if os.path.exists(path):
             try:
                 with open(path, 'r') as f:
-                    self.token = json.load(f)
+                    loaded = json.load(f)
+                self.token = {k: v for k, v in loaded.items() if k != "ua_endpoint"}
+                self.ua_url = loaded.get("ua_endpoint")
                 self.logger.info("Token loaded from file")
                 return self.token
             except Exception as e:
@@ -182,7 +193,7 @@ class OAuth2Producer(Producer):
             raise ValueError("Authentication endpoint not specified")
 
         self.logger.info(f"Starting OAuth2 authentication with endpoint: {endpoint}")
-        token = self.oauth2_manager.authenticate(endpoint,command)
+        token = self.oauth2_manager.authenticate(endpoint)
         self.logger.info("Authentication completed")
         return token
 
@@ -203,16 +214,23 @@ class OAuth2Producer(Producer):
 
         target_consumers = consumers or [self.consumer_url]
 
-        if not self.oauth2_manager.token or not self.oauth2_manager.is_token_valid():
+        #if there is not token or is not valid or ua_url is not present: load token from file
+        if not self.oauth2_manager.token or not self.oauth2_manager.is_token_valid() or self.oauth2_manager.ua_url is not None:
             self.logger.info("Trying to load token from file")
             self.oauth2_manager.load_token_from_file()
 
+        # If token && valid && ua_url is present: authorize and send
+        if self.oauth2_manager.token and self.oauth2_manager.is_token_valid() and self.oauth2_manager.ua_url is not None:
+            if not self.oauth2_manager.authorize(self.oauth2_manager.ua_url, cmd):
+                self.logger.error("Command not authorized by UA")
+                raise PermissionError("Command not authorized by UA")
+            msg = Message(cmd, from_=self.producer, to=target_consumers)
+            return transfer.send(msg, encoder, token=self.oauth2_manager.token)
+
+        # If not: send without token, 401, authenticate and authorize
         try:
             msg = Message(cmd, from_=self.producer, to=target_consumers)
-
-            # First request without token
-            token = self.oauth2_manager.token  #can be None
-            return transfer.send(msg, encoder, token=token)
+            return transfer.send(msg, encoder, token=None)
 
         except PermissionError as e:
             self.logger.error(f"401 Response. Starting authentication process {e}")
@@ -223,9 +241,13 @@ class OAuth2Producer(Producer):
                 raise ValueError("Error fetching endpoint url")
 
             try:
-                self.authenticate(endpoint=auth_endpoint,command=cmd)
+                self.authenticate(endpoint=auth_endpoint, command=cmd)
 
-                # Retry sending of the message
+                # Authorization before sending command
+                if not self.oauth2_manager.authorize(auth_endpoint, cmd):
+                    self.logger.error("Command not authorized by UA")
+                    raise PermissionError("Command not authorized by UA")
+
                 token = self.oauth2_manager.token
                 msg = Message(cmd, from_=self.producer, to=target_consumers)
                 return transfer.send(msg, encoder, token=token)
@@ -233,6 +255,7 @@ class OAuth2Producer(Producer):
             except Exception as auth_exc:
                 self.logger.error(f"Authentication failed {auth_exc}")
                 raise auth_exc
+
         except Exception as e:
             self.logger.error(f"Error sending the command {e}")
             raise e

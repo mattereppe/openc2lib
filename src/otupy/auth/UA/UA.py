@@ -45,7 +45,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-def auth_flow(url, command):
+def auth_flow(url):
     session = requests.Session()
     try:
         response = session.get(url)
@@ -63,55 +63,12 @@ def auth_flow(url, command):
                 login_response = session.post(as_authorize_url, json=login_payload)
 
                 if login_response.status_code == 200:
-                    # Authorization check
-                    is_allowed = True
-
-                    for target in command.get('target', []):
-                        try:
-                            result = auth_agent.is_authorized(
-                                user=CONFIG_USERNAME,
-                                action=command['action'],
-                                target=target,
-                                actuator=command['actuator']
-                            )
-                            logger.info(
-                                f"[AUTH CHECK] user={CONFIG_USERNAME}, action={command['action']}, "
-                                f"target={target}, actuator={command['actuator']} => {'✅ ALLOWED' if result else '❌ DENIED'}"
-                            )
-                            if not result:
-                                is_allowed = False
-                        except AuthorizationError as e:
-                            logger.error(f"[AUTH ERROR] Failed to check auth for target={target}: {e}")
-                            is_allowed = False
-
-                    if is_allowed:
-                        logger.info(f"User {CONFIG_USERNAME} is authorized.")
-                    else:
-                        logger.warning(f"User {CONFIG_USERNAME} is NOT authorized.")
-
                     # Retry the original request
                     response = session.get(url)
-
                     if response.status_code == 200:
                         try:
                             data = response.json()
                             location = data.get('Location')
-
-                            if not is_allowed and location:
-                                try:
-                                    parsed = urlparse(location)
-                                    scheme = parsed.scheme
-                                    host = parsed.hostname
-                                    port = parsed.port
-
-                                    error_url = f"{scheme}://{host}:{port}/error"
-                                    logger.warning(f"User not authorized. Redirecting to: {error_url}")
-                                    rsp = requests.get(error_url)
-                                    return
-
-                                except Exception as e:
-                                    logger.exception(f"Error constructing error URL from location '{location}': {str(e)}")
-
                             if location:
                                 logger.info(f"Redirecting to location: {location}")
                                 try:
@@ -149,7 +106,34 @@ def auth_flow(url, command):
         logger.exception(f"Unexpected error in auth_flow: {e}")
 
 
-@app.route('/auth', methods=['POST'])
+@app.route('/authorize', methods=['POST'])
+def authorize():
+    data=request.get_json()
+    command = data['command']
+    is_allowed = True
+
+    for target in command.get('target', []):
+        try:
+            result = auth_agent.is_authorized(
+                user=CONFIG_USERNAME,
+                action=command['action'],
+                target=target,
+                actuator=command['actuator']
+            )
+            logger.info(
+                f"[AUTH CHECK] user={CONFIG_USERNAME}, action={command['action']}, "
+                f"target={target}, actuator={command['actuator']} => {'✅ ALLOWED' if result else '❌ DENIED'}"
+            )
+            if not result:
+                is_allowed = False
+        except AuthorizationError as e:
+            logger.error(f"[AUTH ERROR] Failed to check auth for target={target}: {e}")
+            is_allowed = False
+    return jsonify(is_allowed), 200
+
+
+
+@app.route('/authenticate', methods=['POST'])
 def auth():
     data = request.get_json()
 
@@ -157,9 +141,7 @@ def auth():
         return jsonify({'error': 'Missing URL'}), 400
 
     url = data['url']
-    command=data['command']
-    print(command)
-    threading.Thread(target=auth_flow, args=(url,command,)).start()
+    threading.Thread(target=auth_flow, args=(url,)).start()
     return jsonify({'status': 'OK'}), 200
 
 
