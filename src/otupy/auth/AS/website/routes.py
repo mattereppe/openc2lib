@@ -81,7 +81,6 @@ def home():
 
         user = User.query.filter_by(username=username).first()
         if not user or not user.check_password(password):
-            print('cred invalide')
             return jsonify({'error': 'Invalid credentials'}), 401
 
         session['id'] = user.id
@@ -157,7 +156,6 @@ def authorize():
     if request.method == 'GET':
         try:
             grant = authorization.get_consent_grant(end_user=user)
-            # print(grant)
         except OAuth2Error as error:
             print(error)
             return error.error
@@ -167,10 +165,6 @@ def authorize():
         user = User.query.filter_by(username=username).first()
         print(user)
     confirmed = True
-    # confirmed = (
-    # (request.form.get('confirm') == 'on') or
-    # (request.json and request.json.get('confirm') in ['true', 'yes', True]))
-    # print(confirmed)
 
     if confirmed:
         grant_user = user
@@ -199,9 +193,6 @@ def issue_token():
 def introspect_token():
     response = authorization.create_endpoint_response('introspection')
 
-    # print("Status code:", response.status_code)
-    # print("Headers:", response.headers)
-    # print("Body:", response.get_data(as_text=True))
     return response
 
 @bp.route('/oauth/revoke', methods=['POST'])
