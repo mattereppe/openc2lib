@@ -12,14 +12,6 @@ from openc2lib.profiles.slpf.data import DropProcess
 
 logger = logging.getLogger(__name__)
 
-OPENC2VERS=Version(1,0)
-""" Supported OpenC2 Version """
-
-MY_IDS = {'hostname': None,
-            'named_group': None,
-            'asset_id': None,
-            'asset_tuple': None }
-
 class SLPFActuator_iptables(SLPFActuator):
     """ `iptables-based` SLPF Actuator implementation.
 
@@ -70,11 +62,6 @@ class SLPFActuator_iptables(SLPFActuator):
         """
 
         if os.environ.get("WERKZEUG_RUN_MAIN") == "true":
-            MY_IDS['hostname'] = hostname
-            MY_IDS['named_group'] = named_group
-            MY_IDS['asset_id'] = asset_id
-            MY_IDS['asset_tuple'] = asset_tuple
-
             self.iptables_input_chain_name = iptables_input_chain_name if iptables_input_chain_name else "INPUT_OC2"
             self.iptables_output_chain_name = iptables_output_chain_name if iptables_output_chain_name else "OUTPUT_OC2"
             self.iptables_forward_chain_name = iptables_forward_chain_name if iptables_forward_chain_name else "FORWARD_OC2"
