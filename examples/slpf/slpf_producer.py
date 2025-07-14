@@ -84,7 +84,7 @@ def main():
 
     # Actions
     # (query)
-    cmd = oc2.Command(oc2.Actions.query, oc2.Features([oc2.Feature.versions, oc2.Feature.profiles, oc2.Feature.pairs]), arg, actuator=pf)
+#    cmd = oc2.Command(oc2.Actions.query, oc2.Features([oc2.Feature.versions, oc2.Feature.profiles, oc2.Feature.pairs]), arg, actuator=pf)
 
 #   ----------------------------------------------------------   
 
@@ -95,7 +95,7 @@ def main():
 #    cmd = oc2.Command(oc2.Actions.allow, oc2.IPv6Net("2001:0db8:85a3::/48"), arg, actuator=pf)
 
     # (allow IPv4Connection)
-#    cmd = oc2.Command(oc2.Actions.allow, oc2.IPv4Connection(src_addr=oc2.IPv4Net("172.19.0.1")), arg, actuator=pf)
+    cmd = oc2.Command(oc2.Actions.allow, oc2.IPv4Connection(src_addr=oc2.IPv4Net("172.19.0.1")), arg, actuator=pf)
 #    cmd = oc2.Command(oc2.Actions.allow, oc2.IPv4Connection(dst_addr=oc2.IPv4Net("172.19.0.1")), arg, actuator=pf)
 #    cmd = oc2.Command(oc2.Actions.allow, oc2.IPv4Connection(protocol=oc2.L4Protocol.tcp), arg, actuator=pf)
 #    cmd = oc2.Command(oc2.Actions.allow, oc2.IPv4Connection(protocol=oc2.L4Protocol.tcp, src_port=oc2.Port(8080)), arg, actuator=pf)
@@ -152,7 +152,7 @@ def main():
 
     # (Delete)
 
-#    cmd = oc2.Command(oc2.Actions.delete, slpf.RuleID(1), arg, actuator=pf)
+    cmd = oc2.Command(oc2.Actions.delete, slpf.RuleID(1), arg, actuator=pf)
 
 #   ----------------------------------------------------------
 

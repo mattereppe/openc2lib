@@ -1,15 +1,11 @@
 apiVersion: v1
+kind: List
 items:
 - apiVersion: networking.k8s.io/v1
   kind: NetworkPolicy
   metadata:
-    creationTimestamp: "2025-07-02T16:59:02Z"
-    generateName: network-policy-
-    generation: 1
     name: network-policy-9j42x
     namespace: my5gtestbed
-    resourceVersion: "58391805"
-    uid: e31d1812-5bda-4290-9a81-07fe44e57083
   spec:
     egress:
     - ports:
@@ -25,13 +21,8 @@ items:
 - apiVersion: networking.k8s.io/v1
   kind: NetworkPolicy
   metadata:
-    creationTimestamp: "2025-07-02T16:59:16Z"
-    generateName: network-policy-
-    generation: 1
     name: network-policy-fnnxh
     namespace: my5gtestbed
-    resourceVersion: "58391827"
-    uid: 18c0086f-00ec-47fc-aeb3-ddf40ba6a02a
   spec:
     egress:
     - ports:
@@ -50,13 +41,8 @@ items:
 - apiVersion: networking.k8s.io/v1
   kind: NetworkPolicy
   metadata:
-    creationTimestamp: "2025-07-02T16:58:49Z"
-    generateName: network-policy-
-    generation: 1
     name: network-policy-jbdw7
     namespace: my5gtestbed
-    resourceVersion: "58391785"
-    uid: 6d4f2d49-fe3f-41e7-8caf-71dad95e0d25
   spec:
     ingress:
     - from:
@@ -70,13 +56,8 @@ items:
 - apiVersion: networking.k8s.io/v1
   kind: NetworkPolicy
   metadata:
-    creationTimestamp: "2025-07-02T16:58:09Z"
-    generateName: network-policy-
-    generation: 1
     name: network-policy-jsjq6
     namespace: my5gtestbed
-    resourceVersion: "58391713"
-    uid: 43954450-e593-4df2-8414-b3988837ec08
   spec:
     egress:
     - ports:
@@ -88,13 +69,8 @@ items:
 - apiVersion: networking.k8s.io/v1
   kind: NetworkPolicy
   metadata:
-    creationTimestamp: "2025-07-02T16:57:44Z"
-    generateName: network-policy-
-    generation: 1
     name: network-policy-lbjsq
     namespace: my5gtestbed
-    resourceVersion: "58391675"
-    uid: 19e173f0-8863-404c-872a-0fd36f8be6d3
   spec:
     ingress:
     - from:
@@ -104,6 +80,3 @@ items:
     policyTypes:
     - Ingress
   status: {}
-kind: List
-metadata:
-  resourceVersion: ""

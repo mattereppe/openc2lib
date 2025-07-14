@@ -45,7 +45,7 @@ class SLPFActuator:
         file = 'File'
         db = 'Database'
 
-    def __init__(self,hostname, named_group, asset_id, asset_tuple, db_path, db_name, db_commands_table_name, db_jobs_table_name, update_path=None):
+    def __init__(self,hostname=None, named_group=None, asset_id=None, asset_tuple=None, db_directory_path=None, db_name=None, db_commands_table_name=None, db_jobs_table_name=None, update_directory_path=None):
         """ Initialization of the `SLPF Actuator`.
 
             This method initializes a `sqlite3` database to store `allow` and `deny` OpenC2 commands as well as `APScheduler jobs` (for non executed scheduled commands in case of SLPF Actuator `shutdown`),  
@@ -61,8 +61,8 @@ class SLPFActuator:
             :type asset_id: str
             :param asset_tuple: SLPF Actuator asset tuple.
             :type asset_tuple: str
-            :param db_path: sqlite3 database path.
-            :type db_path: str
+            :param db_directory_path: sqlite3 database directory path.
+            :type db_directory_path: str
             :param db_name: sqlite3 database name.
             :type db_name: str
             :param db_commands_table_name: Name of the `commands` table in the sqlite3 database.
@@ -71,8 +71,8 @@ class SLPFActuator:
             :type db_jobs_table_name: str
             :param misfire_grace_time: Seconds after the designated runtime that the `APScheduler job` is still allowed to be run, because of a `shutdown`.
             :type misfire_grace_time: int
-            :param update_path: Path to update rule files.
-            :type update_path: str
+            :param update_directory_path: Path to the directory containing files to be used as update.
+            :type update_directory_path: str
         """
         
         # Needed in development phase
@@ -88,16 +88,18 @@ class SLPFActuator:
 
             try:
             #   Path where update files are stored
-                self.update_path = update_path if update_path else os.path.dirname(os.path.abspath(__file__))
+                self.update_directory_path = update_directory_path if update_directory_path else os.path.dirname(os.path.abspath(__file__))
+                if not os.path.exists(self.update_directory_path):
+                    raise ValueError("Update directory path does not exists")
             #   Initializing database
                 logger.info(self.tag + " Initializing database")
-                self.db_path = db_path if db_path else os.path.dirname(os.path.abspath(__file__))
+                self.db_directory_path = db_directory_path if db_directory_path else os.path.dirname(os.path.abspath(__file__))
                 self.db_name = db_name if db_name else "slpf_commands.sqlite"
-                if not os.path.exists(self.db_path):
-                    raise
+                if not os.path.exists(self.db_directory_path):
+                    raise ValueError("Database directory path does not exists")
                 self.db_commands_table_name = db_commands_table_name if db_commands_table_name else "iptables_commands"
                 self.db_jobs_table_name = db_jobs_table_name if db_jobs_table_name else "iptables_jobs"         
-                self.db = SQLDatabase(os.path.join(self.db_path, self.db_name), self.db_commands_table_name, self.db_jobs_table_name)
+                self.db = SQLDatabase(os.path.join(self.db_directory_path, self.db_name), self.db_commands_table_name, self.db_jobs_table_name)
             #   Checking SLPF Mode
                 self.mode = SLPFActuator.Mode.file if self.db.is_empty() else SLPFActuator.Mode.db
                 logger.info(self.tag + " " + self.mode.value + " mode")
@@ -651,7 +653,7 @@ class SLPFActuator:
             
             if 'path' in target and type(target['path']) != str: 
                 raise TypeError("Invalid update argument type")
-            path = target['path'] if 'path' in target else self.update_path
+            path = target['path'] if 'path' in target else self.update_directory_path
             abs_path = os.path.join(path, target['name'])
             if not os.path.exists(abs_path):
                 raise ValueError(StatusCode.INTERNALERROR, "Cannot access file")

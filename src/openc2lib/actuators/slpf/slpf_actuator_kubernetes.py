@@ -2,7 +2,7 @@ import logging
 import os
 import subprocess
 
-from kubernetes import config, client
+from kubernetes import config, client, utils
 from kubernetes.client.rest import ApiException
 
 from openc2lib.actuators.slpf.slpf_actuator import SLPFActuator
@@ -19,7 +19,7 @@ class SLPFActuator_kubernetes(SLPFActuator):
         This class provides an implementation of the `SLPF Actuator` using Kubernetes.
     """
 
-    def __init__(self, config_file, kube_context, namespace, generate_name, hostname, named_group, asset_id, asset_tuple, db_path, db_name, db_commands_table_name, db_jobs_table_name, update_path):
+    def __init__(self, config_file=None, kube_context=None, namespace=None, generate_name=None, hostname=None, named_group=None, asset_id=None, asset_tuple=None, db_directory_path=None, db_name=None, db_commands_table_name=None, db_jobs_table_name=None, update_directory_path=None):
         """ Initialization of the `Kubernetes-based` SLPF Actuator.
 
             This method connects to Kubernetes and initializes the `SLPF Actuator`.
@@ -40,16 +40,16 @@ class SLPFActuator_kubernetes(SLPFActuator):
             :type asset_id: str
             :param asset_tuple: SLPF Actuator asset tuple.
             :type asset_tuple: str
-            :param db_path: sqlite3 database path.
-            :type db_path: str
+            :param db_directory_path: sqlite3 database directory path.
+            :type db_directory_path: str
             :param db_name: sqlite3 database name.
             :type db_name: str
             :param db_commands_table_name: Name of the `commands` table in the sqlite3 database.
             :type db_commands_table_name: str
             :param db_jobs_table_name: Name of the `APScheduler jobs` table in the sqlite3 database.
             :type db_jobs_table_name: str
-            :param update_path: Path to the directory containing the files to be used as update.
-            :type update_path: str
+            :param update_directory_path: Path to the directory containing files to be used as update.
+            :type update_directory_path: str
         """
         try:
             if os.environ.get("WERKZEUG_RUN_MAIN") == "true":
@@ -74,11 +74,11 @@ class SLPFActuator_kubernetes(SLPFActuator):
                                  named_group=named_group,
                                  asset_id=asset_id,
                                  asset_tuple=asset_tuple,
-                                 db_path=db_path,
+                                 db_directory_path=db_directory_path,
                                  db_name=db_name,
                                  db_commands_table_name=db_commands_table_name,
                                  db_jobs_table_name=db_jobs_table_name,
-                                 update_path=update_path)
+                                 update_directory_path=update_directory_path)
         except Exception as e:
             logger.info("[KUBERNETES] Initialization error: %s", str(e))
             raise e
@@ -94,7 +94,8 @@ class SLPFActuator_kubernetes(SLPFActuator):
             # Load the kubeconfig file (by default it loads from ~/.kube/config) and context
             config.load_kube_config(config_file=self.config_file, context=self.kube_context)
             # Create an API client
-            self.api_client = client.NetworkingV1Api()
+            self.networking_api = client.NetworkingV1Api()
+            self.api_client = client.ApiClient()
             logger.info("[KUBERNETES] Connection executed successfully")
         except Exception as e:
             logger.info("[KUBERNETES] Connection failed.")
@@ -224,7 +225,7 @@ class SLPFActuator_kubernetes(SLPFActuator):
                 )
             )
 
-            self.api_client.create_namespaced_network_policy(
+            self.networking_api.create_namespaced_network_policy(
                 namespace=self.namespace,
                 body=network_policy
             )    
@@ -239,7 +240,7 @@ class SLPFActuator_kubernetes(SLPFActuator):
             direction = command_to_delete.args['direction']
             policy_types = [direction.name.capitalize()] if direction != Direction.both else ["Ingress", "Egress"]
 
-            network_policies = self.api_client.list_namespaced_network_policy(namespace=self.namespace)
+            network_policies = self.networking_api.list_namespaced_network_policy(namespace=self.namespace)
             
             for policy in network_policies.items:
                 if set(policy.spec.policy_types) != set(policy_types):
@@ -278,7 +279,7 @@ class SLPFActuator_kubernetes(SLPFActuator):
                         continue
 
                 logger.info("[KUBERNETES] Deleting Kubernetes Network Policy " + policy.metadata.name)
-                self.api_client.delete_namespaced_network_policy(
+                self.networking_api.delete_namespaced_network_policy(
                     name=policy.metadata.name,
                     namespace=self.namespace,
                     body=client.V1DeleteOptions()
@@ -340,9 +341,9 @@ class SLPFActuator_kubernetes(SLPFActuator):
     def clean_actuator_rules(self):
         try:
             logger.info("[KUBERNETES] Deleting all Kubernetes network policy.")
-            network_policies = self.api_client.list_namespaced_network_policy(namespace=self.namespace)
+            network_policies = self.networking_api.list_namespaced_network_policy(namespace=self.namespace)
             for policy in network_policies.items:
-                self.api_client.delete_namespaced_network_policy(
+                self.networking_api.delete_namespaced_network_policy(
                     name=policy.metadata.name,
                     namespace=self.namespace,
                     body=client.V1DeleteOptions()
@@ -356,9 +357,8 @@ class SLPFActuator_kubernetes(SLPFActuator):
             self.clean_actuator_rules()
 
             abs_path = os.path.join(path, name)
-            cmd = "kubectl apply -f " + abs_path + " -n " + self.namespace
-            subprocess.run(cmd, shell=True, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        except subprocess.CalledProcessError as e:
-            raise e
+            utils.create_from_yaml(k8s_client=self.api_client,
+                                   yaml_file=abs_path,
+                                   namespace=self.namespace)
         except Exception as e:
             raise e

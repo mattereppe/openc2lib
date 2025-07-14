@@ -16,12 +16,12 @@ class SLPFActuator_openstack(SLPFActuator):
         This class provides an implementation of the `SLPF Actuator` using OpenStack.
     """
 
-    def __init__(self, file_environment_variables, security_group_id, hostname, named_group, asset_id, asset_tuple, db_path, db_name, db_commands_table_name, db_jobs_table_name):
+    def __init__(self, file_environment_variables, security_group_id, hostname=None, named_group=None, asset_id=None, asset_tuple=None, db_directory_path=None, db_name=None, db_commands_table_name=None, db_jobs_table_name=None):
         """ Initialization of the `OpenStack-based` SLPF Actuator.
 
             This method connects to OpenStack and initializes the `SLPF Actuator`.
 
-            :param file_environment_variables: Path to a file containing environment variables for connecting to OpenStack.
+            :param file_environment_variables: Absolute path of the file containing environment variables for connecting to OpenStack.
             :type file_environment_variables: str
             :param security_group_id: Id of the OpenStack security group to manage.
             :type security_group_id: str
@@ -33,8 +33,8 @@ class SLPFActuator_openstack(SLPFActuator):
             :type asset_id: str
             :param asset_tuple: SLPF Actuator asset tuple.
             :type asset_tuple: str
-            :param db_path: sqlite3 database path.
-            :type db_path: str
+            :param db_directory_path: sqlite3 database directory path.
+            :type db_directory_path: str
             :param db_name: sqlite3 database name.
             :type db_name: str
             :param db_commands_table_name: Name of the `commands` table in the sqlite3 database.
@@ -44,7 +44,11 @@ class SLPFActuator_openstack(SLPFActuator):
         """
         try:
             if os.environ.get("WERKZEUG_RUN_MAIN") == "true":
+                if not file_environment_variables:
+                    raise ValueError("Absolute path of evironment variables file must be provided.")
                 self.file_environment_variables = file_environment_variables
+                if not security_group_id:
+                    raise ValueError("Security group id must be provided.")
                 self.security_group_id = security_group_id
 
                 self.OPENC2VERS=Version(1,0)
@@ -62,7 +66,7 @@ class SLPFActuator_openstack(SLPFActuator):
                                  named_group=named_group,
                                  asset_id=asset_id,
                                  asset_tuple=asset_tuple,
-                                 db_path=db_path,
+                                 db_directory_path=db_directory_path,
                                  db_name=db_name,
                                  db_commands_table_name=db_commands_table_name,
                                  db_jobs_table_name=db_jobs_table_name)

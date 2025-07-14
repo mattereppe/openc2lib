@@ -26,15 +26,15 @@ class SLPFActuator_iptables(SLPFActuator):
         This class provides an implementation of the `SLPF Actuator` using iptables.
     """
 
-    def __init__(self, iptables_rules_files_path, iptables_rules_v4_filename, iptables_rules_v6_filename, iptables_input_chain_name, iptables_output_chain_name, iptables_forward_chain_name, iptables_cmd, ip6tables_cmd, hostname, named_group, asset_id, asset_tuple, db_path, db_name, db_commands_table_name, db_jobs_table_name, update_path):
+    def __init__(self, iptables_rules_directory_path=None, iptables_rules_v4_filename=None, iptables_rules_v6_filename=None, iptables_input_chain_name=None, iptables_output_chain_name=None, iptables_forward_chain_name=None, iptables_cmd=None, ip6tables_cmd=None, hostname=None, named_group=None, asset_id=None, asset_tuple=None, db_directory_path=None, db_name=None, db_commands_table_name=None, db_jobs_table_name=None, update_directory_path=None):
         """ Initialization of the `iptables-based` SLPF Actuator.
 
             This method creates `personalized iptables chain`, 
             creates two `file` to store iptables v4 and v6 persistent rules, respectively, 
             finally initializes the `SLPF Actuator`.
 
-            :param iptables_rules_files_path: Path to the directory containing the files where iptables rules v4/v6 are stored.
-            :type iptables_rules_files_path: str
+            :param iptables_rules_directory_path: Path to the directory containing the files where iptables rules v4/v6 are stored.
+            :type iptables_rules_directory_path: str
             :param iptables_rules_v4_filename: Name of the file where iptables rules v4 are stored.
             :type iptables_rules_v4_filename: str
             :param iptables_rules_v6_filename: Name of the file where iptables rules v6 are stored.
@@ -57,16 +57,16 @@ class SLPFActuator_iptables(SLPFActuator):
             :type asset_id: str
             :param asset_tuple: SLPF Actuator asset tuple.
             :type asset_tuple: str
-            :param db_path: sqlite3 database path.
-            :type db_path: str
+            :param db_directory_path: sqlite3 database directory path.
+            :type db_directory_path: str
             :param db_name: sqlite3 database name.
             :type db_name: str
             :param db_commands_table_name: Name of the `commands` table in the sqlite3 database.
             :type db_commands_table_name: str
             :param db_jobs_table_name: Name of the `APScheduler jobs` table in the sqlite3 database.
             :type db_jobs_table_name: str
-            :param update_path: Path to the directory containing the files to be used as update.
-            :type update_path: str
+            :param update_directory_path: Path to the directory containing files to be used as update.
+            :type update_directory_path: str
         """
 
         if os.environ.get("WERKZEUG_RUN_MAIN") == "true":
@@ -75,11 +75,11 @@ class SLPFActuator_iptables(SLPFActuator):
             MY_IDS['asset_id'] = asset_id
             MY_IDS['asset_tuple'] = asset_tuple
 
-            self.iptables_input_chain_name = iptables_input_chain_name
-            self.iptables_output_chain_name = iptables_output_chain_name
-            self.iptables_forward_chain_name = iptables_forward_chain_name
-            self.iptables_cmd = iptables_cmd
-            self.ip6tables_cmd = ip6tables_cmd
+            self.iptables_input_chain_name = iptables_input_chain_name if iptables_input_chain_name else "INPUT_OC2"
+            self.iptables_output_chain_name = iptables_output_chain_name if iptables_output_chain_name else "OUTPUT_OC2"
+            self.iptables_forward_chain_name = iptables_forward_chain_name if iptables_forward_chain_name else "FORWARD_OC2"
+            self.iptables_cmd = iptables_cmd if iptables_cmd else "sudo iptables"
+            self.ip6tables_cmd = ip6tables_cmd if ip6tables_cmd else "sudo ip6tables"
         
             try:
             #   Creating personalized iptables/ip6tables chains and linking them with iptables/ip6tables chains
@@ -110,21 +110,27 @@ class SLPFActuator_iptables(SLPFActuator):
 
             #   Path for iptables/ip6tables files
             #   These files are used by iptables/ip6tables-save and iptables/ip6tables-restore commands
-                self.iptables_rules_files_path = iptables_rules_files_path if iptables_rules_files_path else os.path.dirname(os.path.abspath(__file__))
-                if not os.path.exists(self.iptables_rules_files_path):
-                    raise
+                self.iptables_rules_directory_path = iptables_rules_directory_path if iptables_rules_directory_path else os.path.dirname(os.path.abspath(__file__))
+                if not os.path.exists(self.iptables_rules_directory_path):
+                    raise ValueError("Iptables rules files path does not exists")
         
             #   Creating the files
                 self.iptables_rules_v4_filename = iptables_rules_v4_filename if iptables_rules_v4_filename else "iptables_rules.v4"
-                if not os.path.exists(os.path.join(self.iptables_rules_files_path, self.iptables_rules_v4_filename)):
+                ext = os.path.splitext(self.iptables_rules_v4_filename)[1] 
+                if ext != '.v4':
+                    raise ValueError("Iptables rules v4 file must have a .v4 extension")
+                if not os.path.exists(os.path.join(self.iptables_rules_directory_path, self.iptables_rules_v4_filename)):
                     logger.info("[IPTABLES] Creating file %s", self.iptables_rules_v4_filename)
-                    with open(os.path.join(self.iptables_rules_files_path, self.iptables_rules_v4_filename), "w") as file:
+                    with open(os.path.join(self.iptables_rules_directory_path, self.iptables_rules_v4_filename), "w") as file:
                         file.write("")
                     
                 self.iptables_rules_v6_filename = iptables_rules_v6_filename if iptables_rules_v6_filename else "iptables_rules.v6"
-                if not os.path.exists(os.path.join(self.iptables_rules_files_path, self.iptables_rules_v6_filename)):
+                ext = os.path.splitext(self.iptables_rules_v6_filename)[1] 
+                if ext != '.v6':
+                    raise ValueError("Iptables rules v6 file must have a .v6 extension")
+                if not os.path.exists(os.path.join(self.iptables_rules_directory_path, self.iptables_rules_v6_filename)):
                     logger.info("[IPTABLES] Creating file %s", self.iptables_rules_v6_filename)
-                    with open(os.path.join(self.iptables_rules_files_path, self.iptables_rules_v6_filename), "w") as file:
+                    with open(os.path.join(self.iptables_rules_directory_path, self.iptables_rules_v6_filename), "w") as file:
                         file.write("")
 
             #   Initializing SLPF Actuator
@@ -132,11 +138,11 @@ class SLPFActuator_iptables(SLPFActuator):
                                  named_group=named_group,
                                  asset_id=asset_id,
                                  asset_tuple=asset_tuple,
-                                 db_path=db_path,
+                                 db_directory_path=db_directory_path,
                                  db_name=db_name,
                                  db_commands_table_name=db_commands_table_name,
                                  db_jobs_table_name=db_jobs_table_name,
-                                 update_path=update_path)
+                                 update_directory_path=update_directory_path)
             except Exception as e:
                 logger.info("[IPTABLES] Initialization error: %s", str(e))
                 raise e
@@ -430,9 +436,9 @@ class SLPFActuator_iptables(SLPFActuator):
     def save_persistent_commands(self):
         try:
             logger.info("[IPTABLES] Saving iptables persistent commands")
-            cmd = self.iptables_cmd + "-save > " + os.path.join(self.iptables_rules_files_path, self.iptables_rules_v4_filename)
+            cmd = self.iptables_cmd + "-save > " + os.path.join(self.iptables_rules_directory_path, self.iptables_rules_v4_filename)
             self.iptables_execute_command(cmd)
-            cmd = self.ip6tables_cmd + "-save > " + os.path.join(self.iptables_rules_files_path, self.iptables_rules_v6_filename)
+            cmd = self.ip6tables_cmd + "-save > " + os.path.join(self.iptables_rules_directory_path, self.iptables_rules_v6_filename)
             self.iptables_execute_command(cmd)
         except Exception as e:
             logger.info("[IPTABLES] An error occurred saving iptables rules: %s", str(e))
@@ -442,9 +448,9 @@ class SLPFActuator_iptables(SLPFActuator):
     def restore_persistent_commands(self):
         try:
             logger.info("[IPTABLES] Restoring iptables persistent commands")
-            cmd = self.iptables_cmd + "-restore < " + os.path.join(self.iptables_rules_files_path, self.iptables_rules_v4_filename)
+            cmd = self.iptables_cmd + "-restore < " + os.path.join(self.iptables_rules_directory_path, self.iptables_rules_v4_filename)
             self.iptables_execute_command(cmd)
-            cmd = self.ip6tables_cmd + "-restore < " + os.path.join(self.iptables_rules_files_path, self.iptables_rules_v6_filename)
+            cmd = self.ip6tables_cmd + "-restore < " + os.path.join(self.iptables_rules_directory_path, self.iptables_rules_v6_filename)
             self.iptables_execute_command(cmd)
         except Exception as e:
             logger.info("[IPTABLES] An error occurred restoring iptables rules: %s", str(e))
@@ -478,9 +484,9 @@ class SLPFActuator_iptables(SLPFActuator):
             ext = os.path.splitext(name)[1]
 
             if ext == '.v4':
-                destination = os.path.join(self.iptables_rules_files_path, self.iptables_rules_v4_filename)
+                destination = os.path.join(self.iptables_rules_directory_path, self.iptables_rules_v4_filename)
             elif ext == '.v6':
-                destination = os.path.join(self.iptables_rules_files_path, self.iptables_rules_v6_filename)
+                destination = os.path.join(self.iptables_rules_directory_path, self.iptables_rules_v6_filename)
 
             with open(abs_path, "r") as src, open(destination, "w") as dst:
                 dst.write(src.read())
