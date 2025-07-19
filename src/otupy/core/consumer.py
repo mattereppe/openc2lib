@@ -5,7 +5,9 @@ to the Actuators.
 """
 
 import logging
+from typing import Optional, Tuple, Dict
 
+from otupy.auth.Authorizer import Authorizer
 from otupy.types.data import DateTime, ResponseType
 
 from otupy.core.encoder import Encoder
@@ -33,7 +35,7 @@ class Consumer:
 		(e.g., to answer Messages that the Consumer does not understand).
 		
 	"""
-	def __init__(self, consumer: str, actuators: [] =None, encoder: Encoder = None, transfer: Transfer = None):
+	def __init__(self, consumer: str, actuators: [] =None, encoder: Encoder = None, transfer: Transfer = None, authorizer: Authorizer = None):
 		""" Create a `Consumer`
 			:param consumer: This is a string that identifies the `Consumer` and is used in `from` 
 				and `to` fields of the OpenC2 `Message` (see Table 3.1 of the Language Specification.
@@ -46,8 +48,10 @@ class Consumer:
 		self.encoder = encoder
 		self.transfer = transfer
 		self.actuators = actuators
+		self.authorizer = authorizer
+		self.auth_info = None  # Store current token for __runcmd
 
-		# TODO: Read configuration from file
+	# TODO: Read configuration from file
 
 	# TODO: Manage non-blocking implementation of the Transfer.receive() function
 	def run(self, encoder: Encoder = None, transfer: Transfer = None):
@@ -72,7 +76,7 @@ class Consumer:
 		transfer.receive(self.dispatch, self.encoder)
 
 
-	def dispatch(self, msg):
+	def dispatch(self, msg,auth_info: Optional[str] = None):
 		""" Dispatches Commands to Actuators
 
 			This method scans the actuator profile carried in the `Command` and select one or more
@@ -100,6 +104,7 @@ class Consumer:
 		# recipient. If Profile is omitted and the recipient supports multiple profiles, 
 		# the command will be executed in the context of each profile that supports the 
 		# command's combination of action and target.
+		self.auth_info = auth_info
 		try:
 			profile = msg.content.actuator.getName()
 		except AttributeError:
@@ -164,8 +169,18 @@ class Consumer:
 		# Run the command and collect the response
 		# TODO: Define how to manage concurrent execution from more than one actuator
 		try:
-			# TODO: How to merge multiple responses?
-			# for a in actuators.items(): 
+			if self.authorizer is not None:
+				is_valid, token_info, error_response = self.authorizer.validate_auth_info(self.auth_info)
+				if not is_valid:
+					return error_response
+
+				is_authorized=self.authorizer.authorize(msg)
+				if not is_authorized:
+					logger.warning("Authorization denied for the given command")
+					return Response(
+						status=StatusCode.FORBIDDEN,
+						status_text="Not authorized to execute this command"
+					)
 			logger.info("Dispatching command to: %s", actuator[0])
 			response_content = actuator[0].run(msg.content) 
 		except (IndexError,AttributeError):
@@ -190,6 +205,8 @@ class Consumer:
 			print(e)
 
 		return respmsg
+
+
 
 
 # TODO: Add main to load configuration from file

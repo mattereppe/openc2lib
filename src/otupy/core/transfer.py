@@ -9,13 +9,14 @@ class Transfer:
 		This is the base class for all implementation of Transfer protocols.
 	"""
 
-	def send(self, msg, encoder,token):
+	def send(self, msg, encoder, auth_info=None):
 		""" Sends a Message
 
 			Encodes, sends a message, and returns the response.
 
 			:arg msg: an otupy `Message` to send
-			:arg encoder: the `Encoder` to be used 
+			:arg encoder: the `Encoder` to be used
+			:arg auth_info
 			:return: An otupy `Message` that contains the `Response` to the sent Message.
 		"""
 		pass
@@ -28,7 +29,7 @@ class Transfer:
 
 			:arg callback: the `Consumer.dispatch` function that contains the logic to dispatch a `Message`
 				to one or more `Actuator`
-			:arg encode: the default `Encoder` instance to encode/decode Messages. Implementations might
+			:arg encoder: the default `Encoder` instance to encode/decode Messages. Implementations might
 				use the information carried within OpenC2 Messages to derive the `Encoder` instance 
 				(retrieved from the `Encoders` variable.
 			:return: None

@@ -1,13 +1,10 @@
 from flask import Flask, request, jsonify
-import requests
 import sys
 import threading
 import logging
 import os
 from dotenv import load_dotenv
-from otupy.auth.UA.casbin.AuthAgent import AuthorizationAgent, AuthorizationError
-from urllib.parse import urlparse
-
+from examples.oauth2_examples.UA.casbin.AuthAgent import AuthorizationAgent, AuthorizationError
 
 # Load environment variables from .env
 load_dotenv()
@@ -23,8 +20,8 @@ as_authorize_url = 'http://127.0.0.1:9000/'
 # Credentials from environment variables
 CONFIG_USERNAME = os.getenv("USERNAME")
 CONFIG_PASSWORD = os.getenv("PASSWORD")
-MODEL_PATH="./casbin/model.conf"
-POLICY_PATH="./casbin/policy.csv"
+MODEL_PATH= "casbin/model.conf"
+POLICY_PATH= "casbin/policy.csv"
 
 
 if not CONFIG_USERNAME or not CONFIG_PASSWORD:
@@ -39,7 +36,6 @@ except AuthorizationError as e:
     logger.error(f"Failed to initialize AuthorizationAgent: {e}")
     sys.exit(1)
 
-from urllib.parse import urlparse
 import requests
 import logging
 

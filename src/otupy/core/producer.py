@@ -7,6 +7,8 @@ from otupy.core.message import Message
 from otupy.core.command import Command
 from otupy.core.encoder import Encoder
 from otupy.core.transfer import Transfer
+from otupy.auth.Authenticator import Authenticator
+import logging
 
 class Producer:
 	"""
@@ -21,7 +23,7 @@ class Producer:
 		 knows the profile of the actuator, which embeds the an identifier for the actual
 		 actuator run by the consumer.
 		"""
-	def __init__(self, producer: str, encoder: Encoder =None, transfer: Transfer =None):
+	def __init__(self, producer: str, encoder: Encoder =None, transfer: Transfer =None,authenticator: Authenticator=None):
 		""" Initialize an OpenC2 stack
 
 			Creates a `Producer` communication stack made of an identifier, an Encoding format, and a 
@@ -38,6 +40,8 @@ class Producer:
 		self.producer = producer
 		self.encoder = encoder
 		self.transfer = transfer
+		self.authenticator = authenticator
+		self.logger = logging.getLogger('producer')
 
 	def sendcmd(self, cmd: Command, encoder: Encoder =None, transfer: Transfer =None, consumers: [] =None):
 		""" Send an OpenC2 message
@@ -67,6 +71,31 @@ class Producer:
 		msg = Message(cmd)
 		msg.from_=self.producer
 		msg.to=consumers
+
+		if self.authenticator is not None:
+			try:
+				target_consumer = self.authenticator.consumer_url
+				msg = Message(cmd, from_=self.producer, to=target_consumer)
+				return transfer.send(msg, encoder, auth_info=None)
+
+			except PermissionError as e:
+				self.logger.error(f"401 Response. Starting authentication process {e}")
+				auth_endpoint = self.authenticator.extract_auth_endpoint_from_error(e)
+
+				if not auth_endpoint:
+					self.logger.error("Error fetching endpoint url")
+					raise ValueError("Error fetching endpoint url")
+
+				try:
+					self.authenticator.authenticate(auth_endpoint)
+					auth_info=self.authenticator.token
+					return transfer.send(msg, encoder, auth_info=auth_info)
+				except Exception as auth_exc:
+					self.logger.error(f"Authentication failed {auth_exc}")
+					raise auth_exc
+			except Exception as e:
+				self.logger.error(f"Error sending the command {e}")
+				raise e
 
 		return transfer.send(msg, encoder)
 

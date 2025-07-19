@@ -100,7 +100,7 @@ class HTTPTransfer(oc2.Transfer):
         return msg, encoder, token
 
     # This function is used to send an HTTP request
-    def send(self, msg, encoder, token=None):
+    def send(self, msg, encoder, auth_info=None):
         """ Sends OpenC2 message
 
 			This method implements the required `Transfer` interface to send message to an OpenC2 server.
@@ -129,8 +129,8 @@ class HTTPTransfer(oc2.Transfer):
         # Send the OpenC2 message and get the response
         if self.scheme == 'https':
             logger.warning("Certificate validation disabled!")
-        if token is not None:
-            openc2headers.update({'Authorization': f"Bearer {token['access_token']}"})
+        if auth_info is not None:
+            openc2headers.update({'Authorization': f"Bearer {auth_info['access_token']}"})
         response = requests.post(self.url, data=openc2data, headers=openc2headers, verify=False)
         logger.info("HTTP got response: %s", response)
         logger.info("HTTP Response Content:\n%s", response.text)
@@ -261,7 +261,7 @@ class HTTPTransfer(oc2.Transfer):
                 resp.to = [str(request.remote_addr)]
             else:
                 logger.info("Received command: %s", cmd)
-                resp = callback(cmd, token=token)
+                resp = callback(cmd, auth_info=token)
 
             logger.info("Got response: %s", resp)
 
