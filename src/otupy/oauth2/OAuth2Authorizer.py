@@ -17,9 +17,8 @@ class OAuth2Authorizer(Authorizer):
         self.timeout = timeout
         self.logger = logging.getLogger(__name__)
 
-    def authorize(self, msg):
+    def authorize(self, msg,auth_info):
         try:
-            #TODO fare introspection con token per capire chi è l'user e quindi le sue autorizzazioni
             command=msg.content
             action = command.action.name if hasattr(command.action, 'name') else str(command.action)
             target_type = command.target.choice
@@ -30,7 +29,8 @@ class OAuth2Authorizer(Authorizer):
                 "target": target,
                 "actuator": actuator
             }
-            payload = {"command": command_dict}
+            username=auth_info['username']
+            payload = {"command": command_dict,"username": username}
             ua_auth = f"{self.ua_url}/authorize"
             response = requests.post(ua_auth, json=payload)
             if response.status_code == 200 and response.json() is True:

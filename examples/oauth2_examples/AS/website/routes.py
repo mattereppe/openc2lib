@@ -192,7 +192,6 @@ def issue_token():
 @bp.route('/oauth/introspect', methods=['POST'])
 def introspect_token():
     response = authorization.create_endpoint_response('introspection')
-
     return response
 
 @bp.route('/oauth/revoke', methods=['POST'])

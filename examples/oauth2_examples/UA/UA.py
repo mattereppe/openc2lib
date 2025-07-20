@@ -106,18 +106,19 @@ def auth_flow(url):
 def authorize():
     data=request.get_json()
     command = data['command']
+    username=data['username']
     is_allowed = True
 
     for target in command.get('target', []):
         try:
             result = auth_agent.is_authorized(
-                user=CONFIG_USERNAME,
+                user=username,
                 action=command['action'],
                 target=target,
                 actuator=command['actuator']
             )
             logger.info(
-                f"[AUTH CHECK] user={CONFIG_USERNAME}, action={command['action']}, "
+                f"[AUTH CHECK] user={username}, action={command['action']}, "
                 f"target={target}, actuator={command['actuator']} => {'✅ ALLOWED' if result else '❌ DENIED'}"
             )
             if not result:

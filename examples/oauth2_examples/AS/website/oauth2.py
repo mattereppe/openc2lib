@@ -92,11 +92,10 @@ class MyIntrospectionEndpoint(IntrospectionEndpoint):
             return tok
 
     def introspect_token(self, token):
-        """Restituisce i dettagli del token"""
+        """Return info about the token"""
         if not token:
             return {'active': False}
 
-        # Calcolo scadenza
         expires_at = token.issued_at + token.expires_in
         is_active = (
                 not token.is_token_revoked() and
