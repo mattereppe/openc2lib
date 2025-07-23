@@ -1,4 +1,5 @@
 from otupy.auth.Authorizer import Authorizer
+from otupy.core.results import Results
 import requests
 import logging
 from otupy.core.response import Response, StatusCode
@@ -108,9 +109,10 @@ class OAuth2Authorizer(Authorizer):
         token = auth_info
         if not token:
             self.logger.warning("Missing access token in auth_info")
+            result=Results(auth_endpoint=self.ua_url)
             return False, None, Response(
                 status=StatusCode.UNAUTHORIZED,
-                auth_endpoint=self.ua_url
+                results=result
         )
 
         try:

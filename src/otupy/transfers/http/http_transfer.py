@@ -91,13 +91,13 @@ class HTTPTransfer(oc2.Transfer):
         except:
             msg.status = None
 
-        # estrarre token da header
+        # extract auth_info from header
         auth_header = hdr.get('Authorization')
-        token = None
+        auth_info = None
         if auth_header and auth_header.startswith('Bearer '):
-            token = auth_header.removeprefix('Bearer ').strip()
+            auth_info = auth_header.removeprefix('Bearer ').strip()
 
-        return msg, encoder, token
+        return msg, encoder, auth_info
 
     # This function is used to send an HTTP request
     def send(self, msg, encoder, auth_info=None):
@@ -143,7 +143,7 @@ class HTTPTransfer(oc2.Transfer):
         # TODO: How to manage HTTP response code? Can we safely assume they always match the Openc2 response?
         try:
             if response.text != "":
-                msg, encoder, token = self._fromhttp(response.headers, response.text)
+                msg, encoder, auth_info = self._fromhttp(response.headers, response.text)
             else:
                 msg = None
         except ValueError as e:
@@ -191,8 +191,8 @@ class HTTPTransfer(oc2.Transfer):
 
         logger.info("Received HTTP body: \n%s", data)
         logger.debug(data)
-        msg, encoder, token = self._fromhttp(headers, data)
-        return msg, encoder, token
+        msg, encoder, auth_info = self._fromhttp(headers, data)
+        return msg, encoder, auth_info
 
     def receive(self, callback, encoder):
         print(' receive HTTP TRANSFER')
@@ -220,7 +220,7 @@ class HTTPTransfer(oc2.Transfer):
             encoder = app.config['ENCODER']
 
             try:
-                cmd, encoder,token = server._recv(request.headers, request.data.decode('UTF-8'))
+                cmd, encoder,auth_info = server._recv(request.headers, request.data.decode('UTF-8'))
             # TODO: Add the code to answer according to 'response_requested'
             except UnsupportedMediaType as e:
                 # We were not able to understand the OpenC2 Message.
@@ -261,7 +261,7 @@ class HTTPTransfer(oc2.Transfer):
                 resp.to = [str(request.remote_addr)]
             else:
                 logger.info("Received command: %s", cmd)
-                resp = callback(cmd, auth_info=token)
+                resp = callback(cmd, auth_info=auth_info)
 
             logger.info("Got response: %s", resp)
 

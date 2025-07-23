@@ -107,6 +107,18 @@ class Consumer:
         # the command will be executed in the context of each profile that supports the
         # command's combination of action and target.
         self.auth_info = auth_info
+        if self.authorizer is not None:
+            is_valid, token_info, error_response = self.authorizer.validate_auth_info(self.auth_info)
+            if not is_valid:
+                return error_response
+
+            is_authorized = self.authorizer.authorize(msg, token_info)
+            if not is_authorized:
+                logger.warning("Authorization denied for the given command")
+                return Response(
+                    status=StatusCode.FORBIDDEN,
+                    status_text="Not authorized to execute this command"
+                )
         try:
             profile = msg.content.actuator.getName()
         except AttributeError:
@@ -174,18 +186,6 @@ class Consumer:
         # Run the command and collect the response
         # TODO: Define how to manage concurrent execution from more than one actuator
         try:
-            if self.authorizer is not None:
-                is_valid, token_info, error_response = self.authorizer.validate_auth_info(self.auth_info)
-                if not is_valid:
-                    return error_response
-
-                is_authorized = self.authorizer.authorize(msg, token_info)
-                if not is_authorized:
-                    logger.warning("Authorization denied for the given command")
-                    return Response(
-                        status=StatusCode.FORBIDDEN,
-                        status_text="Not authorized to execute this command"
-                    )
             logger.info("Dispatching command to: %s", actuator[0])
             response_content = actuator[0].run(msg.content)
         except (IndexError, AttributeError):

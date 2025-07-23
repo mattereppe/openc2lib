@@ -6,7 +6,7 @@
 """
 
 from otupy.types.base import Map, ArrayOf
-from otupy.types.data import Version, ActionTargets, Nsid
+from otupy.types.data import Version, ActionTargets, Nsid, auth_endpoint
 from otupy.core.extensions import extensible
 
 
@@ -22,7 +22,11 @@ class Results(Map):
 		Extensions must define the additional fields envisioned by the Profile specification in the `fieldtypes` 
 		dictionary.
 	"""
-	fieldtypes = dict(versions= ArrayOf(Version), profiles= ArrayOf(Nsid), pairs= ActionTargets, rate_limit= int)
+	fieldtypes = dict(versions= ArrayOf(Version),
+					  profiles= ArrayOf(Nsid),
+					  pairs= ActionTargets,
+					  rate_limit= int,
+					  auth_endpoint= auth_endpoint)
 	""" Field types
 	
 		This is the definition of the fields beard by the `Results`. This definition is for internal use only,
@@ -43,3 +47,4 @@ class Results(Map):
 		self['profiles']=profiles
 		self['pairs']=pairs
 		self['rate_limit']=rate_limit
+		self['auth_endpoint']=auth_endpoint
