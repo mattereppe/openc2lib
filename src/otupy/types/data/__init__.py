@@ -29,6 +29,7 @@ from otupy.types.data.uri import URI
 from otupy.types.data.hostname import Hostname
 from otupy.types.data.idn_hostname import IDNHostname
 from otupy.types.data.command_id import CommandID
+from otupy.types.data.auth_endpoint import AuthEndpoint
 
 import otupy.types.data.mime_types
 		

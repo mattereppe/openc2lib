@@ -110,15 +110,16 @@ class Consumer:
         if self.authorizer is not None:
             is_valid, token_info, error_response = self.authorizer.validate_auth_info(self.auth_info)
             if not is_valid:
-                return error_response
+                return self.__respmsg(msg, error_response)
 
             is_authorized = self.authorizer.authorize(msg, token_info)
             if not is_authorized:
                 logger.warning("Authorization denied for the given command")
-                return Response(
+                res=Response(
                     status=StatusCode.FORBIDDEN,
                     status_text="Not authorized to execute this command"
                 )
+                return self.__respmsg(res, res)
         try:
             profile = msg.content.actuator.getName()
         except AttributeError:

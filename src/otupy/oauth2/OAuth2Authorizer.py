@@ -112,6 +112,7 @@ class OAuth2Authorizer(Authorizer):
             result=Results(auth_endpoint=self.ua_url)
             return False, None, Response(
                 status=StatusCode.UNAUTHORIZED,
+                status_text='Missing access token.',
                 results=result
         )
 
