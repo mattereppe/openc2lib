@@ -63,6 +63,10 @@ class OAuth2Authorizer(Authorizer):
             raise
 
     def validate_token(self, token: str) -> Dict[str, Any]:
+        """
+               Introspect the token to retrieve token information.
+
+        """
         try:
             token_info = self.introspect_token(token)
 
