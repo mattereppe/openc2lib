@@ -208,7 +208,7 @@ class Consumer:
                 respmsg = None
             logger.debug("Response to be sent: %s", respmsg)
         except Exception as e:
-            print(e)
+            logger.error(e)
 
         return respmsg
 

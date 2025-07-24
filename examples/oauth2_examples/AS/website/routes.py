@@ -93,7 +93,6 @@ def home():
 
     user = current_user()
     if user:
-        print(user.id)
         clients = OAuth2Client.query.filter_by(user_id=user.id).all()
         return jsonify({
             "user": {"id": user.id, "username": user.username},
@@ -157,13 +156,11 @@ def authorize():
         try:
             grant = authorization.get_consent_grant(end_user=user)
         except OAuth2Error as error:
-            print(error)
             return error.error
 
     if not user and 'username' in request.form:
         username = request.form.get('username') or request.json.get('username')
         user = User.query.filter_by(username=username).first()
-        print(user)
     confirmed = True
 
     if confirmed:
@@ -176,16 +173,15 @@ def authorize():
     status_code = a.status_code
     headers = a.headers
     content = a.data
-
-    print(f"Status: {status_code}")
-    print(f"Headers: {headers} {type(headers)}")
-    print(f"Content: {content} {type(content)}")
+    #
+    # print(f"Status: {status_code}")
+    # print(f"Headers: {headers} {type(headers)}")
+    # print(f"Content: {content} {type(content)}")
     # return 200
     return jsonify(dict(headers)) #redirect con code al redirect_uri
 
 @bp.route('/oauth/token', methods=['POST'])
 def issue_token():
-    # print('sono qui')
     a=authorization.create_token_response()
     return a
 
