@@ -118,7 +118,7 @@ class OAuth2Authorizer(Authorizer):
 
         try:
             token_info = self.validate_token(token)
-            self.logger.info("Token validation successful")
+            self.logger.info(token_info)
             return True, token_info, None
 
         except OAuth2Error as e:

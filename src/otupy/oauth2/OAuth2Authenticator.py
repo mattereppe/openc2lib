@@ -21,7 +21,8 @@ class OAuth2Authenticator(Authenticator):
         self.client = OAuth2Session(
             client_id=self.client_id,
             client_secret=self.client_secret,
-            redirect_uri=self.redirect_uri
+            redirect_uri=self.redirect_uri,
+            scope="openc2"
         )
         self.token = None
         self.flask_app = None
@@ -49,6 +50,7 @@ class OAuth2Authenticator(Authenticator):
             self.token = self.client.fetch_token(token_url,
                                                  authorization_response=auth_response)
             self.logger.info("Token obtained successfully")
+            self.logger.info(f"Token: {self.token}")
             return self.token
         except Exception as e:
             self.logger.error(f"Error fetching the token: {e}")

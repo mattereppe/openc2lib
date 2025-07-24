@@ -20,8 +20,8 @@ def main():
 
     # OAuth2 configuration
     oauth2_config = {
-        'client_id': 'FXEHY5cASqiO2a6TDVJQcR2X',
-        'client_secret': 'zdZ6zawQaOINAhfNxlwhsyRFD5aREUFCkL2Bqxu77g5B82Xb',
+        'client_id': 'jWcEjOQG0I0MdcxsRdGFS5Ca',
+        'client_secret': 'l9KX9UhQNEDyzBxWYe3Ot6OxcvN7Cask6aBdFkEL0UM2gsSQ',
         'redirect_uri': 'http://127.0.0.1:8000/callback',
         'consumer_url': 'http://127.0.0.1:8080',
         'callback_port': 8000
